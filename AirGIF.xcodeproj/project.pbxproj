@@ -1,0 +1,496 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		3CA3508D17ED225E00F17A03 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3CA3508C17ED225E00F17A03 /* Foundation.framework */; };
+		3CA3508F17ED225E00F17A03 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3CA3508E17ED225E00F17A03 /* CoreGraphics.framework */; };
+		3CA3509117ED225E00F17A03 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3CA3509017ED225E00F17A03 /* UIKit.framework */; };
+		3CA3509717ED225E00F17A03 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 3CA3509517ED225E00F17A03 /* InfoPlist.strings */; };
+		3CA3509917ED225E00F17A03 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CA3509817ED225E00F17A03 /* main.m */; };
+		3CA3509D17ED225E00F17A03 /* GIFAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CA3509C17ED225E00F17A03 /* GIFAppDelegate.m */; };
+		3CA350A017ED225E00F17A03 /* Main_iPhone.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3CA3509E17ED225E00F17A03 /* Main_iPhone.storyboard */; };
+		3CA350A317ED225E00F17A03 /* Main_iPad.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3CA350A117ED225E00F17A03 /* Main_iPad.storyboard */; };
+		3CA350A617ED225E00F17A03 /* GIFMainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CA350A517ED225E00F17A03 /* GIFMainViewController.m */; };
+		3CA350A917ED225E00F17A03 /* GIFFlipsideViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CA350A817ED225E00F17A03 /* GIFFlipsideViewController.m */; };
+		3CA350AB17ED225E00F17A03 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3CA350AA17ED225E00F17A03 /* Images.xcassets */; };
+		3CA350B217ED225E00F17A03 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3CA350B117ED225E00F17A03 /* XCTest.framework */; };
+		3CA350B317ED225E00F17A03 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3CA3508C17ED225E00F17A03 /* Foundation.framework */; };
+		3CA350B417ED225E00F17A03 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3CA3509017ED225E00F17A03 /* UIKit.framework */; };
+		3CA350BC17ED225E00F17A03 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 3CA350BA17ED225E00F17A03 /* InfoPlist.strings */; };
+		3CA350BE17ED225E00F17A03 /* AirGIFTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CA350BD17ED225E00F17A03 /* AirGIFTests.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		3CA350B517ED225E00F17A03 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3CA3508117ED225D00F17A03 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 3CA3508817ED225E00F17A03;
+			remoteInfo = AirGIF;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		3CA3508917ED225E00F17A03 /* AirGIF.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AirGIF.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		3CA3508C17ED225E00F17A03 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		3CA3508E17ED225E00F17A03 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		3CA3509017ED225E00F17A03 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		3CA3509417ED225E00F17A03 /* AirGIF-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "AirGIF-Info.plist"; sourceTree = "<group>"; };
+		3CA3509617ED225E00F17A03 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		3CA3509817ED225E00F17A03 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		3CA3509A17ED225E00F17A03 /* AirGIF-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "AirGIF-Prefix.pch"; sourceTree = "<group>"; };
+		3CA3509B17ED225E00F17A03 /* GIFAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GIFAppDelegate.h; sourceTree = "<group>"; };
+		3CA3509C17ED225E00F17A03 /* GIFAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GIFAppDelegate.m; sourceTree = "<group>"; };
+		3CA3509F17ED225E00F17A03 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main_iPhone.storyboard; sourceTree = "<group>"; };
+		3CA350A217ED225E00F17A03 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main_iPad.storyboard; sourceTree = "<group>"; };
+		3CA350A417ED225E00F17A03 /* GIFMainViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GIFMainViewController.h; sourceTree = "<group>"; };
+		3CA350A517ED225E00F17A03 /* GIFMainViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GIFMainViewController.m; sourceTree = "<group>"; };
+		3CA350A717ED225E00F17A03 /* GIFFlipsideViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GIFFlipsideViewController.h; sourceTree = "<group>"; };
+		3CA350A817ED225E00F17A03 /* GIFFlipsideViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GIFFlipsideViewController.m; sourceTree = "<group>"; };
+		3CA350AA17ED225E00F17A03 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		3CA350B017ED225E00F17A03 /* AirGIFTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AirGIFTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		3CA350B117ED225E00F17A03 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
+		3CA350B917ED225E00F17A03 /* AirGIFTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "AirGIFTests-Info.plist"; sourceTree = "<group>"; };
+		3CA350BB17ED225E00F17A03 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		3CA350BD17ED225E00F17A03 /* AirGIFTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AirGIFTests.m; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		3CA3508617ED225E00F17A03 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3CA3508F17ED225E00F17A03 /* CoreGraphics.framework in Frameworks */,
+				3CA3509117ED225E00F17A03 /* UIKit.framework in Frameworks */,
+				3CA3508D17ED225E00F17A03 /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3CA350AD17ED225E00F17A03 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3CA350B217ED225E00F17A03 /* XCTest.framework in Frameworks */,
+				3CA350B417ED225E00F17A03 /* UIKit.framework in Frameworks */,
+				3CA350B317ED225E00F17A03 /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		3CA3508017ED225D00F17A03 = {
+			isa = PBXGroup;
+			children = (
+				3CA3509217ED225E00F17A03 /* AirGIF */,
+				3CA350B717ED225E00F17A03 /* AirGIFTests */,
+				3CA3508B17ED225E00F17A03 /* Frameworks */,
+				3CA3508A17ED225E00F17A03 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		3CA3508A17ED225E00F17A03 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				3CA3508917ED225E00F17A03 /* AirGIF.app */,
+				3CA350B017ED225E00F17A03 /* AirGIFTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		3CA3508B17ED225E00F17A03 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				3CA3508C17ED225E00F17A03 /* Foundation.framework */,
+				3CA3508E17ED225E00F17A03 /* CoreGraphics.framework */,
+				3CA3509017ED225E00F17A03 /* UIKit.framework */,
+				3CA350B117ED225E00F17A03 /* XCTest.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		3CA3509217ED225E00F17A03 /* AirGIF */ = {
+			isa = PBXGroup;
+			children = (
+				3CA3509B17ED225E00F17A03 /* GIFAppDelegate.h */,
+				3CA3509C17ED225E00F17A03 /* GIFAppDelegate.m */,
+				3CA3509E17ED225E00F17A03 /* Main_iPhone.storyboard */,
+				3CA350A117ED225E00F17A03 /* Main_iPad.storyboard */,
+				3CA350A417ED225E00F17A03 /* GIFMainViewController.h */,
+				3CA350A517ED225E00F17A03 /* GIFMainViewController.m */,
+				3CA350A717ED225E00F17A03 /* GIFFlipsideViewController.h */,
+				3CA350A817ED225E00F17A03 /* GIFFlipsideViewController.m */,
+				3CA350AA17ED225E00F17A03 /* Images.xcassets */,
+				3CA3509317ED225E00F17A03 /* Supporting Files */,
+			);
+			path = AirGIF;
+			sourceTree = "<group>";
+		};
+		3CA3509317ED225E00F17A03 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				3CA3509417ED225E00F17A03 /* AirGIF-Info.plist */,
+				3CA3509517ED225E00F17A03 /* InfoPlist.strings */,
+				3CA3509817ED225E00F17A03 /* main.m */,
+				3CA3509A17ED225E00F17A03 /* AirGIF-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		3CA350B717ED225E00F17A03 /* AirGIFTests */ = {
+			isa = PBXGroup;
+			children = (
+				3CA350BD17ED225E00F17A03 /* AirGIFTests.m */,
+				3CA350B817ED225E00F17A03 /* Supporting Files */,
+			);
+			path = AirGIFTests;
+			sourceTree = "<group>";
+		};
+		3CA350B817ED225E00F17A03 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				3CA350B917ED225E00F17A03 /* AirGIFTests-Info.plist */,
+				3CA350BA17ED225E00F17A03 /* InfoPlist.strings */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		3CA3508817ED225E00F17A03 /* AirGIF */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 3CA350C117ED225E00F17A03 /* Build configuration list for PBXNativeTarget "AirGIF" */;
+			buildPhases = (
+				3CA3508517ED225E00F17A03 /* Sources */,
+				3CA3508617ED225E00F17A03 /* Frameworks */,
+				3CA3508717ED225E00F17A03 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = AirGIF;
+			productName = AirGIF;
+			productReference = 3CA3508917ED225E00F17A03 /* AirGIF.app */;
+			productType = "com.apple.product-type.application";
+		};
+		3CA350AF17ED225E00F17A03 /* AirGIFTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 3CA350C417ED225E00F17A03 /* Build configuration list for PBXNativeTarget "AirGIFTests" */;
+			buildPhases = (
+				3CA350AC17ED225E00F17A03 /* Sources */,
+				3CA350AD17ED225E00F17A03 /* Frameworks */,
+				3CA350AE17ED225E00F17A03 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				3CA350B617ED225E00F17A03 /* PBXTargetDependency */,
+			);
+			name = AirGIFTests;
+			productName = AirGIFTests;
+			productReference = 3CA350B017ED225E00F17A03 /* AirGIFTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		3CA3508117ED225D00F17A03 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				CLASSPREFIX = GIF;
+				LastUpgradeCheck = 0500;
+				ORGANIZATIONNAME = "Ian Meyer";
+				TargetAttributes = {
+					3CA350AF17ED225E00F17A03 = {
+						TestTargetID = 3CA3508817ED225E00F17A03;
+					};
+				};
+			};
+			buildConfigurationList = 3CA3508417ED225D00F17A03 /* Build configuration list for PBXProject "AirGIF" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 3CA3508017ED225D00F17A03;
+			productRefGroup = 3CA3508A17ED225E00F17A03 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				3CA3508817ED225E00F17A03 /* AirGIF */,
+				3CA350AF17ED225E00F17A03 /* AirGIFTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		3CA3508717ED225E00F17A03 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3CA350A317ED225E00F17A03 /* Main_iPad.storyboard in Resources */,
+				3CA350AB17ED225E00F17A03 /* Images.xcassets in Resources */,
+				3CA350A017ED225E00F17A03 /* Main_iPhone.storyboard in Resources */,
+				3CA3509717ED225E00F17A03 /* InfoPlist.strings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3CA350AE17ED225E00F17A03 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3CA350BC17ED225E00F17A03 /* InfoPlist.strings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		3CA3508517ED225E00F17A03 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3CA3509917ED225E00F17A03 /* main.m in Sources */,
+				3CA3509D17ED225E00F17A03 /* GIFAppDelegate.m in Sources */,
+				3CA350A617ED225E00F17A03 /* GIFMainViewController.m in Sources */,
+				3CA350A917ED225E00F17A03 /* GIFFlipsideViewController.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3CA350AC17ED225E00F17A03 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3CA350BE17ED225E00F17A03 /* AirGIFTests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		3CA350B617ED225E00F17A03 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 3CA3508817ED225E00F17A03 /* AirGIF */;
+			targetProxy = 3CA350B517ED225E00F17A03 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		3CA3509517ED225E00F17A03 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				3CA3509617ED225E00F17A03 /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		3CA3509E17ED225E00F17A03 /* Main_iPhone.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				3CA3509F17ED225E00F17A03 /* Base */,
+			);
+			name = Main_iPhone.storyboard;
+			sourceTree = "<group>";
+		};
+		3CA350A117ED225E00F17A03 /* Main_iPad.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				3CA350A217ED225E00F17A03 /* Base */,
+			);
+			name = Main_iPad.storyboard;
+			sourceTree = "<group>";
+		};
+		3CA350BA17ED225E00F17A03 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				3CA350BB17ED225E00F17A03 /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		3CA350BF17ED225E00F17A03 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		3CA350C017ED225E00F17A03 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = YES;
+				ENABLE_NS_ASSERTIONS = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		3CA350C217ED225E00F17A03 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "AirGIF/AirGIF-Prefix.pch";
+				INFOPLIST_FILE = "AirGIF/AirGIF-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		3CA350C317ED225E00F17A03 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "AirGIF/AirGIF-Prefix.pch";
+				INFOPLIST_FILE = "AirGIF/AirGIF-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+		3CA350C517ED225E00F17A03 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/AirGIF.app/AirGIF";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "AirGIF/AirGIF-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = "AirGIFTests/AirGIFTests-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUNDLE_LOADER)";
+				WRAPPER_EXTENSION = xctest;
+			};
+			name = Debug;
+		};
+		3CA350C617ED225E00F17A03 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/AirGIF.app/AirGIF";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "AirGIF/AirGIF-Prefix.pch";
+				INFOPLIST_FILE = "AirGIFTests/AirGIFTests-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUNDLE_LOADER)";
+				WRAPPER_EXTENSION = xctest;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		3CA3508417ED225D00F17A03 /* Build configuration list for PBXProject "AirGIF" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3CA350BF17ED225E00F17A03 /* Debug */,
+				3CA350C017ED225E00F17A03 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		3CA350C117ED225E00F17A03 /* Build configuration list for PBXNativeTarget "AirGIF" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3CA350C217ED225E00F17A03 /* Debug */,
+				3CA350C317ED225E00F17A03 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		3CA350C417ED225E00F17A03 /* Build configuration list for PBXNativeTarget "AirGIFTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3CA350C517ED225E00F17A03 /* Debug */,
+				3CA350C617ED225E00F17A03 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 3CA3508117ED225D00F17A03 /* Project object */;
+}
