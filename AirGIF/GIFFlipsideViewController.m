@@ -37,6 +37,8 @@
 - (IBAction)done:(id)sender
 {
     [self.delegate flipsideViewControllerDidFinish:self];
+    
+    [self.presentingViewController dismissViewControllerAnimated:YES completion:nil];
 }
 
 @end

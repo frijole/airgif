@@ -12,4 +12,10 @@
 
 @property (strong, nonatomic) UIPopoverController *flipsidePopoverController;
 
+@property (nonatomic, weak) IBOutlet UIImageView *imageView;
+
+- (IBAction)screenTapped:(id)sender;
+- (IBAction)shareButtonTapped:(id)sender;
+- (IBAction)deleteButtonTapped:(id)sender;
+
 @end

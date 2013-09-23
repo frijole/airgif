@@ -23,6 +23,9 @@
 		3CA350B417ED225E00F17A03 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3CA3509017ED225E00F17A03 /* UIKit.framework */; };
 		3CA350BC17ED225E00F17A03 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 3CA350BA17ED225E00F17A03 /* InfoPlist.strings */; };
 		3CA350BE17ED225E00F17A03 /* AirGIFTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CA350BD17ED225E00F17A03 /* AirGIFTests.m */; };
+		3CC6D2B517EF67AD00422505 /* gilles.gif in Resources */ = {isa = PBXBuildFile; fileRef = 3CC6D2B417EF67AD00422505 /* gilles.gif */; };
+		3CC6D2B817EF68CE00422505 /* UIImage+animatedGIF.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CC6D2B617EF68CE00422505 /* UIImage+animatedGIF.m */; };
+		3CC6D30017EF7CF000422505 /* GIFActivityProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CC6D2FF17EF7CF000422505 /* GIFActivityProvider.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -58,6 +61,11 @@
 		3CA350B917ED225E00F17A03 /* AirGIFTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "AirGIFTests-Info.plist"; sourceTree = "<group>"; };
 		3CA350BB17ED225E00F17A03 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		3CA350BD17ED225E00F17A03 /* AirGIFTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AirGIFTests.m; sourceTree = "<group>"; };
+		3CC6D2B417EF67AD00422505 /* gilles.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = gilles.gif; sourceTree = "<group>"; };
+		3CC6D2B617EF68CE00422505 /* UIImage+animatedGIF.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+animatedGIF.m"; sourceTree = "<group>"; };
+		3CC6D2B717EF68CE00422505 /* UIImage+animatedGIF.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+animatedGIF.h"; sourceTree = "<group>"; };
+		3CC6D2FE17EF7CF000422505 /* GIFActivityProvider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIFActivityProvider.h; sourceTree = "<group>"; };
+		3CC6D2FF17EF7CF000422505 /* GIFActivityProvider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIFActivityProvider.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -123,9 +131,13 @@
 				3CA350A117ED225E00F17A03 /* Main_iPad.storyboard */,
 				3CA350A417ED225E00F17A03 /* GIFMainViewController.h */,
 				3CA350A517ED225E00F17A03 /* GIFMainViewController.m */,
+				3CC6D2FE17EF7CF000422505 /* GIFActivityProvider.h */,
+				3CC6D2FF17EF7CF000422505 /* GIFActivityProvider.m */,
 				3CA350A717ED225E00F17A03 /* GIFFlipsideViewController.h */,
 				3CA350A817ED225E00F17A03 /* GIFFlipsideViewController.m */,
 				3CA350AA17ED225E00F17A03 /* Images.xcassets */,
+				3CC6D2B417EF67AD00422505 /* gilles.gif */,
+				3CC6D2B917EF68D300422505 /* UIImage+animatedGIF */,
 				3CA3509317ED225E00F17A03 /* Supporting Files */,
 			);
 			path = AirGIF;
@@ -158,6 +170,15 @@
 				3CA350BA17ED225E00F17A03 /* InfoPlist.strings */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		3CC6D2B917EF68D300422505 /* UIImage+animatedGIF */ = {
+			isa = PBXGroup;
+			children = (
+				3CC6D2B617EF68CE00422505 /* UIImage+animatedGIF.m */,
+				3CC6D2B717EF68CE00422505 /* UIImage+animatedGIF.h */,
+			);
+			name = "UIImage+animatedGIF";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -239,6 +260,7 @@
 			files = (
 				3CA350A317ED225E00F17A03 /* Main_iPad.storyboard in Resources */,
 				3CA350AB17ED225E00F17A03 /* Images.xcassets in Resources */,
+				3CC6D2B517EF67AD00422505 /* gilles.gif in Resources */,
 				3CA350A017ED225E00F17A03 /* Main_iPhone.storyboard in Resources */,
 				3CA3509717ED225E00F17A03 /* InfoPlist.strings in Resources */,
 			);
@@ -261,7 +283,9 @@
 			files = (
 				3CA3509917ED225E00F17A03 /* main.m in Sources */,
 				3CA3509D17ED225E00F17A03 /* GIFAppDelegate.m in Sources */,
+				3CC6D30017EF7CF000422505 /* GIFActivityProvider.m in Sources */,
 				3CA350A617ED225E00F17A03 /* GIFMainViewController.m in Sources */,
+				3CC6D2B817EF68CE00422505 /* UIImage+animatedGIF.m in Sources */,
 				3CA350A917ED225E00F17A03 /* GIFFlipsideViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -481,6 +505,7 @@
 				3CA350C317ED225E00F17A03 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		3CA350C417ED225E00F17A03 /* Build configuration list for PBXNativeTarget "AirGIFTests" */ = {
 			isa = XCConfigurationList;
@@ -489,6 +514,7 @@
 				3CA350C617ED225E00F17A03 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

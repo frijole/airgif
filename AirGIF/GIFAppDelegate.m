@@ -13,6 +13,19 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     // Override point for customization after application launch.
+    NSURL *url = (NSURL *)[launchOptions valueForKey:UIApplicationLaunchOptionsURLKey];
+    
+    if ( [url isFileURL] ) {
+        NSLog(@"opened file");
+    }
+    
+    return YES;
+}
+
+- (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation
+{
+    NSLog(@"application openURL:%@ \n    sourceApplication:%@ \n    annotation:%@",url.absoluteString,sourceApplication,annotation);
+    
     return YES;
 }
 							
