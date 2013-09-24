@@ -40,17 +40,21 @@
 
 - (NSString *)activityViewController:(UIActivityViewController *)activityViewController dataTypeIdentifierForActivityType:(NSString *)activityType
 {
-    if ( [activityType isEqualToString:UIActivityTypePostToTwitter] )
-        return nil;
-
-    if ( [activityType isEqualToString:UIActivityTypeAirDrop] )
-        return @"info.frijole.airgif";
+    id rtnValue = nil;
     
-    // return @"info.frijole.airgif";
-    return @"com.compuserve.gif";
+    /* if ( [activityType isEqualToString:UIActivityTypePostToTwitter] )
+        rtnValue = nil;
+    else */ if ( [activityType isEqualToString:UIActivityTypeAirDrop] )
+        rtnValue = @"info.frijole.airgif";
+    else
+        rtnValue = @"com.compuserve.gif";
+    
+    NSLog(@"activityType: %@  dataTypeIdentifier: %@",activityType,rtnValue);
+    
+    return rtnValue;
 }
 
-- (id) activityViewControllerPlaceholderItem:(UIActivityViewController *)activityViewController
+- (id)activityViewControllerPlaceholderItem:(UIActivityViewController *)activityViewController
 {
     return @"";
 }
