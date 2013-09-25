@@ -10,6 +10,8 @@
 
 #import <MobileCoreServices/MobileCoreServices.h>
 
+#import "UIImage+animatedGIF.h"
+
 @implementation GIFActivityProvider
 
 - (id)initWithData:(NSData *)data
@@ -21,10 +23,35 @@
     return self;
 }
 
+- (void)setData:(NSData *)data
+{
+    _data = data;
+    
+    [self setImage:[UIImage animatedImageWithAnimatedGIFData:_data]];
+}
+
+- (NSString *)activityViewController:(UIActivityViewController *)activityViewController subjectForActivityType:(NSString *)activityType
+{
+    return @"Check out this gif";
+}
+
+- (UIImage *)activityViewController:(UIActivityViewController *)activityViewController thumbnailImageForActivityType:(NSString *)activityType suggestedSize:(CGSize)size
+{
+    return self.image;
+}
+
+- (id)activityViewControllerPlaceholderItem:(UIActivityViewController *)activityViewController
+{
+    return self.image;
+}
+
 - (id)activityViewController:(UIActivityViewController *)activityViewController itemForActivityType:(NSString *)activityType
 {
     if ( [activityType isEqualToString:UIActivityTypePostToTwitter] )
         return @"$URL from @gifbookapp";
+    
+    // if ( [activityType isEqualToString:UIActivityTypeAirDrop] )
+    //     return self.data;
     
     // if ( [activityType isEqualToString:UIActivityTypePostToFacebook] )
     //     return self.data;
@@ -52,11 +79,6 @@
     NSLog(@"activityType: %@  dataTypeIdentifier: %@",activityType,rtnValue);
     
     return rtnValue;
-}
-
-- (id)activityViewControllerPlaceholderItem:(UIActivityViewController *)activityViewController
-{
-    return @"";
 }
 
 @end
