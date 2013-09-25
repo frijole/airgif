@@ -12,6 +12,13 @@
 
 #import "UIImage+animatedGIF.h"
 
+@interface GIFActivityProvider ()
+
+@property (nonatomic, strong) UIImage *image;
+
+@end
+
+
 @implementation GIFActivityProvider
 
 - (id)initWithData:(NSData *)data

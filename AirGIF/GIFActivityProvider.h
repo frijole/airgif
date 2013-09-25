@@ -11,7 +11,6 @@
 @interface GIFActivityProvider : UIActivityItemProvider <UIActivityItemSource>
 
 @property (nonatomic, strong) NSData *data;
-@property (nonatomic, strong) UIImage *image;
 
 - (id)initWithData:(NSData *)data;
 
