@@ -101,17 +101,10 @@
                 <navigationController definesPresentationContext="YES" toolbarHidden="NO" id="Qaj-Jz-HYl" sceneMemberID="viewController">
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="ocq-yX-0rW">
                         <autoresizingMask key="autoresizingMask"/>
-                        <color key="tintColor" red="0.97900640959999996" green="0.4719837308" blue="0.032206684350000001" alpha="1" colorSpace="calibratedRGB"/>
-                        <color key="barTintColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
-                        <textAttributes key="titleTextAttributes">
-                            <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                        </textAttributes>
                     </navigationBar>
                     <toolbar key="toolbar" opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="kyS-OR-SIN">
                         <rect key="frame" x="0.0" y="524" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
-                        <color key="tintColor" red="0.97900640959999996" green="0.4719837308" blue="0.032206684350000001" alpha="1" colorSpace="calibratedRGB"/>
-                        <color key="barTintColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                     </toolbar>
                     <connections>
                         <segue destination="rQl-PL-IFJ" kind="relationship" relationship="rootViewController" id="WRj-dz-4YW"/>
@@ -127,11 +120,6 @@
                 <navigationController definesPresentationContext="YES" id="x9A-M1-nzJ" sceneMemberID="viewController">
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="xB1-1F-gIR">
                         <autoresizingMask key="autoresizingMask"/>
-                        <color key="tintColor" red="0.97900640959999996" green="0.4719837308" blue="0.032206684350000001" alpha="1" colorSpace="calibratedRGB"/>
-                        <color key="barTintColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
-                        <textAttributes key="titleTextAttributes">
-                            <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                        </textAttributes>
                     </navigationBar>
                     <connections>
                         <segue destination="kIf-nA-PKG" kind="relationship" relationship="rootViewController" id="xxM-Y2-z65"/>
