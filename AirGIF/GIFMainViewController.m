@@ -26,7 +26,20 @@
     
     NSURL *url = [[NSBundle mainBundle] URLForResource:@"gilles" withExtension:@"gif"];
     self.imageView.image = [UIImage animatedImageWithAnimatedGIFURL:url];
+}
 
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    
+    [self performSelector:@selector(hideBars) withObject:nil afterDelay:2.0f];
+}
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    
+    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(hideBars) object:nil];
 }
 
 - (void)didReceiveMemoryWarning
@@ -38,19 +51,24 @@
 - (IBAction)screenTapped:(id)sender
 {
     if ( self.statusbarHidden )
-    {
-        [self setStatusbarHidden:NO];
-        [self.navigationController setNavigationBarHidden:NO animated:YES];
-        [self.navigationController setToolbarHidden:NO animated:YES];
-    }
+        [self showBars];
     else
-    {
-        [self.navigationController setNavigationBarHidden:YES animated:YES];
-        [self.navigationController setToolbarHidden:YES animated:YES];
-        [self setStatusbarHidden:YES];
-        [UIView animateWithDuration:UINavigationControllerHideShowBarDuration animations:^{[self setNeedsStatusBarAppearanceUpdate];}];
-    }
-    
+        [self hideBars];;
+}
+
+- (void)showBars
+{
+    [self setStatusbarHidden:NO];
+    [self.navigationController setNavigationBarHidden:NO animated:YES];
+    [self.navigationController setToolbarHidden:NO animated:YES];
+}
+
+- (void)hideBars
+{
+    [self.navigationController setNavigationBarHidden:YES animated:YES];
+    [self.navigationController setToolbarHidden:YES animated:YES];
+    [self setStatusbarHidden:YES];
+    [UIView animateWithDuration:UINavigationControllerHideShowBarDuration animations:^{[self setNeedsStatusBarAppearanceUpdate];}];
 }
 
 - (void)openURL:(NSURL *)url
