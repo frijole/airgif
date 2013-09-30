@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="4510" systemVersion="12F37" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="Qaj-Jz-HYl">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="4510" systemVersion="13A584" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="Qaj-Jz-HYl">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3742"/>
     </dependencies>
     <scenes>
-        <!--Main View Controller-->
+        <!--Main View Controller - x of y-->
         <scene sceneID="rV5-Y2-ghB">
             <objects>
                 <viewController id="rQl-PL-IFJ" customClass="GIFMainViewController" sceneMemberID="viewController">
@@ -38,36 +38,30 @@
                         </constraints>
                     </view>
                     <toolbarItems>
+                        <barButtonItem systemItem="organize" id="7QY-HY-dgc">
+                            <connections>
+                                <segue destination="ikA-Ny-DXU" kind="modal" id="N7K-ya-a9q"/>
+                            </connections>
+                        </barButtonItem>
+                        <barButtonItem style="plain" systemItem="flexibleSpace" id="mwG-jU-0UA"/>
                         <barButtonItem systemItem="action" id="rCI-KA-ZD3">
                             <connections>
                                 <action selector="shareButtonTapped:" destination="rQl-PL-IFJ" id="dmL-Iu-boA"/>
                             </connections>
                         </barButtonItem>
-                        <barButtonItem style="plain" systemItem="flexibleSpace" id="mwG-jU-0UA"/>
-                        <barButtonItem title="x of y" style="plain" id="oCp-0J-sGJ"/>
-                        <barButtonItem style="plain" systemItem="flexibleSpace" id="zO2-uD-QGN"/>
+                        <barButtonItem style="plain" systemItem="flexibleSpace" id="W2P-ar-CMj"/>
                         <barButtonItem systemItem="trash" id="7EB-vr-GVH">
                             <connections>
                                 <action selector="deleteButtonTapped:" destination="rQl-PL-IFJ" id="5Pe-tv-HbX"/>
                             </connections>
                         </barButtonItem>
                     </toolbarItems>
-                    <navigationItem key="navigationItem" id="auq-3P-ja7">
-                        <nil key="title"/>
+                    <navigationItem key="navigationItem" title="x of y" id="auq-3P-ja7">
                         <barButtonItem key="leftBarButtonItem" systemItem="edit" id="wyC-G0-Zxx">
                             <connections>
                                 <segue destination="071-Jf-xhw" kind="modal" id="PC1-Tw-ODE"/>
                             </connections>
                         </barButtonItem>
-                        <segmentedControl key="titleView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="bar" selectedSegmentIndex="0" id="6oY-Gb-Dq3">
-                            <rect key="frame" x="90" y="7" width="141" height="30"/>
-                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                            <segments>
-                                <segment title="Favorites"/>
-                                <segment title="Random"/>
-                            </segments>
-                        </segmentedControl>
-                        <barButtonItem key="rightBarButtonItem" systemItem="add" id="2U7-h6-Ejg"/>
                     </navigationItem>
                     <connections>
                         <outlet property="imageView" destination="fJv-MZ-pEd" id="rqq-OQ-5Ca"/>
@@ -95,7 +89,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="rem-gY-18h" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="410" y="914"/>
+            <point key="canvasLocation" x="1041" y="878"/>
         </scene>
         <!--Edit Library View Controller - Edit GIFs-->
         <scene sceneID="OzW-eR-PQs">
@@ -119,16 +113,26 @@
                                 <action selector="done:" destination="RXD-DE-PzT" id="PMO-VX-Gcp"/>
                             </connections>
                         </barButtonItem>
-                        <barButtonItem key="rightBarButtonItem" title="Settings" id="XOd-sd-xn0">
-                            <connections>
-                                <segue destination="kIf-nA-PKG" kind="push" id="ALu-9i-M1g"/>
-                            </connections>
-                        </barButtonItem>
                     </navigationItem>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="I4j-fX-Kel" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="893" y="914"/>
+            <point key="canvasLocation" x="1524" y="878"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="8JP-zc-vp7">
+            <objects>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="f1Z-HJ-wLN" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <navigationController definesPresentationContext="YES" id="ikA-Ny-DXU" sceneMemberID="viewController">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="S5F-Oe-x9P">
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <connections>
+                        <segue destination="kIf-nA-PKG" kind="relationship" relationship="rootViewController" id="xku-0A-Afo"/>
+                    </connections>
+                </navigationController>
+            </objects>
+            <point key="canvasLocation" x="1041" y="118"/>
         </scene>
         <!--Flipside View Controller - Settings-->
         <scene sceneID="z9J-Vg-hzE">
@@ -143,11 +147,19 @@
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
-                    <navigationItem key="navigationItem" title="Settings" id="mM0-ts-o3N"/>
+                    <toolbarItems/>
+                    <navigationItem key="navigationItem" title="Settings" id="mM0-ts-o3N">
+                        <barButtonItem key="leftBarButtonItem" systemItem="done" id="SQ6-ac-koN">
+                            <connections>
+                                <action selector="done:" destination="kIf-nA-PKG" id="6MR-q6-sQX"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                    <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="xlJ-1o-FvB" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1376" y="914"/>
+            <point key="canvasLocation" x="1524" y="118"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="Q8X-dD-YtI">

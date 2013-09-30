@@ -53,6 +53,11 @@
     
 }
 
+- (void)openURL:(NSURL *)url
+{
+    [self.imageView setImage:[UIImage animatedImageWithAnimatedGIFURL:url]];
+}
+
 - (void)setStatusbarHidden:(BOOL)statusbarHidden
 {
     _statusbarHidden = statusbarHidden;

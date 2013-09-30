@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3C9D91B017F9C419007DEDF8 /* GIFLibrary.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C9D91AF17F9C419007DEDF8 /* GIFLibrary.m */; };
 		3CA3508D17ED225E00F17A03 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3CA3508C17ED225E00F17A03 /* Foundation.framework */; };
 		3CA3508F17ED225E00F17A03 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3CA3508E17ED225E00F17A03 /* CoreGraphics.framework */; };
 		3CA3509117ED225E00F17A03 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3CA3509017ED225E00F17A03 /* UIKit.framework */; };
@@ -40,6 +41,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		3C9D91AE17F9C419007DEDF8 /* GIFLibrary.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIFLibrary.h; sourceTree = "<group>"; };
+		3C9D91AF17F9C419007DEDF8 /* GIFLibrary.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIFLibrary.m; sourceTree = "<group>"; };
 		3CA3508917ED225E00F17A03 /* AirGIF.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AirGIF.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3CA3508C17ED225E00F17A03 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		3CA3508E17ED225E00F17A03 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -140,6 +143,8 @@
 				3CA350A817ED225E00F17A03 /* GIFFlipsideViewController.m */,
 				3CE1FD0A17F8E1F6001C8685 /* GIFEditLibraryViewController.h */,
 				3CE1FD0B17F8E1F6001C8685 /* GIFEditLibraryViewController.m */,
+				3C9D91AE17F9C419007DEDF8 /* GIFLibrary.h */,
+				3C9D91AF17F9C419007DEDF8 /* GIFLibrary.m */,
 				3CA350AA17ED225E00F17A03 /* Images.xcassets */,
 				3CC6D2B417EF67AD00422505 /* gilles.gif */,
 				3CC6D2B917EF68D300422505 /* UIImage+animatedGIF */,
@@ -288,6 +293,7 @@
 			files = (
 				3CE1FD0C17F8E1F6001C8685 /* GIFEditLibraryViewController.m in Sources */,
 				3CA3509917ED225E00F17A03 /* main.m in Sources */,
+				3C9D91B017F9C419007DEDF8 /* GIFLibrary.m in Sources */,
 				3CA3509D17ED225E00F17A03 /* GIFAppDelegate.m in Sources */,
 				3CC6D30017EF7CF000422505 /* GIFActivityProvider.m in Sources */,
 				3CA350A617ED225E00F17A03 /* GIFMainViewController.m in Sources */,

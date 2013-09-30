@@ -14,6 +14,8 @@
 
 @property (nonatomic, weak) IBOutlet UIImageView *imageView;
 
+- (void)openURL:(NSURL *)url;
+
 - (IBAction)screenTapped:(id)sender;
 - (IBAction)shareButtonTapped:(id)sender;
 - (IBAction)deleteButtonTapped:(id)sender;

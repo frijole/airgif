@@ -8,6 +8,8 @@
 
 #import "GIFAppDelegate.h"
 
+#import "GIFMainViewController.h"
+
 @implementation GIFAppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
@@ -17,6 +19,14 @@
     
     if ( [url isFileURL] ) {
         NSLog(@"opened file");
+        
+        UINavigationController *rootViewController = (UINavigationController *)self.window.rootViewController;
+        
+        if ( [rootViewController respondsToSelector:@selector(viewControllers)] &&
+            [[[rootViewController viewControllers] firstObject] respondsToSelector:@selector(openURL:)] )
+        {
+            [(GIFMainViewController *)[[rootViewController viewControllers] firstObject] openURL:url];
+        }
     }
     
     /*
@@ -34,9 +44,17 @@
 {
     NSLog(@"application openURL:%@ \n    sourceApplication:%@ \n    annotation:%@",url.absoluteString,sourceApplication,annotation);
     
+    UINavigationController *rootViewController = (UINavigationController *)self.window.rootViewController;
+    
+    if ( [rootViewController respondsToSelector:@selector(viewControllers)] &&
+        [[[rootViewController viewControllers] firstObject] respondsToSelector:@selector(openURL:)] )
+    {
+        [(GIFMainViewController *)[[rootViewController viewControllers] firstObject] openURL:url];
+    }
+    
     return YES;
 }
-							
+
 - (void)applicationWillResignActive:(UIApplication *)application
 {
     // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
