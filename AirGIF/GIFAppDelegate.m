@@ -19,6 +19,14 @@
         NSLog(@"opened file");
     }
     
+    /*
+    [[UINavigationBar appearance] setBarTintColor:[UIColor blackColor]];
+    [[UINavigationBar appearance] setTintColor:[UIColor whiteColor]];
+    
+    [[UIToolbar appearance] setBarTintColor:[UIColor blackColor]];
+    [[UIToolbar appearance] setTintColor:[UIColor whiteColor]];
+    */
+    
     return YES;
 }
 
