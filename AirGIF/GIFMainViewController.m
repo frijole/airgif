@@ -28,12 +28,14 @@
     self.imageView.image = [UIImage animatedImageWithAnimatedGIFURL:url];
 }
 
+/*
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
     
     [self performSelector:@selector(hideBars) withObject:nil afterDelay:2.0f];
 }
+*/
 
 - (void)viewWillDisappear:(BOOL)animated
 {
@@ -74,6 +76,17 @@
 - (void)openURL:(NSURL *)url
 {
     [self.imageView setImage:[UIImage animatedImageWithAnimatedGIFURL:url]];
+    
+    [self.navigationItem setTitle:url.lastPathComponent];
+    
+    UIBarButtonItem *tmpFavoritesBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Add to Favorites" style:UIBarButtonItemStylePlain target:self action:@selector(addToFavoritesTapped)];
+    UIBarButtonItem *tmpDiscardBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Discard" style:UIBarButtonItemStylePlain target:self action:@selector(discardButtonTapped)];
+    [tmpDiscardBarButtonItem setTintColor:[UIColor redColor]];
+    
+    UIBarButtonItem *tmpSpace = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
+    
+    [self setToolbarItems:@[tmpSpace, tmpDiscardBarButtonItem, tmpSpace, tmpFavoritesBarButtonItem, tmpSpace] animated:NO];
+    
 }
 
 - (void)setStatusbarHidden:(BOOL)statusbarHidden
