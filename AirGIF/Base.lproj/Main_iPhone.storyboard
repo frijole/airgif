@@ -5,38 +5,42 @@
     </dependencies>
     <scenes>
         <!--Main View Controller - x of y-->
-        <scene sceneID="rV5-Y2-ghB">
+        <scene sceneID="6Ld-qY-d8B">
             <objects>
-                <viewController id="rQl-PL-IFJ" customClass="GIFMainViewController" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="wr2-d6-BxB"/>
-                        <viewControllerLayoutGuide type="bottom" id="BwB-Xf-hYG"/>
-                    </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="l9E-07-oys">
+                <collectionViewController autoresizesArchivedViewToFullSize="NO" id="euz-r7-eTv" customClass="GIFMainViewController" sceneMemberID="viewController">
+                    <collectionView key="view" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" pagingEnabled="YES" minimumZoomScale="0.0" maximumZoomScale="0.0" dataMode="prototypes" id="9q7-F0-pCt">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                        <subviews>
-                            <imageView contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="fJv-MZ-pEd">
-                                <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                        <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="0.0" minimumInteritemSpacing="0.0" id="39E-uZ-bT0">
+                            <size key="itemSize" width="320" height="568"/>
+                            <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                            <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                            <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                        </collectionViewFlowLayout>
+                        <imageView key="backgroundView" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" id="rNc-ED-EJ8">
+                            <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        </imageView>
+                        <cells>
+                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="esJ-hz-ht1">
+                                <rect key="frame" x="0.0" y="64" width="320" height="568"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                                    <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                </view>
                                 <gestureRecognizers/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="320" id="Mxu-Tt-xzA"/>
-                                </constraints>
-                                <connections>
-                                    <outletCollection property="gestureRecognizers" destination="xDL-nM-chh" appends="YES" id="R5H-lA-TYe"/>
-                                </connections>
-                            </imageView>
-                        </subviews>
-                        <color key="backgroundColor" white="0.25" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
-                        <gestureRecognizers/>
-                        <constraints>
-                            <constraint firstItem="fJv-MZ-pEd" firstAttribute="top" secondItem="l9E-07-oys" secondAttribute="top" id="5Rp-4G-bAG"/>
-                            <constraint firstAttribute="bottom" secondItem="fJv-MZ-pEd" secondAttribute="bottom" id="NeS-8Y-vLh"/>
-                            <constraint firstAttribute="trailing" secondItem="fJv-MZ-pEd" secondAttribute="trailing" id="oZU-l7-uim"/>
-                            <constraint firstItem="fJv-MZ-pEd" firstAttribute="leading" secondItem="l9E-07-oys" secondAttribute="leading" id="vEV-Jg-Ucb"/>
-                        </constraints>
-                    </view>
+                            </collectionViewCell>
+                        </cells>
+                        <connections>
+                            <outlet property="dataSource" destination="euz-r7-eTv" id="yND-oA-ETT"/>
+                            <outlet property="delegate" destination="euz-r7-eTv" id="MuO-Uk-i8Q"/>
+                            <outletCollection property="gestureRecognizers" destination="eTj-bO-d2U" appends="YES" id="QpY-pW-6oC"/>
+                            <outletCollection property="gestureRecognizers" destination="Jj0-IH-60x" appends="YES" id="JPc-Dr-TW8"/>
+                        </connections>
+                    </collectionView>
                     <toolbarItems>
                         <barButtonItem systemItem="organize" id="7QY-HY-dgc">
                             <connections>
@@ -46,35 +50,43 @@
                         <barButtonItem style="plain" systemItem="flexibleSpace" id="mwG-jU-0UA"/>
                         <barButtonItem systemItem="action" id="rCI-KA-ZD3">
                             <connections>
-                                <action selector="shareButtonTapped:" destination="rQl-PL-IFJ" id="dmL-Iu-boA"/>
+                                <action selector="shareButtonTapped:" destination="euz-r7-eTv" id="dPv-Ig-OI5"/>
                             </connections>
                         </barButtonItem>
                         <barButtonItem style="plain" systemItem="flexibleSpace" id="W2P-ar-CMj"/>
                         <barButtonItem systemItem="trash" id="7EB-vr-GVH">
                             <connections>
-                                <action selector="deleteButtonTapped:" destination="rQl-PL-IFJ" id="5Pe-tv-HbX"/>
+                                <action selector="deleteButtonTapped:" destination="euz-r7-eTv" id="8hm-Fs-wq5"/>
                             </connections>
                         </barButtonItem>
                     </toolbarItems>
-                    <navigationItem key="navigationItem" title="x of y" id="auq-3P-ja7">
+                    <navigationItem key="navigationItem" title="x of y" id="fV7-OD-VRj">
                         <barButtonItem key="leftBarButtonItem" systemItem="edit" id="wyC-G0-Zxx">
                             <connections>
                                 <segue destination="071-Jf-xhw" kind="modal" id="PC1-Tw-ODE"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
+                    <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
-                        <outlet property="imageView" destination="fJv-MZ-pEd" id="rqq-OQ-5Ca"/>
+                        <outlet property="doubleTapRecognizer" destination="Jj0-IH-60x" id="tst-dr-Ozv"/>
+                        <outlet property="imageView" destination="rNc-ED-EJ8" id="2ZG-Pj-QsX"/>
+                        <outlet property="tapRecognizer" destination="eTj-bO-d2U" id="JXy-te-Fol"/>
                     </connections>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="h4L-l5-tyG" sceneMemberID="firstResponder"/>
-                <tapGestureRecognizer id="xDL-nM-chh">
+                </collectionViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="1vR-Qh-Uc2" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <tapGestureRecognizer numberOfTapsRequired="2" id="Jj0-IH-60x">
                     <connections>
-                        <action selector="screenTapped:" destination="rQl-PL-IFJ" id="HxA-9U-XWe"/>
+                        <action selector="screenDoubleTapped:" destination="euz-r7-eTv" id="I2V-WZ-MRS"/>
+                    </connections>
+                </tapGestureRecognizer>
+                <tapGestureRecognizer id="eTj-bO-d2U">
+                    <connections>
+                        <action selector="screenTapped:" destination="euz-r7-eTv" id="wcl-ru-7ZJ"/>
                     </connections>
                 </tapGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="410" y="118"/>
+            <point key="canvasLocation" x="446" y="118"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="qYW-7G-5qp">
@@ -173,7 +185,7 @@
                         <autoresizingMask key="autoresizingMask"/>
                     </toolbar>
                     <connections>
-                        <segue destination="rQl-PL-IFJ" kind="relationship" relationship="rootViewController" id="WRj-dz-4YW"/>
+                        <segue destination="euz-r7-eTv" kind="relationship" relationship="rootViewController" id="ts7-vV-fVO"/>
                     </connections>
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="N3X-91-BAm" userLabel="First Responder" sceneMemberID="firstResponder"/>
