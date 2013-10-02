@@ -14,16 +14,16 @@
 + (NSArray *)random;
 
 // loads some random gif urls from picbot
-- (BOOL)fetchRandom:(NSInteger)quantity;
++ (BOOL)fetchRandom:(NSInteger)quantity;
 
 // adds image at address to favorites.
 // if a remote url, downloads and adds local url to favorites
-- (BOOL)addToFavorites:(NSURL *)url;
++ (BOOL)addToFavorites:(NSURL *)url;
 
 // removes from favorites and random and adds to blacklist
-- (BOOL)deleteGif:(NSURL *)url;
++ (BOOL)deleteGif:(NSURL *)url;
 
 // report problem to picbot (send 404 command)
-- (BOOL)reportProblem:(NSURL *)url;
++ (BOOL)reportProblem:(NSURL *)url;
 
 @end
