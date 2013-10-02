@@ -11,9 +11,14 @@
 #import "UIImage+animatedGIF.h"
 #import "GIFActivityProvider.h"
 
+#import "GIFLibrary.h"
+
 @interface GIFMainViewController ()
 
 @property (nonatomic) BOOL statusbarHidden;
+@property (nonatomic, strong) NSURL *openedURL;
+
+@property (nonatomic, strong) NSArray *cachedToolbarItems;
 
 @end
 
@@ -75,6 +80,8 @@
 
 - (void)openURL:(NSURL *)url
 {
+    [self setOpenedURL:url];
+    
     [self.imageView setImage:[UIImage animatedImageWithAnimatedGIFURL:url]];
     
     [self.navigationItem setTitle:url.lastPathComponent];
@@ -85,6 +92,7 @@
     
     UIBarButtonItem *tmpSpace = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
     
+    [self setCachedToolbarItems:self.toolbarItems];
     [self setToolbarItems:@[tmpSpace, tmpDiscardBarButtonItem, tmpSpace, tmpFavoritesBarButtonItem, tmpSpace] animated:NO];
     
 }
@@ -104,6 +112,55 @@
 - (UIStatusBarAnimation)preferredStatusBarUpdateAnimation
 {
     return UIStatusBarAnimationSlide;
+}
+
+- (void)discardButtonTapped
+{
+    self.navigationItem.title = nil;
+    
+    if ( self.cachedToolbarItems ) {
+        [self setToolbarItems:self.cachedToolbarItems animated:YES];
+        [self setCachedToolbarItems:nil];
+    }
+    
+    [UIView animateWithDuration:1.0f
+                     animations:^{
+                         [self.imageView setImage:nil];
+                     }];
+}
+
+- (void)addToFavoritesTapped
+{
+    NSAssert(self.openedURL, @"addToFavorites tapped, but no openedURL set");
+    
+    // check url, if a file, copy to Documents folder, and add url there to favorites
+    NSURL *savedDocumentURL;
+    
+    if ( self.openedURL.isFileURL ) {
+        // is file, check for location, move to Documents if necessary and save final path
+        
+        savedDocumentURL = [NSURL URLWithString:@"file://"];
+    }
+    else {
+        // is remote, download into Documents and save path
+
+        savedDocumentURL = [NSURL URLWithString:@"file://"];
+    }
+
+    BOOL success = [GIFLibrary addToFavorites:savedDocumentURL];
+
+    // reset the toolbar
+
+    if ( self.cachedToolbarItems ) {
+        [self setToolbarItems:self.cachedToolbarItems animated:YES];
+        [self setCachedToolbarItems:nil];
+    }
+
+    NSInteger tmpTotalFavorites = 5;
+    [self setTitle:[NSString stringWithFormat:@"%ld of %ld",(long)tmpTotalFavorites,tmpTotalFavorites]];
+    
+    // did it work?
+    NSLog(@"added to favorites: %d",success);
 }
 
 - (void)shareButtonTapped:(id)sender
