@@ -15,6 +15,8 @@
 
 #define cellIdentifier @"cellIdentifier"
 
+#define kGIFMainViewControllerAnimationDuration 0.5f
+
 @interface GIFMainViewController ()
 
 @property (nonatomic) BOOL statusbarHidden;
@@ -42,34 +44,8 @@
     
     // tweak the tap handling
     [self.tapRecognizer requireGestureRecognizerToFail:self.doubleTapRecognizer];
-    
-    // set up a cell class
-    [self.collectionView registerClass:[UICollectionViewCell class] forCellWithReuseIdentifier:cellIdentifier];
-    
-    // make sure the cells are full-screen (like the imageView is)
-    [(UICollectionViewFlowLayout *)self.collectionView.collectionViewLayout setItemSize:self.imageView.frame.size];
-    
-    // sign up to hear about rotation events
-    [[UIDevice currentDevice] beginGeneratingDeviceOrientationNotifications];
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(orientationChanged:)
-                                                 name:UIDeviceOrientationDidChangeNotification
-                                               object:nil];
 }
 
-- (void)viewWillAppear:(BOOL)animated
-{
-    [self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:1 inSection:0] atScrollPosition:UICollectionViewScrollPositionCenteredHorizontally animated:NO];
-}
-
-/*
-- (void)viewDidAppear:(BOOL)animated
-{
-    [super viewDidAppear:animated];
-    
-    [self performSelector:@selector(hideBars) withObject:nil afterDelay:2.0f];
-}
-*/
 
 - (void)viewWillDisappear:(BOOL)animated
 {
@@ -89,27 +65,6 @@
     // Dispose of any resources that can be recreated.
 }
 
-- (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration
-{
-    // TODO: figure out why these are the same, and how to tell what the transition actually is
-    NSLog(@"currently: %lu isPortrait: %@",[UIDevice currentDevice].orientation,UIDeviceOrientationIsPortrait([UIDevice currentDevice].orientation)?@"YES":@"NO");
-    NSLog(@"destination: %lu  isPortrait: %@",toInterfaceOrientation,UIInterfaceOrientationIsPortrait(toInterfaceOrientation)?@"YES":@"NO");
-    
-    if ( (UIDeviceOrientationIsPortrait([UIDevice currentDevice].orientation) && UIInterfaceOrientationIsLandscape(toInterfaceOrientation)) ||
-         (UIDeviceOrientationIsLandscape([UIDevice currentDevice].orientation) && UIInterfaceOrientationIsPortrait(toInterfaceOrientation)) ) {
-        // rotating 90 degrees
-        [(UICollectionViewFlowLayout *)self.collectionView.collectionViewLayout setItemSize:CGSizeMake(self.imageView.frame.size.height, self.imageView.frame.size.width)];
-        
-         [self.collectionView reloadData];
-        [self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:1 inSection:0] atScrollPosition:UICollectionViewScrollPositionCenteredHorizontally animated:NO];
-    }
-}
-
-- (void)orientationChanged:(NSNotification *)notification
-{
-    // wat
-}
-
 - (IBAction)screenTapped:(id)sender
 {
     if ( self.statusbarHidden )
@@ -123,7 +78,7 @@
     [self setScaleImages:!self.scaleImages];
     
     // reload display
-    [UIView animateWithDuration:0.2f
+    [UIView animateWithDuration:kGIFMainViewControllerAnimationDuration/2
                      animations:^{
                          // hide the image
                          [self.imageView setAlpha:0.0f];
@@ -135,7 +90,7 @@
                              [self.imageView setContentMode:(self.scaleImages?UIViewContentModeScaleAspectFill:UIViewContentModeScaleAspectFit)];
 
                              // and bring it back
-                             [UIView animateWithDuration:0.2f
+                             [UIView animateWithDuration:kGIFMainViewControllerAnimationDuration/2
                                               animations:^{
                                                   [self.imageView setAlpha:1.0f];
                                               }];
@@ -164,9 +119,9 @@
     
     [self.imageView setImage:[UIImage animatedImageWithAnimatedGIFURL:url]];
     
-    [self.collectionView setScrollEnabled:NO];
-    
     [self.navigationItem setTitle:url.lastPathComponent];
+    
+    [self.navigationItem setLeftBarButtonItem:nil animated:NO];
     
     UIBarButtonItem *tmpFavoritesBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Add to Favorites" style:UIBarButtonItemStylePlain target:self action:@selector(addToFavoritesTapped)];
     UIBarButtonItem *tmpDiscardBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Discard" style:UIBarButtonItemStylePlain target:self action:@selector(discardButtonTapped)];
@@ -198,17 +153,18 @@
 
 - (void)discardButtonTapped
 {
-    // re-enable the collection view
-    [self.collectionView setScrollEnabled:YES];
-    
     if ( self.cachedToolbarItems ) {
         [self setToolbarItems:self.cachedToolbarItems animated:YES];
         [self setCachedToolbarItems:nil];
     }
     
+    // restore our edit button
+    [self.navigationItem setLeftBarButtonItem:self.customEditButton animated:YES];
+    
+    // and reset the UI
     UIImage *tmpNextImage = nil; // TODO: get the last-displayed one from the favorites or randoms
     
-    [UIView animateWithDuration:1.0f
+    [UIView animateWithDuration:kGIFMainViewControllerAnimationDuration
                      animations:^{
                          self.imageView.image = tmpNextImage;
     
@@ -241,17 +197,23 @@
 
 #warning temporary override
     if ( success || YES ) {
-        // re-enable the collection view
-        [self.collectionView setScrollEnabled:YES];
 
-        // reset the toolbar
-        if ( self.cachedToolbarItems ) {
-            [self setToolbarItems:self.cachedToolbarItems animated:YES];
-            [self setCachedToolbarItems:nil];
-        }
-        
-        NSInteger tmpTotalFavorites = 5;
-        [self setTitle:[NSString stringWithFormat:@"%ld of %ld",(long)tmpTotalFavorites,tmpTotalFavorites]];
+        [UIView animateWithDuration:kGIFMainViewControllerAnimationDuration
+                         animations:^{
+                             NSInteger tmpTotalFavorites = 5;
+                             [self setTitle:[NSString stringWithFormat:@"%ld of %ld",(long)tmpTotalFavorites,tmpTotalFavorites]];
+
+                             // reset the toolbar
+                             if ( self.cachedToolbarItems ) {
+                                 self.toolbarItems = self.cachedToolbarItems;
+                                 self.cachedToolbarItems = nil;
+                             }
+
+                         }];
+
+
+        // restore our edit button
+        [self.navigationItem setLeftBarButtonItem:self.customEditButton animated:YES];
     }
     else {
         // alert?
@@ -298,22 +260,6 @@
                                                        otherButtonTitles:@"Report Problem", nil];
 
     [tmpActionSheet showFromToolbar:self.navigationController.toolbar];
-}
-
-#pragma mark - Collection View
-- (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
-{
-    return 3;
-}
-
-- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
-{
-    UICollectionViewCell *rtnCell = [collectionView dequeueReusableCellWithReuseIdentifier:cellIdentifier forIndexPath:indexPath];
-    
-    // configure
-    [rtnCell setBackgroundColor:@[[UIColor redColor],[UIColor clearColor],[UIColor blueColor]][indexPath.row]];
-    
-    return rtnCell;
 }
 
 #pragma mark - Flipside View Controller

@@ -8,11 +8,13 @@
 
 #import "GIFFlipsideViewController.h"
 
-@interface GIFMainViewController : UICollectionViewController <GIFFlipsideViewControllerDelegate, UIPopoverControllerDelegate>
+@interface GIFMainViewController : UIViewController <GIFFlipsideViewControllerDelegate, UIPopoverControllerDelegate>
 
 @property (strong, nonatomic) UIPopoverController *flipsidePopoverController;
 
 @property (nonatomic, weak) IBOutlet UIImageView *imageView;
+
+@property (nonatomic, strong) IBOutlet UIBarButtonItem *customEditButton; // strong property to keep it around when not being displayed
 
 @property (nonatomic, weak) IBOutlet UITapGestureRecognizer *tapRecognizer;
 @property (nonatomic, weak) IBOutlet UITapGestureRecognizer *doubleTapRecognizer;

@@ -1,93 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="4510" systemVersion="12F37" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="Qaj-Jz-HYl">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="4510" systemVersion="13A584" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="Qaj-Jz-HYl">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3742"/>
     </dependencies>
     <scenes>
-        <!--Main View Controller - x of y-->
-        <scene sceneID="6Ld-qY-d8B">
-            <objects>
-                <collectionViewController autoresizesArchivedViewToFullSize="NO" id="euz-r7-eTv" customClass="GIFMainViewController" sceneMemberID="viewController">
-                    <collectionView key="view" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" pagingEnabled="YES" minimumZoomScale="0.0" maximumZoomScale="0.0" dataMode="prototypes" id="9q7-F0-pCt">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                        <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="0.0" minimumInteritemSpacing="0.0" id="39E-uZ-bT0">
-                            <size key="itemSize" width="320" height="568"/>
-                            <size key="headerReferenceSize" width="0.0" height="0.0"/>
-                            <size key="footerReferenceSize" width="0.0" height="0.0"/>
-                            <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
-                        </collectionViewFlowLayout>
-                        <imageView key="backgroundView" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" id="rNc-ED-EJ8">
-                            <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
-                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                        </imageView>
-                        <cells>
-                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="esJ-hz-ht1">
-                                <rect key="frame" x="0.0" y="64" width="320" height="568"/>
-                                <autoresizingMask key="autoresizingMask"/>
-                                <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                                    <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
-                                    <autoresizingMask key="autoresizingMask"/>
-                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                </view>
-                                <gestureRecognizers/>
-                            </collectionViewCell>
-                        </cells>
-                        <connections>
-                            <outlet property="dataSource" destination="euz-r7-eTv" id="yND-oA-ETT"/>
-                            <outlet property="delegate" destination="euz-r7-eTv" id="MuO-Uk-i8Q"/>
-                            <outletCollection property="gestureRecognizers" destination="eTj-bO-d2U" appends="YES" id="QpY-pW-6oC"/>
-                            <outletCollection property="gestureRecognizers" destination="Jj0-IH-60x" appends="YES" id="JPc-Dr-TW8"/>
-                        </connections>
-                    </collectionView>
-                    <toolbarItems>
-                        <barButtonItem systemItem="organize" id="7QY-HY-dgc">
-                            <connections>
-                                <segue destination="ikA-Ny-DXU" kind="modal" id="N7K-ya-a9q"/>
-                            </connections>
-                        </barButtonItem>
-                        <barButtonItem style="plain" systemItem="flexibleSpace" id="mwG-jU-0UA"/>
-                        <barButtonItem systemItem="action" id="rCI-KA-ZD3">
-                            <connections>
-                                <action selector="shareButtonTapped:" destination="euz-r7-eTv" id="dPv-Ig-OI5"/>
-                            </connections>
-                        </barButtonItem>
-                        <barButtonItem style="plain" systemItem="flexibleSpace" id="W2P-ar-CMj"/>
-                        <barButtonItem systemItem="trash" id="7EB-vr-GVH">
-                            <connections>
-                                <action selector="deleteButtonTapped:" destination="euz-r7-eTv" id="8hm-Fs-wq5"/>
-                            </connections>
-                        </barButtonItem>
-                    </toolbarItems>
-                    <navigationItem key="navigationItem" title="x of y" id="fV7-OD-VRj">
-                        <barButtonItem key="leftBarButtonItem" systemItem="edit" id="wyC-G0-Zxx">
-                            <connections>
-                                <segue destination="071-Jf-xhw" kind="modal" id="PC1-Tw-ODE"/>
-                            </connections>
-                        </barButtonItem>
-                    </navigationItem>
-                    <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
-                    <connections>
-                        <outlet property="doubleTapRecognizer" destination="Jj0-IH-60x" id="tst-dr-Ozv"/>
-                        <outlet property="imageView" destination="rNc-ED-EJ8" id="2ZG-Pj-QsX"/>
-                        <outlet property="tapRecognizer" destination="eTj-bO-d2U" id="JXy-te-Fol"/>
-                    </connections>
-                </collectionViewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="1vR-Qh-Uc2" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <tapGestureRecognizer numberOfTapsRequired="2" id="Jj0-IH-60x">
-                    <connections>
-                        <action selector="screenDoubleTapped:" destination="euz-r7-eTv" id="I2V-WZ-MRS"/>
-                    </connections>
-                </tapGestureRecognizer>
-                <tapGestureRecognizer id="eTj-bO-d2U">
-                    <connections>
-                        <action selector="screenTapped:" destination="euz-r7-eTv" id="wcl-ru-7ZJ"/>
-                    </connections>
-                </tapGestureRecognizer>
-            </objects>
-            <point key="canvasLocation" x="446" y="118"/>
-        </scene>
         <!--Navigation Controller-->
         <scene sceneID="qYW-7G-5qp">
             <objects>
@@ -101,7 +17,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="rem-gY-18h" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1041" y="878"/>
+            <point key="canvasLocation" x="937" y="626"/>
         </scene>
         <!--Edit Library View Controller - Edit GIFs-->
         <scene sceneID="OzW-eR-PQs">
@@ -129,7 +45,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="I4j-fX-Kel" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1524" y="878"/>
+            <point key="canvasLocation" x="1500" y="626"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="8JP-zc-vp7">
@@ -144,7 +60,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="f1Z-HJ-wLN" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1041" y="118"/>
+            <point key="canvasLocation" x="937" y="-134"/>
         </scene>
         <!--Flipside View Controller - Settings-->
         <scene sceneID="z9J-Vg-hzE">
@@ -171,11 +87,12 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="xlJ-1o-FvB" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1524" y="118"/>
+            <point key="canvasLocation" x="1500" y="-134"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="Q8X-dD-YtI">
             <objects>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="N3X-91-BAm" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <navigationController definesPresentationContext="YES" toolbarHidden="NO" id="Qaj-Jz-HYl" sceneMemberID="viewController">
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="ocq-yX-0rW">
                         <autoresizingMask key="autoresizingMask"/>
@@ -185,12 +102,84 @@
                         <autoresizingMask key="autoresizingMask"/>
                     </toolbar>
                     <connections>
-                        <segue destination="euz-r7-eTv" kind="relationship" relationship="rootViewController" id="ts7-vV-fVO"/>
+                        <segue destination="fuH-ao-EQr" kind="relationship" relationship="rootViewController" id="mF7-a3-w3Q"/>
                     </connections>
                 </navigationController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="N3X-91-BAm" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-73" y="118"/>
+            <point key="canvasLocation" x="-183" y="-134"/>
+        </scene>
+        <!--Main View Controller - x of y-->
+        <scene sceneID="d0f-mc-gMg">
+            <objects>
+                <viewController id="fuH-ao-EQr" customClass="GIFMainViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="Okh-fJ-1Sx"/>
+                        <viewControllerLayoutGuide type="bottom" id="jSn-8q-z6V"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="2SO-fH-T6Y">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="rNc-ED-EJ8">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="320" id="37d-i4-LKZ"/>
+                                </constraints>
+                            </imageView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <connections>
+                            <outletCollection property="gestureRecognizers" destination="Iy8-PC-bCG" appends="YES" id="9nQ-Ar-7Da"/>
+                            <outletCollection property="gestureRecognizers" destination="R48-dp-OWM" appends="YES" id="luw-HS-DnR"/>
+                        </connections>
+                    </view>
+                    <toolbarItems>
+                        <barButtonItem systemItem="organize" id="7QY-HY-dgc">
+                            <connections>
+                                <segue destination="ikA-Ny-DXU" kind="modal" id="N7K-ya-a9q"/>
+                            </connections>
+                        </barButtonItem>
+                        <barButtonItem style="plain" systemItem="flexibleSpace" id="mwG-jU-0UA"/>
+                        <barButtonItem systemItem="action" id="rCI-KA-ZD3">
+                            <connections>
+                                <action selector="shareButtonTapped:" destination="fuH-ao-EQr" id="rF7-O0-zhR"/>
+                            </connections>
+                        </barButtonItem>
+                        <barButtonItem style="plain" systemItem="flexibleSpace" id="W2P-ar-CMj"/>
+                        <barButtonItem systemItem="trash" id="7EB-vr-GVH">
+                            <connections>
+                                <action selector="deleteButtonTapped:" destination="fuH-ao-EQr" id="7P5-RO-hPt"/>
+                            </connections>
+                        </barButtonItem>
+                    </toolbarItems>
+                    <navigationItem key="navigationItem" title="x of y" id="DW6-Ch-8ko">
+                        <barButtonItem key="leftBarButtonItem" systemItem="edit" id="wyC-G0-Zxx">
+                            <connections>
+                                <segue destination="071-Jf-xhw" kind="modal" id="PC1-Tw-ODE"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                    <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
+                    <connections>
+                        <outlet property="doubleTapRecognizer" destination="R48-dp-OWM" id="Me4-WG-fo4"/>
+                        <outlet property="imageView" destination="rNc-ED-EJ8" id="D5U-ps-024"/>
+                        <outlet property="tapRecognizer" destination="Iy8-PC-bCG" id="0no-am-GQC"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="hlB-50-t5p" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <tapGestureRecognizer id="Iy8-PC-bCG">
+                    <connections>
+                        <action selector="screenTapped:" destination="fuH-ao-EQr" id="OU5-IZ-Ugn"/>
+                    </connections>
+                </tapGestureRecognizer>
+                <tapGestureRecognizer numberOfTapsRequired="2" id="R48-dp-OWM">
+                    <connections>
+                        <action selector="screenDoubleTapped:" destination="fuH-ao-EQr" id="VMB-Jo-m9u"/>
+                    </connections>
+                </tapGestureRecognizer>
+            </objects>
+            <point key="canvasLocation" x="369" y="-134"/>
         </scene>
     </scenes>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">

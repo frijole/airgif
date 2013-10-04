@@ -11,10 +11,10 @@
 @interface GIFLibrary : NSObject
 
 + (NSArray *)favorites;
-+ (NSArray *)random;
++ (NSArray *)randoms;
 
 // loads some random gif urls from picbot
-+ (BOOL)fetchRandom:(NSInteger)quantity;
++ (BOOL)fetchRandoms:(NSInteger)quantity;
 
 // adds image at address to favorites.
 // if a remote url, downloads and adds local url to favorites
