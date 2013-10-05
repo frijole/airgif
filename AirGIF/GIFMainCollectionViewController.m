@@ -1,23 +1,42 @@
 //
-//  GIFMainViewController.m
+//  GIFMainCollectionViewController.m
 //  AirGIF
 //
-//  Created by Ian Meyer on 9/20/13.
+//  Created by Ian Meyer on 10/4/13.
 //  Copyright (c) 2013 Ian Meyer. All rights reserved.
 //
 
-#import "GIFMainViewController.h"
+#import "GIFMainCollectionViewController.h"
 
 #import "UIImage+animatedGIF.h"
 #import "GIFActivityProvider.h"
 
 #import "GIFLibrary.h"
 
-#define cellIdentifier @"cellIdentifier"
+#define collectionCellIdentifier @"collectionCellIdentifier"
 
 #define kGIFMainViewControllerAnimationDuration 0.5f
 
-@interface GIFMainViewController ()
+@implementation GIFMainCollectionViewCell
+
+- (instancetype)initWithFrame:(CGRect)frame
+{
+    if ( self = [super initWithFrame:frame] )
+    {
+        // configure
+        UIImageView *tmpImageView = [[UIImageView alloc] initWithFrame:self.bounds];
+        [tmpImageView setClipsToBounds:YES];
+        [self addSubview:tmpImageView];
+        [self setImageView:tmpImageView];
+    }
+    
+    return self;
+}
+
+@end
+
+
+@interface GIFMainCollectionViewController ()
 
 @property (nonatomic) BOOL statusbarHidden;
 @property (nonatomic, strong) NSURL *openedURL;
@@ -27,7 +46,7 @@
 
 @end
 
-@implementation GIFMainViewController
+@implementation GIFMainCollectionViewController
 
 - (void)viewDidLoad
 {
@@ -36,9 +55,15 @@
     
     // load default image
     // NSURL *url = [[NSBundle mainBundle] URLForResource:@"gilles" withExtension:@"gif"];
-    NSURL *url = [[GIFLibrary randoms] firstObject];
-    self.imageView.image = [UIImage animatedImageWithAnimatedGIFURL:url];
-    self.openedURL = url;
+    // NSURL *url = [[GIFLibrary randoms] firstObject];
+    // self.imageView.image = [UIImage animatedImageWithAnimatedGIFURL:url];
+    // self.openedURL = url;
+    
+    // set up the cell size
+    [(UICollectionViewFlowLayout *)self.collectionViewLayout setItemSize:self.view.bounds.size];
+    
+    // register our collection view cell
+    [self.collectionView registerClass:[GIFMainCollectionViewCell class] forCellWithReuseIdentifier:collectionCellIdentifier];
     
     // image view is ScaleAspectFill in storyboard, set default value here.
     self.scaleImages = YES;
@@ -46,7 +71,6 @@
     // tweak the tap handling
     [self.tapRecognizer requireGestureRecognizerToFail:self.doubleTapRecognizer];
 }
-
 
 - (void)viewWillDisappear:(BOOL)animated
 {
@@ -66,6 +90,19 @@
     // Dispose of any resources that can be recreated.
 }
 
+-(void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation
+                               duration:(NSTimeInterval)duration
+{
+    //self.collectionView.bounds are still the last size...not the new size here
+}
+
+- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation
+{
+    [(UICollectionViewFlowLayout *)self.collectionView.collectionViewLayout setItemSize:self.view.bounds.size];
+    [self.collectionView.collectionViewLayout invalidateLayout];
+    [self.collectionView reloadData];
+}
+
 - (IBAction)screenTapped:(id)sender
 {
     if ( self.statusbarHidden )
@@ -81,19 +118,19 @@
     // reload display
     [UIView animateWithDuration:kGIFMainViewControllerAnimationDuration/2
                      animations:^{
-                         // hide the image
-                         [self.imageView setAlpha:0.0f];
+                         // hide the collection view
+                         [self.collectionView setAlpha:0.0f];
                      }
                      completion:^(BOOL finished) {
                          if ( finished ) {
                              
-                             // update the contentMode
-                             [self.imageView setContentMode:(self.scaleImages?UIViewContentModeScaleAspectFill:UIViewContentModeScaleAspectFit)];
+                             // update the contentMode in the cells by calling...
+                             [self.collectionView reloadData];
                              
                              // and bring it back
                              [UIView animateWithDuration:kGIFMainViewControllerAnimationDuration/2
                                               animations:^{
-                                                  [self.imageView setAlpha:1.0f];
+                                                  [self.collectionView setAlpha:1.0f];
                                               }];
                          }
                      }];
@@ -118,7 +155,15 @@
 {
     [self setOpenedURL:url];
     
-    [self.imageView setImage:[UIImage animatedImageWithAnimatedGIFURL:url]];
+    // [self.imageView setAlpha:1.0f];
+    // [self.imageView setHidden:NO];
+    // [self.imageView setImage:[UIImage animatedImageWithAnimatedGIFURL:url]];
+    
+    // stop scrolling
+    [self.collectionView setScrollEnabled:NO];
+    
+    // hijack the current cell
+    [[(GIFMainCollectionViewCell *)[[self.collectionView visibleCells] firstObject] imageView] setImage:[UIImage animatedImageWithAnimatedGIFURL:url]];
     
     [self.navigationItem setTitle:url.lastPathComponent];
     
@@ -162,14 +207,17 @@
     // restore our edit button
     [self.navigationItem setLeftBarButtonItem:self.customEditButton animated:YES];
     
-    // and reset the UI
-    UIImage *tmpNextImage = nil; // TODO: get the last-displayed one from the favorites or randoms
-    
+    // and the rest of the UI, too
     [UIView animateWithDuration:kGIFMainViewControllerAnimationDuration
                      animations:^{
-                         self.imageView.image = tmpNextImage;
-    
+                         [self.collectionView reloadItemsAtIndexPaths:[self.collectionView indexPathsForVisibleItems]];
+                         
                          self.navigationItem.title = @"x of y";
+                     }
+                     completion:^(BOOL finished) {
+                         if ( finished ) {
+                             [self.collectionView setScrollEnabled:YES];
+                         }
                      }];
 }
 
@@ -187,32 +235,38 @@
     }
     else {
         // is remote, download into Documents and save path
-
+        
         savedDocumentURL = [NSURL URLWithString:@"file://"];
     }
-
+    
     BOOL success = [GIFLibrary addToFavorites:savedDocumentURL];
-
+    
     // did it work?
     NSLog(@"added to favorites: %d",success);
-
-#warning temporary override
-    if ( success || YES ) {
-
+    
+    if ( success ) {
+        
         [UIView animateWithDuration:kGIFMainViewControllerAnimationDuration
                          animations:^{
-                             NSInteger tmpTotalFavorites = 5;
+                             NSInteger tmpTotalFavorites = [GIFLibrary favorites].count;
                              [self setTitle:[NSString stringWithFormat:@"%ld of %ld",(long)tmpTotalFavorites,tmpTotalFavorites]];
-
+                             
+                             // and reset the collection view cell on screen
+                             [self.collectionView reloadItemsAtIndexPaths:[self.collectionView indexPathsForVisibleItems]];
+                             
                              // reset the toolbar
                              if ( self.cachedToolbarItems ) {
-                                 self.toolbarItems = self.cachedToolbarItems;
-                                 self.cachedToolbarItems = nil;
+                                 [self setToolbarItems:self.cachedToolbarItems];
+                                 [self setCachedToolbarItems:nil];
                              }
-
+                         }
+                         completion:^(BOOL finished) {
+                             if ( finished ) {
+                                 // re-enable scrolling
+                                 [self.collectionView setScrollEnabled:YES];
+                             }
                          }];
-
-
+        
         // restore our edit button
         [self.navigationItem setLeftBarButtonItem:self.customEditButton animated:YES];
     }
@@ -225,21 +279,21 @@
 {
     GIFActivityProvider *activityProvider = [[GIFActivityProvider alloc] initWithData:[NSData dataWithContentsOfURL:self.openedURL]];
     UIActivityViewController *activityController = [[UIActivityViewController alloc] initWithActivityItems:@[activityProvider] applicationActivities:nil];
-
+    
     /*
-    [activityController setCompletionHandler:^(NSString *activityType, BOOL completed){
-        if ( completed ) {
-            if ( [activityType isEqualToString:UIActivityTypeCopyToPasteboard] ) {
-                // custom copy to pasteboard?
-                NSData *gifData = [NSData dataWithContentsOfURL:url];
-                UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
-                [pasteboard setData:gifData forPasteboardType:@"com.compuserve.gif"];
-            }
-            else if ( [activityType isEqualToString:UIActivityTypeMail] ) {
-                NSLog(@"mailed");
-            }
-        }
-    }];
+     [activityController setCompletionHandler:^(NSString *activityType, BOOL completed){
+     if ( completed ) {
+     if ( [activityType isEqualToString:UIActivityTypeCopyToPasteboard] ) {
+     // custom copy to pasteboard?
+     NSData *gifData = [NSData dataWithContentsOfURL:url];
+     UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
+     [pasteboard setData:gifData forPasteboardType:@"com.compuserve.gif"];
+     }
+     else if ( [activityType isEqualToString:UIActivityTypeMail] ) {
+     NSLog(@"mailed");
+     }
+     }
+     }];
      */
     
     [activityController setExcludedActivityTypes:[NSArray arrayWithObjects:UIActivityTypePrint, // print a gif? lulz.
@@ -250,7 +304,7 @@
                                                   nil]];
     
     [self presentViewController:activityController animated:YES completion:nil];
-
+    
 }
 
 - (void)deleteButtonTapped:(id)sender
@@ -259,47 +313,31 @@
                                                                 delegate:nil
                                                        cancelButtonTitle:@"Cancel" destructiveButtonTitle:@"Delete GIF"
                                                        otherButtonTitles:@"Report Problem", nil];
-
+    
     [tmpActionSheet showFromToolbar:self.navigationController.toolbar];
 }
 
-#pragma mark - Flipside View Controller
-
-- (void)flipsideViewControllerDidFinish:(GIFFlipsideViewController *)controller
+#pragma mark - Collection View
+- (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView
 {
-    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
-        [self dismissViewControllerAnimated:YES completion:nil];
-    } else {
-        [self.flipsidePopoverController dismissPopoverAnimated:YES];
-    }
+    return 1;
 }
 
-- (void)popoverControllerDidDismissPopover:(UIPopoverController *)popoverController
+- (NSInteger)collectionView:(UICollectionView *)collectionView
+     numberOfItemsInSection:(NSInteger)section
 {
-    self.flipsidePopoverController = nil;
+    return [GIFLibrary randoms].count;
 }
 
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView
+                  cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    if ([[segue identifier] isEqualToString:@"showAlternate"]) {
-        // [[segue destinationViewController] setDelegate:self];
-        
-        if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
-            UIPopoverController *popoverController = [(UIStoryboardPopoverSegue *)segue popoverController];
-            self.flipsidePopoverController = popoverController;
-            popoverController.delegate = self;
-        }
-    }
-}
+    GIFMainCollectionViewCell *rtnCell = [collectionView dequeueReusableCellWithReuseIdentifier:collectionCellIdentifier forIndexPath:indexPath];
+    
+    [rtnCell.imageView setImage:[UIImage animatedImageWithAnimatedGIFURL:[GIFLibrary randoms][indexPath.row]]];
+    [rtnCell.imageView setContentMode:(self.scaleImages?UIViewContentModeScaleAspectFill:UIViewContentModeScaleAspectFit)];
 
-- (IBAction)togglePopover:(id)sender
-{
-    if (self.flipsidePopoverController) {
-        [self.flipsidePopoverController dismissPopoverAnimated:YES];
-        self.flipsidePopoverController = nil;
-    } else {
-        [self performSegueWithIdentifier:@"showAlternate" sender:sender];
-    }
+    return rtnCell;
 }
 
 @end

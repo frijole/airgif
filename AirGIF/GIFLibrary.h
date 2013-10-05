@@ -8,6 +8,10 @@
 
 #import <Foundation/Foundation.h>
 
+
+// Set up some NSUserDefault keys
+#define kGIFLibraryUserDefaultsKeyResetURLs @"resetURLs"
+
 @interface GIFLibrary : NSObject
 
 + (NSArray *)favorites;
