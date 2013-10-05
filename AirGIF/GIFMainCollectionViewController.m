@@ -206,11 +206,13 @@
     
     // restore our edit button
     [self.navigationItem setLeftBarButtonItem:self.customEditButton animated:YES];
-    
+
+    // the collection view
+    [self.collectionView reloadData];
+
     // and the rest of the UI, too
     [UIView animateWithDuration:kGIFMainViewControllerAnimationDuration
                      animations:^{
-                         [self.collectionView reloadItemsAtIndexPaths:[self.collectionView indexPathsForVisibleItems]];
                          
                          self.navigationItem.title = @"x of y";
                      }
@@ -246,13 +248,16 @@
     
     if ( success ) {
         
+        // scroll to it silently
+        [self.collectionView reloadData];
+        [self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:[GIFLibrary favorites].count-1 inSection:0]
+                                    atScrollPosition:UICollectionViewScrollPositionCenteredHorizontally animated:NO];
+
+        // and take care of the rest of the ui too.
         [UIView animateWithDuration:kGIFMainViewControllerAnimationDuration
                          animations:^{
                              NSInteger tmpTotalFavorites = [GIFLibrary favorites].count;
                              [self setTitle:[NSString stringWithFormat:@"%ld of %ld",(long)tmpTotalFavorites,tmpTotalFavorites]];
-                             
-                             // and reset the collection view cell on screen
-                             [self.collectionView reloadItemsAtIndexPaths:[self.collectionView indexPathsForVisibleItems]];
                              
                              // reset the toolbar
                              if ( self.cachedToolbarItems ) {
