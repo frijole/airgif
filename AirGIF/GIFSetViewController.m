@@ -24,8 +24,6 @@
 @property (nonatomic, strong) NSURL *openedURL;
 @property (nonatomic) BOOL scaleImages; // default YES, UIViewContentModeScaleAspectFill. NO results in UIViewContentModeScaleAspectFit.
 
-@property (nonatomic, strong) NSArray *cachedToolbarItems;
-
 @end
 
 @implementation GIFSetViewController
@@ -144,75 +142,6 @@
 - (UIStatusBarAnimation)preferredStatusBarUpdateAnimation
 {
     return UIStatusBarAnimationSlide;
-}
-
-- (void)discardButtonTapped
-{
-    if ( self.cachedToolbarItems ) {
-        [self setToolbarItems:self.cachedToolbarItems animated:YES];
-        [self setCachedToolbarItems:nil];
-    }
-    
-    // restore our edit button
-    [self.navigationItem setLeftBarButtonItem:self.customEditButton animated:YES];
-    
-    // and reset the UI
-    UIImage *tmpNextImage = nil; // TODO: get the last-displayed one from the favorites or randoms
-    
-    [UIView animateWithDuration:kGIFSetViewControllerAnimationDuration
-                     animations:^{
-                         self.imageView.image = tmpNextImage;
-    
-                         self.navigationItem.title = @"x of y";
-                     }];
-}
-
-- (void)addToFavoritesTapped
-{
-    NSAssert(self.openedURL, @"addToFavorites tapped, but no openedURL set");
-    
-    // check url, if a file, copy to Documents folder, and add url there to favorites
-    NSURL *savedDocumentURL;
-    
-    if ( self.openedURL.isFileURL ) {
-        // is file, check for location, move to Documents if necessary and save final path
-        
-        savedDocumentURL = [NSURL URLWithString:@"file://"];
-    }
-    else {
-        // is remote, download into Documents and save path
-
-        savedDocumentURL = [NSURL URLWithString:@"file://"];
-    }
-
-    BOOL success = [GIFLibrary addToFavorites:savedDocumentURL];
-
-    // did it work?
-    NSLog(@"added to favorites: %d",success);
-
-#warning temporary override
-    if ( success ) {
-
-        [UIView animateWithDuration:kGIFSetViewControllerAnimationDuration
-                         animations:^{
-                             NSInteger tmpTotalFavorites = 5;
-                             [self setTitle:[NSString stringWithFormat:@"%ld of %ld",(long)tmpTotalFavorites,(long)tmpTotalFavorites]];
-
-                             // reset the toolbar
-                             if ( self.cachedToolbarItems ) {
-                                 self.toolbarItems = self.cachedToolbarItems;
-                                 self.cachedToolbarItems = nil;
-                             }
-
-                         }];
-
-
-        // restore our edit button
-        [self.navigationItem setLeftBarButtonItem:self.customEditButton animated:YES];
-    }
-    else {
-        // alert?
-    }
 }
 
 - (void)shareButtonTapped:(id)sender
