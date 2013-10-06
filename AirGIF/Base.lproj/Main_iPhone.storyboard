@@ -120,23 +120,34 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="rNc-ED-EJ8">
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Vag-ir-0Cd">
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                            </imageView>
+                                <subviews>
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="rNc-ED-EJ8">
+                                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <color key="backgroundColor" red="0.89607208969999996" green="0.26263967160000001" blue="0.02769316174" alpha="1" colorSpace="calibratedRGB"/>
+                                    </imageView>
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="36D-Dq-dIF">
+                                        <rect key="frame" x="320" y="0.0" width="320" height="568"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <color key="backgroundColor" red="0.99874329569999998" green="0.92174136640000004" blue="0.039589270949999998" alpha="1" colorSpace="calibratedRGB"/>
+                                    </imageView>
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="vie-QQ-krH">
+                                        <rect key="frame" x="640" y="0.0" width="320" height="568"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <color key="backgroundColor" red="0.0" green="0.86048689140000001" blue="0.32249239229999999" alpha="1" colorSpace="calibratedRGB"/>
+                                    </imageView>
+                                </subviews>
+                                <color key="backgroundColor" red="0.97899329660000001" green="0.0" blue="0.99911600349999996" alpha="1" colorSpace="calibratedRGB"/>
+                                <connections>
+                                    <outletCollection property="gestureRecognizers" destination="Iy8-PC-bCG" appends="YES" id="ThI-r7-SbA"/>
+                                    <outletCollection property="gestureRecognizers" destination="R48-dp-OWM" appends="YES" id="MhT-b5-NA3"/>
+                                </connections>
+                            </scrollView>
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
-                        <constraints>
-                            <constraint firstItem="rNc-ED-EJ8" firstAttribute="leading" secondItem="2SO-fH-T6Y" secondAttribute="leading" id="8Ae-9q-UBM"/>
-                            <constraint firstAttribute="bottom" secondItem="rNc-ED-EJ8" secondAttribute="bottom" id="Daw-qn-PpR"/>
-                            <constraint firstAttribute="trailing" secondItem="rNc-ED-EJ8" secondAttribute="trailing" id="KCP-Xg-fBf"/>
-                            <constraint firstItem="rNc-ED-EJ8" firstAttribute="top" secondItem="2SO-fH-T6Y" secondAttribute="top" id="nZL-ew-aSz"/>
-                        </constraints>
-                        <connections>
-                            <outletCollection property="gestureRecognizers" destination="Iy8-PC-bCG" appends="YES" id="9nQ-Ar-7Da"/>
-                            <outletCollection property="gestureRecognizers" destination="R48-dp-OWM" appends="YES" id="luw-HS-DnR"/>
-                        </connections>
                     </view>
                     <toolbarItems>
                         <barButtonItem systemItem="organize" id="7QY-HY-dgc">
@@ -167,7 +178,10 @@
                     <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
                         <outlet property="doubleTapRecognizer" destination="R48-dp-OWM" id="Me4-WG-fo4"/>
-                        <outlet property="imageView" destination="rNc-ED-EJ8" id="D5U-ps-024"/>
+                        <outlet property="imageView" destination="36D-Dq-dIF" id="AOZ-cj-rcR"/>
+                        <outlet property="nextImageView" destination="vie-QQ-krH" id="JiK-p7-e0s"/>
+                        <outlet property="previousImageView" destination="rNc-ED-EJ8" id="9mV-vn-56X"/>
+                        <outlet property="scrollView" destination="Vag-ir-0Cd" id="5dB-4X-p1p"/>
                         <outlet property="tapRecognizer" destination="Iy8-PC-bCG" id="0no-am-GQC"/>
                         <segue destination="CBn-2t-olR" kind="modal" identifier="openURL" id="5VF-Zj-Fhr"/>
                     </connections>

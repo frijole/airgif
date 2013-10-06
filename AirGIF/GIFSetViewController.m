@@ -33,6 +33,10 @@
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
     
+    [self setAutomaticallyAdjustsScrollViewInsets:NO];
+    
+    [self.view setUserInteractionEnabled:YES];
+    
     // load default image
     // NSURL *url = [[NSBundle mainBundle] URLForResource:@"gilles" withExtension:@"gif"];
     NSURL *url = [[GIFLibrary favorites] firstObject];
@@ -46,15 +50,13 @@
     [self.tapRecognizer requireGestureRecognizerToFail:self.doubleTapRecognizer];
 }
 
-/*
-#warning for testing
-- (void)viewDidAppear:(BOOL)animated
+- (void)viewWillAppear:(BOOL)animated
 {
-    [self performSelector:@selector(openURL:)
-               withObject:[NSURL URLWithString:@"http://31.media.tumblr.com/17304b5d47e174685c62f61c9d2ffce3/tumblr_mriia3bgMp1r2vcn2o1_500.gif"]
-               afterDelay:1.0f];
+    [super viewWillAppear:animated];
+    
+    [self.scrollView setContentSize:CGSizeMake(CGRectGetMaxX(self.nextImageView.frame), CGRectGetMaxY(self.nextImageView.frame))];
+    [self.scrollView setContentOffset:CGPointMake(320.0f, 0.0f)];
 }
-*/
 
 - (void)viewWillDisappear:(BOOL)animated
 {
