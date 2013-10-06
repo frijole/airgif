@@ -19,18 +19,20 @@
 
 @implementation GIFMainCollectionViewCell
 
-- (instancetype)initWithFrame:(CGRect)frame
+- (void)awakeFromNib
 {
-    if ( self = [super initWithFrame:frame] )
-    {
-        // configure
-        UIImageView *tmpImageView = [[UIImageView alloc] initWithFrame:self.bounds];
-        [tmpImageView setClipsToBounds:YES];
-        [self addSubview:tmpImageView];
-        [self setImageView:tmpImageView];
-    }
+    [super awakeFromNib];
     
-    return self;
+    [self.imageView setClipsToBounds:YES];
+}
+
+- (void)setGIF:(UIImage *)GIF
+{
+    // set the first frame to the image view. when the collection view is done scrolling, it'll load the animated image into the visibie cells. or something like that.
+    _GIF = GIF;
+    
+//    [self.imageView setImage:[GIF images].firstObject];
+    [self.imageView setImage:GIF];
 }
 
 @end
@@ -41,6 +43,8 @@
 @property (nonatomic) BOOL statusbarHidden;
 @property (nonatomic, strong) NSURL *openedURL;
 @property (nonatomic) BOOL scaleImages; // default YES, UIViewContentModeScaleAspectFill. NO results in UIViewContentModeScaleAspectFit.
+
+@property (nonatomic, strong) NSIndexPath *currentItem;
 
 @property (nonatomic, strong) NSArray *cachedToolbarItems;
 
@@ -59,11 +63,16 @@
     // self.imageView.image = [UIImage animatedImageWithAnimatedGIFURL:url];
     // self.openedURL = url;
     
+    // ???
+    [self setAutomaticallyAdjustsScrollViewInsets:NO];
+    
     // set up the cell size
-    [(UICollectionViewFlowLayout *)self.collectionViewLayout setItemSize:self.view.bounds.size];
+    [(UICollectionViewFlowLayout *)self.collectionViewLayout setItemSize:[UIScreen mainScreen].bounds.size];
+    NSLog(@"set item size: %@",NSStringFromCGSize([UIScreen mainScreen].bounds.size));
+    NSLog(@"collection view frame: %@",NSStringFromCGRect(self.collectionView.frame));
     
     // register our collection view cell
-    [self.collectionView registerClass:[GIFMainCollectionViewCell class] forCellWithReuseIdentifier:collectionCellIdentifier];
+    // [self.collectionView registerClass:[GIFMainCollectionViewCell class] forCellWithReuseIdentifier:collectionCellIdentifier];
     
     // image view is ScaleAspectFill in storyboard, set default value here.
     self.scaleImages = YES;
@@ -88,19 +97,6 @@
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
-}
-
--(void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation
-                               duration:(NSTimeInterval)duration
-{
-    //self.collectionView.bounds are still the last size...not the new size here
-}
-
-- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation
-{
-    [(UICollectionViewFlowLayout *)self.collectionView.collectionViewLayout setItemSize:self.view.bounds.size];
-    [self.collectionView.collectionViewLayout invalidateLayout];
-    [self.collectionView reloadData];
 }
 
 - (IBAction)screenTapped:(id)sender
@@ -331,7 +327,7 @@
 - (NSInteger)collectionView:(UICollectionView *)collectionView
      numberOfItemsInSection:(NSInteger)section
 {
-    return [GIFLibrary randoms].count;
+    return [GIFLibrary favorites].count;
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView
@@ -339,10 +335,75 @@
 {
     GIFMainCollectionViewCell *rtnCell = [collectionView dequeueReusableCellWithReuseIdentifier:collectionCellIdentifier forIndexPath:indexPath];
     
-    [rtnCell.imageView setImage:[UIImage animatedImageWithAnimatedGIFURL:[GIFLibrary randoms][indexPath.row]]];
+    [rtnCell setGIF:[UIImage animatedImageWithAnimatedGIFURL:[GIFLibrary favorites][indexPath.row]]];
     [rtnCell.imageView setContentMode:(self.scaleImages?UIViewContentModeScaleAspectFill:UIViewContentModeScaleAspectFit)];
 
+//    if ( !self.collectionView.isDragging )
+//        rtnCell.imageView.image = rtnCell.GIF;
+    
     return rtnCell;
+}
+
+//- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView
+//{
+//    for ( GIFMainCollectionViewCell *tmpCell in [self.collectionView visibleCells] ) {
+//        tmpCell.imageView.image = tmpCell.GIF.images.firstObject;
+//    }
+//}
+
+//- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
+//{
+//    for ( GIFMainCollectionViewCell *tmpCell in [self.collectionView visibleCells] ) {
+//        tmpCell.imageView.image = tmpCell.GIF;
+//    }
+//}
+
+#pragma mark - Scrolling
+- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate
+{
+    if ( !decelerate )
+        [self scrollViewDidEndDecelerating:scrollView];
+}
+
+- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
+{
+    self.currentItem = self.collectionView.indexPathsForVisibleItems.firstObject;
+}
+
+#pragma mark - Rotation
+-(void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation
+                               duration:(NSTimeInterval)duration
+//- (void)willAnimateRotationToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation
+//                                         duration:(NSTimeInterval)duration
+{
+    CGSize tmpSize;
+    
+    CGFloat tmpScreenHeight = [UIScreen mainScreen].bounds.size.height;
+    CGFloat tmpScreenWidth = [UIScreen mainScreen].bounds.size.width;
+    
+    switch ( toInterfaceOrientation ) {
+        case UIInterfaceOrientationLandscapeLeft:
+        case UIInterfaceOrientationLandscapeRight:
+            tmpSize = CGSizeMake(tmpScreenHeight, tmpScreenWidth);
+            break;
+            
+        case UIInterfaceOrientationPortrait:
+        default:
+            tmpSize = CGSizeMake(tmpScreenWidth, tmpScreenHeight);
+            break;
+    }
+    
+    [(UICollectionViewFlowLayout *)self.collectionView.collectionViewLayout setItemSize:tmpSize];
+    [self.collectionView.collectionViewLayout invalidateLayout];
+}
+
+- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation
+{
+    //    [(UICollectionViewFlowLayout *)self.collectionView.collectionViewLayout setItemSize:self.view.bounds.size];
+    //    [self.collectionView.collectionViewLayout invalidateLayout];
+    //    [self.collectionView reloadData];
+
+    [self.collectionView scrollToItemAtIndexPath:self.currentItem atScrollPosition:UICollectionViewScrollPositionCenteredHorizontally animated:YES];
 }
 
 @end

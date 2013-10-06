@@ -17,15 +17,26 @@ static NSMutableArray *_favorites = nil;
     
     if ( !_favorites ) {
         // load from disk
+        
+        /*
         NSArray *cacheDirectories = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);
         NSString *tmpAddressFilePath = [NSString stringWithFormat:@"%@/%@",[cacheDirectories objectAtIndex:0],@"favorites"];
         NSArray *tmpFavoritesFromDisk = [NSKeyedUnarchiver unarchiveObjectWithFile:tmpAddressFilePath];
         _favorites = [NSMutableArray arrayWithArray:tmpFavoritesFromDisk];
+         */
     }
     
     if ( !_favorites ) {
         // loading failed
         _favorites = [NSMutableArray array];
+        
+        NSArray *tmpDefaults = [NSArray arrayWithObjects:
+                                [[NSBundle mainBundle] URLForResource:@"senna prost" withExtension:@"gif"],
+                                [[NSBundle mainBundle] URLForResource:@"rally" withExtension:@"gif"],
+                                [[NSBundle mainBundle] URLForResource:@"gilles" withExtension:@"gif"],
+                                nil];
+        
+        _favorites = [NSMutableArray arrayWithArray:tmpDefaults];
     }
     
     return _favorites;
@@ -71,9 +82,6 @@ static NSMutableArray *_favorites = nil;
         _randoms = [NSMutableArray array];
 
         NSArray *tmpDefaults = [NSArray arrayWithObjects:
-                                [[NSBundle mainBundle] URLForResource:@"senna prost" withExtension:@"gif"],
-                                [[NSBundle mainBundle] URLForResource:@"rally" withExtension:@"gif"],
-                                [[NSBundle mainBundle] URLForResource:@"gilles" withExtension:@"gif"],
                                 [NSURL URLWithString:@"http://25.media.tumblr.com/0a9f27187f486be9d24a4760b89ac03a/tumblr_mgn52pl4hI1qg39ewo1_500.gif"],
                                 [NSURL URLWithString:@"http://25.media.tumblr.com/4d6bfe7484da35cf9dd235d60109fe47/tumblr_mg6ld5tbaG1qehntzo1_500.gif"],
                                 [NSURL URLWithString:@"http://24.media.tumblr.com/tumblr_m7dbzmGd4n1qzqdulo1_500.gif"],

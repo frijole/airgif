@@ -10,6 +10,7 @@
 
 @interface GIFMainCollectionViewCell : UICollectionViewCell
 
+@property (nonatomic, strong) UIImage *GIF;
 @property (nonatomic, weak) IBOutlet UIImageView *imageView;
 
 @end

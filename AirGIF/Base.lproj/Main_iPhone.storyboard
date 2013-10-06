@@ -17,7 +17,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="rem-gY-18h" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="937" y="626"/>
+            <point key="canvasLocation" x="1097" y="626"/>
         </scene>
         <!--Edit Library View Controller - Edit GIFs-->
         <scene sceneID="OzW-eR-PQs">
@@ -45,7 +45,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="I4j-fX-Kel" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1500" y="626"/>
+            <point key="canvasLocation" x="1660" y="626"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="8JP-zc-vp7">
@@ -60,7 +60,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="f1Z-HJ-wLN" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="937" y="-134"/>
+            <point key="canvasLocation" x="1097" y="-134"/>
         </scene>
         <!--Flipside View Controller - Settings-->
         <scene sceneID="z9J-Vg-hzE">
@@ -87,7 +87,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="xlJ-1o-FvB" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1500" y="-134"/>
+            <point key="canvasLocation" x="1660" y="-134"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="Q8X-dD-YtI">
@@ -101,12 +101,12 @@
                         <autoresizingMask key="autoresizingMask"/>
                     </toolbar>
                     <connections>
-                        <segue destination="NaL-cA-paF" kind="relationship" relationship="rootViewController" id="RBm-fl-3GT"/>
+                        <segue destination="NaL-cA-paF" kind="relationship" relationship="rootViewController" id="IXO-Zx-tdo"/>
                     </connections>
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="N3X-91-BAm" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-183" y="-134"/>
+            <point key="canvasLocation" x="-255" y="-142"/>
         </scene>
         <!--Main View Controller - x of y-->
         <scene sceneID="d0f-mc-gMg">
@@ -199,7 +199,7 @@
                             <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                         </collectionViewFlowLayout>
                         <cells>
-                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="G27-A8-CL6">
+                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="collectionCellIdentifier" id="G27-A8-CL6" customClass="GIFMainCollectionViewCell">
                                 <rect key="frame" x="0.0" y="188" width="320" height="320"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
@@ -207,18 +207,22 @@
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="uki-K8-TBZ">
-                                            <rect key="frame" x="0.0" y="0.0" width="320" height="320"/>
+                                            <rect key="frame" x="1" y="1" width="318" height="318"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                         </imageView>
                                     </subviews>
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 </view>
+                                <color key="backgroundColor" red="0.89607208969999996" green="0.26263967160000001" blue="0.02769316174" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
-                                    <constraint firstAttribute="trailing" secondItem="uki-K8-TBZ" secondAttribute="trailing" id="AW9-aQ-Q9H"/>
-                                    <constraint firstAttribute="bottom" secondItem="uki-K8-TBZ" secondAttribute="bottom" id="TDP-u7-TwR"/>
-                                    <constraint firstItem="uki-K8-TBZ" firstAttribute="leading" secondItem="G27-A8-CL6" secondAttribute="leading" id="hIJ-lW-ZiN"/>
-                                    <constraint firstItem="uki-K8-TBZ" firstAttribute="top" secondItem="G27-A8-CL6" secondAttribute="top" id="t4b-qy-aKL"/>
+                                    <constraint firstAttribute="trailing" secondItem="uki-K8-TBZ" secondAttribute="trailing" constant="1" id="8Yg-Wk-lt7"/>
+                                    <constraint firstAttribute="bottom" secondItem="uki-K8-TBZ" secondAttribute="bottom" constant="1" id="EGx-JS-6rZ"/>
+                                    <constraint firstItem="uki-K8-TBZ" firstAttribute="top" secondItem="G27-A8-CL6" secondAttribute="top" constant="1" id="FDs-ec-JKx"/>
+                                    <constraint firstItem="uki-K8-TBZ" firstAttribute="leading" secondItem="G27-A8-CL6" secondAttribute="leading" constant="1" id="zvT-gc-D6F"/>
                                 </constraints>
+                                <connections>
+                                    <outlet property="imageView" destination="uki-K8-TBZ" id="2xS-xh-drt"/>
+                                </connections>
                             </collectionViewCell>
                         </cells>
                         <connections>
@@ -280,7 +284,7 @@
         <simulatedScreenMetrics key="destination" type="retina4"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="piB-6f-eLp"/>
         <segue reference="EsK-eO-1rY"/>
+        <segue reference="piB-6f-eLp"/>
     </inferredMetricsTieBreakers>
 </document>
