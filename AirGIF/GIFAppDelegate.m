@@ -8,7 +8,7 @@
 
 #import "GIFAppDelegate.h"
 
-#import "GIFMainViewController.h"
+#import "GIFSetViewController.h"
 
 @implementation GIFAppDelegate
 
@@ -25,7 +25,7 @@
         if ( [rootViewController respondsToSelector:@selector(viewControllers)] &&
             [[[rootViewController viewControllers] firstObject] respondsToSelector:@selector(openURL:)] )
         {
-            [(GIFMainViewController *)[[rootViewController viewControllers] firstObject] openURL:url];
+            [(GIFSetViewController *)[[rootViewController viewControllers] firstObject] openURL:url];
         }
     }
     
@@ -49,7 +49,7 @@
     if ( [rootViewController respondsToSelector:@selector(viewControllers)] &&
         [[[rootViewController viewControllers] firstObject] respondsToSelector:@selector(openURL:)] )
     {
-        [(GIFMainViewController *)[[rootViewController viewControllers] firstObject] openURL:url];
+        [(GIFSetViewController *)[[rootViewController viewControllers] firstObject] openURL:url];
     }
     
     return YES;

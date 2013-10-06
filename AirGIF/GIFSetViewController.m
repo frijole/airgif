@@ -1,23 +1,24 @@
 //
-//  GIFMainViewController.m
+//  GIFSetViewController.m
 //  AirGIF
 //
 //  Created by Ian Meyer on 9/20/13.
 //  Copyright (c) 2013 Ian Meyer. All rights reserved.
 //
 
-#import "GIFMainViewController.h"
+#import "GIFSetViewController.h"
+#import "GIFSoloViewController.h"
 
 #import "UIImage+animatedGIF.h"
 #import "GIFActivityProvider.h"
 
 #import "GIFLibrary.h"
 
-#define cellIdentifier @"cellIdentifier"
+#define cellIdentifier @"setCellIdentifier"
 
-#define kGIFMainViewControllerAnimationDuration 0.5f
+#define kGIFSetViewControllerAnimationDuration 0.5f
 
-@interface GIFMainViewController ()
+@interface GIFSetViewController ()
 
 @property (nonatomic) BOOL statusbarHidden;
 @property (nonatomic, strong) NSURL *openedURL;
@@ -27,7 +28,7 @@
 
 @end
 
-@implementation GIFMainViewController
+@implementation GIFSetViewController
 
 - (void)viewDidLoad
 {
@@ -36,7 +37,7 @@
     
     // load default image
     // NSURL *url = [[NSBundle mainBundle] URLForResource:@"gilles" withExtension:@"gif"];
-    NSURL *url = [[GIFLibrary randoms] firstObject];
+    NSURL *url = [[GIFLibrary favorites] firstObject];
     self.imageView.image = [UIImage animatedImageWithAnimatedGIFURL:url];
     self.openedURL = url;
     
@@ -47,6 +48,15 @@
     [self.tapRecognizer requireGestureRecognizerToFail:self.doubleTapRecognizer];
 }
 
+/*
+#warning for testing
+- (void)viewDidAppear:(BOOL)animated
+{
+    [self performSelector:@selector(openURL:)
+               withObject:[NSURL URLWithString:@"http://31.media.tumblr.com/17304b5d47e174685c62f61c9d2ffce3/tumblr_mriia3bgMp1r2vcn2o1_500.gif"]
+               afterDelay:1.0f];
+}
+*/
 
 - (void)viewWillDisappear:(BOOL)animated
 {
@@ -79,7 +89,7 @@
     [self setScaleImages:!self.scaleImages];
     
     // reload display
-    [UIView animateWithDuration:kGIFMainViewControllerAnimationDuration/2
+    [UIView animateWithDuration:kGIFSetViewControllerAnimationDuration/2
                      animations:^{
                          // hide the image
                          [self.imageView setAlpha:0.0f];
@@ -91,7 +101,7 @@
                              [self.imageView setContentMode:(self.scaleImages?UIViewContentModeScaleAspectFill:UIViewContentModeScaleAspectFit)];
                              
                              // and bring it back
-                             [UIView animateWithDuration:kGIFMainViewControllerAnimationDuration/2
+                             [UIView animateWithDuration:kGIFSetViewControllerAnimationDuration/2
                                               animations:^{
                                                   [self.imageView setAlpha:1.0f];
                                               }];
@@ -116,23 +126,7 @@
 
 - (void)openURL:(NSURL *)url
 {
-    [self setOpenedURL:url];
-    
-    [self.imageView setImage:[UIImage animatedImageWithAnimatedGIFURL:url]];
-    
-    [self.navigationItem setTitle:url.lastPathComponent];
-    
-    [self.navigationItem setLeftBarButtonItem:nil animated:NO];
-    
-    UIBarButtonItem *tmpFavoritesBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Add to Favorites" style:UIBarButtonItemStylePlain target:self action:@selector(addToFavoritesTapped)];
-    UIBarButtonItem *tmpDiscardBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Discard" style:UIBarButtonItemStylePlain target:self action:@selector(discardButtonTapped)];
-    [tmpDiscardBarButtonItem setTintColor:[UIColor redColor]];
-    
-    UIBarButtonItem *tmpSpace = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
-    
-    [self setCachedToolbarItems:self.toolbarItems];
-    [self setToolbarItems:@[tmpSpace, tmpDiscardBarButtonItem, tmpSpace, tmpFavoritesBarButtonItem, tmpSpace] animated:NO];
-    
+    [self performSegueWithIdentifier:@"openURL" sender:url];
 }
 
 - (void)setStatusbarHidden:(BOOL)statusbarHidden
@@ -165,7 +159,7 @@
     // and reset the UI
     UIImage *tmpNextImage = nil; // TODO: get the last-displayed one from the favorites or randoms
     
-    [UIView animateWithDuration:kGIFMainViewControllerAnimationDuration
+    [UIView animateWithDuration:kGIFSetViewControllerAnimationDuration
                      animations:^{
                          self.imageView.image = tmpNextImage;
     
@@ -197,12 +191,12 @@
     NSLog(@"added to favorites: %d",success);
 
 #warning temporary override
-    if ( success || YES ) {
+    if ( success ) {
 
-        [UIView animateWithDuration:kGIFMainViewControllerAnimationDuration
+        [UIView animateWithDuration:kGIFSetViewControllerAnimationDuration
                          animations:^{
                              NSInteger tmpTotalFavorites = 5;
-                             [self setTitle:[NSString stringWithFormat:@"%ld of %ld",(long)tmpTotalFavorites,tmpTotalFavorites]];
+                             [self setTitle:[NSString stringWithFormat:@"%ld of %ld",(long)tmpTotalFavorites,(long)tmpTotalFavorites]];
 
                              // reset the toolbar
                              if ( self.cachedToolbarItems ) {
@@ -263,43 +257,18 @@
     [tmpActionSheet showFromToolbar:self.navigationController.toolbar];
 }
 
-#pragma mark - Flipside View Controller
-
-- (void)flipsideViewControllerDidFinish:(GIFFlipsideViewController *)controller
-{
-    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
-        [self dismissViewControllerAnimated:YES completion:nil];
-    } else {
-        [self.flipsidePopoverController dismissPopoverAnimated:YES];
-    }
-}
-
-- (void)popoverControllerDidDismissPopover:(UIPopoverController *)popoverController
-{
-    self.flipsidePopoverController = nil;
-}
-
+#pragma mark - Storyboard
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
-    if ([[segue identifier] isEqualToString:@"showAlternate"]) {
-        // [[segue destinationViewController] setDelegate:self];
+    if ([[segue identifier] isEqualToString:@"openURL"]) {
         
-        if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad) {
-            UIPopoverController *popoverController = [(UIStoryboardPopoverSegue *)segue popoverController];
-            self.flipsidePopoverController = popoverController;
-            popoverController.delegate = self;
+        if ( [[segue destinationViewController] respondsToSelector:@selector(openURL:)] && [sender respondsToSelector:@selector(absoluteString)] )
+        {
+            NSURL *tmpURL = sender;
+            [(GIFSoloRootViewController *)[segue destinationViewController] openURL:tmpURL];
         }
     }
 }
 
-- (IBAction)togglePopover:(id)sender
-{
-    if (self.flipsidePopoverController) {
-        [self.flipsidePopoverController dismissPopoverAnimated:YES];
-        self.flipsidePopoverController = nil;
-    } else {
-        [self performSegueWithIdentifier:@"showAlternate" sender:sender];
-    }
-}
 
 @end

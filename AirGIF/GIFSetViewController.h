@@ -6,9 +6,7 @@
 //  Copyright (c) 2013 Ian Meyer. All rights reserved.
 //
 
-#import "GIFFlipsideViewController.h"
-
-@interface GIFMainViewController : UIViewController <GIFFlipsideViewControllerDelegate, UIPopoverControllerDelegate>
+@interface GIFSetViewController : UIViewController <UIPopoverControllerDelegate>
 
 @property (strong, nonatomic) UIPopoverController *flipsidePopoverController;
 

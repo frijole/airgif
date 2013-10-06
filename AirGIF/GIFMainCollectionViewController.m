@@ -253,7 +253,7 @@
         [UIView animateWithDuration:kGIFMainViewControllerAnimationDuration
                          animations:^{
                              NSInteger tmpTotalFavorites = [GIFLibrary favorites].count;
-                             [self setTitle:[NSString stringWithFormat:@"%ld of %ld",(long)tmpTotalFavorites,tmpTotalFavorites]];
+                             [self setTitle:[NSString stringWithFormat:@"%ld of %ld",(long)tmpTotalFavorites,(long)tmpTotalFavorites]];
                              
                              // reset the toolbar
                              if ( self.cachedToolbarItems ) {

@@ -101,17 +101,17 @@
                         <autoresizingMask key="autoresizingMask"/>
                     </toolbar>
                     <connections>
-                        <segue destination="NaL-cA-paF" kind="relationship" relationship="rootViewController" id="IXO-Zx-tdo"/>
+                        <segue destination="fuH-ao-EQr" kind="relationship" relationship="rootViewController" id="dOD-sx-T0l"/>
                     </connections>
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="N3X-91-BAm" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-255" y="-142"/>
         </scene>
-        <!--Main View Controller - x of y-->
+        <!--Set View Controller - x of y-->
         <scene sceneID="d0f-mc-gMg">
             <objects>
-                <viewController id="fuH-ao-EQr" customClass="GIFMainViewController" sceneMemberID="viewController">
+                <viewController id="fuH-ao-EQr" customClass="GIFSetViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="Okh-fJ-1Sx"/>
                         <viewControllerLayoutGuide type="bottom" id="jSn-8q-z6V"/>
@@ -169,6 +169,7 @@
                         <outlet property="doubleTapRecognizer" destination="R48-dp-OWM" id="Me4-WG-fo4"/>
                         <outlet property="imageView" destination="rNc-ED-EJ8" id="D5U-ps-024"/>
                         <outlet property="tapRecognizer" destination="Iy8-PC-bCG" id="0no-am-GQC"/>
+                        <segue destination="CBn-2t-olR" kind="modal" identifier="openURL" id="5VF-Zj-Fhr"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="hlB-50-t5p" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -200,7 +201,7 @@
                         </collectionViewFlowLayout>
                         <cells>
                             <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="collectionCellIdentifier" id="G27-A8-CL6" customClass="GIFMainCollectionViewCell">
-                                <rect key="frame" x="0.0" y="188" width="320" height="320"/>
+                                <rect key="frame" x="0.0" y="124" width="320" height="320"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
                                     <rect key="frame" x="0.0" y="0.0" width="320" height="320"/>
@@ -277,6 +278,99 @@
             </objects>
             <point key="canvasLocation" x="369" y="626"/>
         </scene>
+        <!--Solo View Controller-->
+        <scene sceneID="elV-VH-8rM">
+            <objects>
+                <navigationController definesPresentationContext="YES" toolbarHidden="NO" id="CBn-2t-olR" customClass="GIFSoloViewController" sceneMemberID="viewController">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="MHR-KA-oFp">
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <toolbar key="toolbar" opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="Arl-tU-8QC">
+                        <rect key="frame" x="0.0" y="524" width="320" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </toolbar>
+                    <connections>
+                        <segue destination="Ixa-Rr-Jy1" kind="relationship" relationship="rootViewController" id="L9V-PF-JcX"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Y2o-KA-WiY" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1097" y="-981"/>
+        </scene>
+        <!--Solo Root View Controller - Opened GIF-->
+        <scene sceneID="6Fw-CA-TEk">
+            <objects>
+                <viewController id="Ixa-Rr-Jy1" customClass="GIFSoloRootViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="Lhk-ix-8Op"/>
+                        <viewControllerLayoutGuide type="bottom" id="x6R-55-vEy"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="Eml-PP-8IT">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="3q5-s3-Imk">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                            </imageView>
+                        </subviews>
+                        <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="3q5-s3-Imk" firstAttribute="top" secondItem="Eml-PP-8IT" secondAttribute="top" id="0Ll-3K-FCe"/>
+                            <constraint firstAttribute="bottom" secondItem="3q5-s3-Imk" secondAttribute="bottom" id="Db2-KU-7BB"/>
+                            <constraint firstItem="3q5-s3-Imk" firstAttribute="leading" secondItem="Eml-PP-8IT" secondAttribute="leading" id="NAn-dq-pvv"/>
+                            <constraint firstAttribute="trailing" secondItem="3q5-s3-Imk" secondAttribute="trailing" id="lsl-hQ-E6w"/>
+                        </constraints>
+                        <connections>
+                            <outletCollection property="gestureRecognizers" destination="fpJ-2a-nwQ" appends="YES" id="v4J-6b-oPb"/>
+                            <outletCollection property="gestureRecognizers" destination="Pyg-J5-MOi" appends="YES" id="g53-cw-1IQ"/>
+                        </connections>
+                    </view>
+                    <toolbarItems>
+                        <barButtonItem style="plain" systemItem="flexibleSpace" id="3Hv-Fk-xCH"/>
+                        <barButtonItem title="Discard" id="Uoy-PA-MHa">
+                            <color key="tintColor" red="0.98594826459999996" green="0.0" blue="0.02878310718" alpha="1" colorSpace="calibratedRGB"/>
+                            <connections>
+                                <action selector="discardButtonTapped:" destination="Ixa-Rr-Jy1" id="lha-UW-nZX"/>
+                            </connections>
+                        </barButtonItem>
+                        <barButtonItem width="42" style="plain" systemItem="fixedSpace" id="SNR-7c-JxY"/>
+                        <barButtonItem title="Add To Favorites" id="LwK-sK-dh4">
+                            <connections>
+                                <action selector="addToFavoritesButtonTapped:" destination="Ixa-Rr-Jy1" id="koK-G1-bad"/>
+                            </connections>
+                        </barButtonItem>
+                        <barButtonItem style="plain" systemItem="flexibleSpace" id="IrM-EP-kCK"/>
+                    </toolbarItems>
+                    <navigationItem key="navigationItem" title="Opened GIF" id="Az2-qs-ed2">
+                        <barButtonItem key="rightBarButtonItem" systemItem="action" id="JvG-Ly-fg7">
+                            <connections>
+                                <action selector="shareButtonTapped:" destination="Ixa-Rr-Jy1" id="Nqd-wZ-ne8"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                    <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
+                    <connections>
+                        <outlet property="doubleTapRecognizer" destination="R48-dp-OWM" id="iKp-p8-At7"/>
+                        <outlet property="imageView" destination="3q5-s3-Imk" id="qnc-SP-d3i"/>
+                        <outlet property="tapRecognizer" destination="Iy8-PC-bCG" id="JOC-t6-VYi"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Wqc-za-Zef" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <tapGestureRecognizer id="fpJ-2a-nwQ">
+                    <connections>
+                        <action selector="screenTapped:" destination="Ixa-Rr-Jy1" id="SXa-98-X2m"/>
+                    </connections>
+                </tapGestureRecognizer>
+                <tapGestureRecognizer numberOfTapsRequired="2" id="Pyg-J5-MOi">
+                    <connections>
+                        <action selector="screenDoubleTapped:" destination="Ixa-Rr-Jy1" id="dcW-jG-el5"/>
+                    </connections>
+                </tapGestureRecognizer>
+            </objects>
+            <point key="canvasLocation" x="1660" y="-981"/>
+        </scene>
     </scenes>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>
@@ -284,7 +378,7 @@
         <simulatedScreenMetrics key="destination" type="retina4"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="EsK-eO-1rY"/>
-        <segue reference="piB-6f-eLp"/>
+        <segue reference="N7K-ya-a9q"/>
+        <segue reference="PC1-Tw-ODE"/>
     </inferredMetricsTieBreakers>
 </document>

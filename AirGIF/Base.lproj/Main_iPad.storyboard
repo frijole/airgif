@@ -4,10 +4,10 @@
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3742"/>
     </dependencies>
     <scenes>
-        <!--Main View Controller-->
+        <!--Set View Controller-->
         <scene sceneID="0NU-cZ-2PS">
             <objects>
-                <viewController id="aVO-UE-KGo" customClass="GIFMainViewController" sceneMemberID="viewController">
+                <viewController id="aVO-UE-KGo" customClass="GIFSetViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="kTN-lK-pv4"/>
                         <viewControllerLayoutGuide type="bottom" id="w5b-EJ-Itj"/>
