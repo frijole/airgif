@@ -132,6 +132,16 @@
     return rtnVC;
 }
 
+- (void)pageViewController:(UIPageViewController *)pageViewController willTransitionToViewControllers:(NSArray *)pendingViewControllers
+{
+    // make sure pendingViewControllers are properly configured
+    
+    for ( GIFSinglePageViewController *tmpPageVC in pendingViewControllers )
+    {
+        // NSLog(@"pending view controller: %@",tmpPageVC);
+        [tmpPageVC.imageView setContentMode:(self.scaleImages?UIViewContentModeScaleAspectFill:UIViewContentModeScaleAspectFit)];
+    }
+}
 
 #pragma mark - Gestures & Buttons
 - (IBAction)screenTapped:(id)sender
