@@ -299,7 +299,7 @@
                     <connections>
                         <outlet property="doubleTapRecognizer" destination="84D-AT-UN0" id="2Fq-Bq-Zx5"/>
                         <outlet property="tapRecognizer" destination="d3A-aF-8zN" id="clv-pC-RAa"/>
-                        <segue destination="CBn-2t-olR" kind="modal" identifier="openURL" id="TWs-If-xv5"/>
+                        <segue destination="CBn-2t-olR" kind="modal" identifier="openURL" modalTransitionStyle="coverVertical" id="TWs-If-xv5"/>
                     </connections>
                 </pageViewController>
                 <tapGestureRecognizer id="d3A-aF-8zN">
@@ -449,7 +449,7 @@
         <simulatedScreenMetrics key="destination" type="retina4"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="5VF-Zj-Fhr"/>
         <segue reference="q5H-bU-siV"/>
+        <segue reference="TWs-If-xv5"/>
     </inferredMetricsTieBreakers>
 </document>

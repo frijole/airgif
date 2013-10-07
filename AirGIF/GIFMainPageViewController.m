@@ -16,6 +16,11 @@
 
 #define kGIFPageViewControllerAnimationDuration 0.5f
 
+
+// comment out for normal behavior
+// #define TEST_OPEN_URL YES
+
+
 @interface GIFMainPageViewController ()
 
 @property (nonatomic) BOOL statusbarHidden;
@@ -44,7 +49,7 @@
     // TODO: set real image, and use -setOpenedURL
     [tmpFirstSinglePageVC.imageView setContentMode:(self.scaleImages?UIViewContentModeScaleAspectFill:UIViewContentModeScaleAspectFit)];
     [tmpFirstSinglePageVC.imageView setClipsToBounds:YES]; // TODO: move to a more robust location
-    [tmpFirstSinglePageVC.imageView setImage:[UIImage animatedImageWithAnimatedGIFURL:[GIFLibrary favorites].firstObject]];
+    [tmpFirstSinglePageVC setOpenedURL:[GIFLibrary favorites].firstObject];
 
     [self setViewControllers:@[tmpFirstSinglePageVC] direction:UIPageViewControllerNavigationDirectionForward animated:NO completion:nil];
     
@@ -73,19 +78,27 @@
 #pragma mark - Page View Controller
 - (UIViewController *)pageViewController:(UIPageViewController *)pageViewController viewControllerBeforeViewController:(UIViewController *)viewController
 {
-    // TODO: return nil if at first image
-    
     UIViewController *rtnVC =nil;
+
+    NSURL *tmpCurrentURL = [self.viewControllers.firstObject openedURL];
     
-    UIStoryboard *tmpStoryboard = [UIStoryboard storyboardWithName:@"Main_iPhone" bundle:[NSBundle mainBundle]];
-    rtnVC = [tmpStoryboard instantiateViewControllerWithIdentifier:@"GIFSinglePageViewController"];
-    [rtnVC loadView];
+    NSInteger tmpIndex = [[GIFLibrary favorites] indexOfObject:tmpCurrentURL];
     
-    if ( [rtnVC respondsToSelector:@selector(imageView)] ) {
-        GIFSinglePageViewController *tmpPrevPage = (GIFSinglePageViewController *)rtnVC;
-        [tmpPrevPage.imageView setContentMode:(self.scaleImages?UIViewContentModeScaleAspectFill:UIViewContentModeScaleAspectFit)];
-        [tmpPrevPage.imageView setClipsToBounds:YES]; // TODO: move to a more robust place
-        [tmpPrevPage.imageView setBackgroundColor:[UIColor redColor]]; // TODO: set real image, and use -setOpenedURL
+    if ( tmpIndex > 0 ) // if there is another image before the current one...
+    {
+        NSURL *tmpPrevURL = [[GIFLibrary favorites] objectAtIndex:tmpIndex-1];
+        
+        UIStoryboard *tmpStoryboard = [UIStoryboard storyboardWithName:@"Main_iPhone" bundle:[NSBundle mainBundle]];
+        rtnVC = [tmpStoryboard instantiateViewControllerWithIdentifier:@"GIFSinglePageViewController"];
+        [rtnVC loadView];
+        
+        if ( [rtnVC respondsToSelector:@selector(imageView)] ) {
+            GIFSinglePageViewController *tmpPrevPage = (GIFSinglePageViewController *)rtnVC;
+            [tmpPrevPage.imageView setContentMode:(self.scaleImages?UIViewContentModeScaleAspectFill:UIViewContentModeScaleAspectFit)];
+            [tmpPrevPage.imageView setClipsToBounds:YES]; // TODO: move to a more robust place
+            [tmpPrevPage setOpenedURL:tmpPrevURL];
+        }
+    
     }
     
     return rtnVC;
@@ -93,20 +106,27 @@
 
 - (UIViewController *)pageViewController:(UIPageViewController *)pageViewController viewControllerAfterViewController:(UIViewController *)viewController
 {
-    // TODO: return nil if at last image
-    
     UIViewController *rtnVC =nil;
     
-    UIStoryboard *tmpStoryboard = [UIStoryboard storyboardWithName:@"Main_iPhone" bundle:[NSBundle mainBundle]];
-    rtnVC = [tmpStoryboard instantiateViewControllerWithIdentifier:@"GIFSinglePageViewController"];
-    [rtnVC loadView];
+    NSURL *tmpCurrentURL = [self.viewControllers.firstObject openedURL];
     
-    if ( [rtnVC respondsToSelector:@selector(imageView)] ) {
-        GIFSinglePageViewController *tmpNextPage = (GIFSinglePageViewController *)rtnVC;
-        [tmpNextPage.imageView setContentMode:(self.scaleImages?UIViewContentModeScaleAspectFill:UIViewContentModeScaleAspectFit)];
-        [tmpNextPage.imageView setClipsToBounds:YES]; // TODO: move to a more robust place
-        [tmpNextPage.imageView setBackgroundColor:[UIColor redColor]]; // TODO: set real image, and use -setOpenedURL
+    NSInteger tmpIndex = [[GIFLibrary favorites] indexOfObject:tmpCurrentURL];
 
+    if ( tmpIndex < [GIFLibrary favorites].count-1 ) // if there is another image after the current one...
+    {
+        NSURL *tmpNextURL = [[GIFLibrary favorites] objectAtIndex:tmpIndex+1];
+
+        UIStoryboard *tmpStoryboard = [UIStoryboard storyboardWithName:@"Main_iPhone" bundle:[NSBundle mainBundle]];
+        rtnVC = [tmpStoryboard instantiateViewControllerWithIdentifier:@"GIFSinglePageViewController"];
+        [rtnVC loadView];
+        
+        if ( [rtnVC respondsToSelector:@selector(imageView)] ) {
+            GIFSinglePageViewController *tmpNextPage = (GIFSinglePageViewController *)rtnVC;
+            [tmpNextPage.imageView setContentMode:(self.scaleImages?UIViewContentModeScaleAspectFill:UIViewContentModeScaleAspectFit)];
+            [tmpNextPage.imageView setClipsToBounds:YES]; // TODO: move to a more robust place
+            [tmpNextPage setOpenedURL:tmpNextURL];
+        }
+        
     }
 
     return rtnVC;
@@ -152,34 +172,36 @@
 
 - (void)shareButtonTapped:(id)sender
 {
-    GIFActivityProvider *activityProvider = [[GIFActivityProvider alloc] initWithData:[NSData dataWithContentsOfURL:self.openedURL]];
-    UIActivityViewController *activityController = [[UIActivityViewController alloc] initWithActivityItems:@[activityProvider] applicationActivities:nil];
-    
-    /*
-     [activityController setCompletionHandler:^(NSString *activityType, BOOL completed){
-     if ( completed ) {
-     if ( [activityType isEqualToString:UIActivityTypeCopyToPasteboard] ) {
-     // custom copy to pasteboard?
-     NSData *gifData = [NSData dataWithContentsOfURL:url];
-     UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
-     [pasteboard setData:gifData forPasteboardType:@"com.compuserve.gif"];
-     }
-     else if ( [activityType isEqualToString:UIActivityTypeMail] ) {
-     NSLog(@"mailed");
-     }
-     }
-     }];
-     */
-    
-    [activityController setExcludedActivityTypes:[NSArray arrayWithObjects:UIActivityTypePrint, // print a gif? lulz.
-                                                  UIActivityTypeAssignToContact, // no animation
-                                                  // UIActivityTypeCopyToPasteboard, // default doesn't copy animation, but we're doing our own, so allow it
-                                                  // UIActivityTypeSaveToCameraRoll, // saves static version
-                                                  // UIActivityTypeMail, // attachments animate?
-                                                  nil]];
-    
-    [self presentViewController:activityController animated:YES completion:nil];
-    
+    if ( [self.viewControllers.firstObject respondsToSelector:@selector(openedURL)] )
+    {
+        
+        NSURL *tmpURL = [self.viewControllers.firstObject openedURL];
+        
+        // bail out if we didn't get a url
+        if ( !tmpURL ) {
+            UIAlertView *tmpAlert = [[UIAlertView alloc] initWithTitle:@"AirGIF" message:@"No openedURL found" delegate:nil cancelButtonTitle:@"Bummer, Dude." otherButtonTitles:nil];
+            [tmpAlert show];
+            return;
+        }
+        
+        GIFActivityProvider *activityProvider = [[GIFActivityProvider alloc] initWithData:[NSData dataWithContentsOfURL:tmpURL]];
+        UIActivityViewController *activityController = [[UIActivityViewController alloc] initWithActivityItems:@[activityProvider] applicationActivities:nil];
+        
+        [activityController setExcludedActivityTypes:[NSArray arrayWithObjects:UIActivityTypePrint, // print a gif? lulz.
+                                                      UIActivityTypeAssignToContact, // no animation
+                                                      // UIActivityTypeCopyToPasteboard, // default doesn't copy animation, but we're doing our own, so allow it
+                                                      // UIActivityTypeSaveToCameraRoll, // saves static version
+                                                      // UIActivityTypeMail, // attachments animate?
+                                                      nil]];
+        
+        [self presentViewController:activityController animated:YES completion:nil];
+        
+    }
+    else
+    {
+        UIAlertView *tmpAlert = [[UIAlertView alloc] initWithTitle:@"AirGIF" message:@"openedURL not found" delegate:nil cancelButtonTitle:@"Bummer, Dude." otherButtonTitles:nil];
+        [tmpAlert show];
+    }
 }
 
 - (void)deleteButtonTapped:(id)sender

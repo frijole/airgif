@@ -11,6 +11,10 @@
 #import "UIImage+animatedGIF.h"
 
 #import "GIFSetViewController.h"
+#import "GIFSinglePageViewController.h"
+
+#import "GIFMainPageViewController.h"
+
 #import "GIFActivityProvider.h"
 #import "GIFLibrary.h"
 
@@ -125,17 +129,19 @@
     NSAssert(self.openedURL, @"addToFavorites tapped, but no openedURL set");
     
     // check url, if a file, copy to Documents folder, and add url there to favorites
-    NSURL *savedDocumentURL;
+    NSURL *savedDocumentURL = self.openedURL; // TODO: disable default pass-through after implementing below
     
-    if ( self.openedURL.isFileURL ) {
-        // is file, check for location, move to Documents if necessary and save final path
+    if ( self.openedURL.isFileURL )
+    {   // is file
         
-        savedDocumentURL = [NSURL URLWithString:@"file://"];
+        // TODO: check for location, move to Documents if necessary and save final path
+        // savedDocumentURL = [NSURL URLWithString:@"file://"];
     }
-    else {
-        // is remote, download into Documents and save path
-        
-        savedDocumentURL = [NSURL URLWithString:@"file://"];
+    else
+    {   // is remote,
+
+        // TODO: download into Documents and save path
+        // savedDocumentURL = [NSURL URLWithString:@"file://"];
     }
     
     BOOL success = [GIFLibrary addToFavorites:savedDocumentURL];
@@ -145,14 +151,23 @@
     
     if ( success ) {
         
-        // TODO: tell main vc to display new favorite?
-        if ( [self.presentingViewController respondsToSelector:@selector(viewControllers)] ) {
-        GIFSetViewController *tmpParentVC = [(UINavigationController *)[self presentingViewController] viewControllers].firstObject;
-        
-        if ( [tmpParentVC respondsToSelector:@selector(imageView)] ) {
-            [tmpParentVC.imageView setImage:self.imageView.image];
-            [tmpParentVC setTitle:[NSString stringWithFormat:@"%lu of %lu",(unsigned long)[[GIFLibrary favorites] indexOfObject:self.openedURL],(unsigned long)[GIFLibrary favorites].count]];
-        }
+        // TODO: tell main vc to display new favorite
+        if ( [self.presentingViewController respondsToSelector:@selector(viewControllers)] )
+        {
+            GIFMainPageViewController *tmpParentVC = [(UINavigationController *)[self presentingViewController] viewControllers].firstObject;
+            
+            if ( [tmpParentVC respondsToSelector:@selector(setViewControllers:direction:animated:completion:)] )
+            {
+                UIStoryboard *tmpStoryboard = [UIStoryboard storyboardWithName:@"Main_iPhone" bundle:[NSBundle mainBundle]];
+                GIFSinglePageViewController *tmpNewFavoriteVC = [tmpStoryboard instantiateViewControllerWithIdentifier:@"GIFSinglePageViewController"];
+                [tmpNewFavoriteVC loadView]; // so we can configure it
+                // TODO: set real image, and use -setOpenedURL
+                [tmpNewFavoriteVC.imageView setContentMode:(self.scaleImages?UIViewContentModeScaleAspectFill:UIViewContentModeScaleAspectFit)];
+                [tmpNewFavoriteVC.imageView setClipsToBounds:YES]; // TODO: move to a more robust location
+                [tmpNewFavoriteVC setOpenedURL:self.openedURL];
+                
+                [tmpParentVC setViewControllers:@[tmpNewFavoriteVC] direction:UIPageViewControllerNavigationDirectionForward animated:NO completion:nil];
+            }
         }
         // and go away
         [self.presentingViewController dismissViewControllerAnimated:YES
@@ -160,7 +175,6 @@
     }
     else {
         // TODO: alert?
-        
         [self.presentingViewController dismissViewControllerAnimated:YES
                                                           completion:nil];
     }

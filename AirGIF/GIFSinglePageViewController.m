@@ -8,6 +8,8 @@
 
 #import "GIFSinglePageViewController.h"
 
+#import "UIImage+animatedGIF.h"
+
 @interface GIFSinglePageViewController ()
 
 @end
@@ -23,23 +25,19 @@
     return self;
 }
 
-- (void)awakeFromNib
+- (void)setOpenedURL:(NSURL *)openedURL
 {
-    NSLog(@"awakeFromNib");
-}
-
-- (void)viewDidLoad
-{
-    [super viewDidLoad];
-	// Do any additional setup after loading the view.
+    _openedURL = openedURL;
     
-    [self.imageView setClipsToBounds:YES];
-}
-
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+    if ( [openedURL isFileURL] )
+    {   // file url, open directly
+        [self.imageView setImage:[UIImage animatedImageWithAnimatedGIFURL:openedURL]];
+    }
+    else
+    {
+        [self.imageView setImage:[UIImage animatedImageWithAnimatedGIFURL:openedURL]]; // TODO: load remote images async
+    }
+    
 }
 
 @end
