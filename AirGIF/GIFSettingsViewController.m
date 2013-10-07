@@ -6,13 +6,13 @@
 //  Copyright (c) 2013 Ian Meyer. All rights reserved.
 //
 
-#import "GIFFlipsideViewController.h"
+#import "GIFSettingsViewController.h"
 
-@interface GIFFlipsideViewController ()
+@interface GIFSettingsViewController ()
 
 @end
 
-@implementation GIFFlipsideViewController
+@implementation GIFSettingsViewController
 
 - (void)awakeFromNib
 {
@@ -36,7 +36,7 @@
 
 - (IBAction)done:(id)sender
 {
-    [self.delegate flipsideViewControllerDidFinish:self];
+    [self.delegate settingsViewControllerDidFinish:self];
     
     [self.presentingViewController dismissViewControllerAnimated:YES completion:nil];
 }
