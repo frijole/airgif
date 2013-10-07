@@ -111,7 +111,7 @@
         <!--Set View Controller - AirGIF-->
         <scene sceneID="d0f-mc-gMg">
             <objects>
-                <viewController id="fuH-ao-EQr" customClass="GIFSetViewController" sceneMemberID="viewController">
+                <viewController automaticallyAdjustsScrollViewInsets="NO" id="fuH-ao-EQr" customClass="GIFSetViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="Okh-fJ-1Sx"/>
                         <viewControllerLayoutGuide type="bottom" id="jSn-8q-z6V"/>
@@ -183,7 +183,7 @@
         <!--Main Collection View Controller - AirGIF-->
         <scene sceneID="93W-NW-866">
             <objects>
-                <collectionViewController autoresizesArchivedViewToFullSize="NO" id="NaL-cA-paF" customClass="GIFMainCollectionViewController" sceneMemberID="viewController">
+                <collectionViewController autoresizesArchivedViewToFullSize="NO" automaticallyAdjustsScrollViewInsets="NO" id="NaL-cA-paF" customClass="GIFMainCollectionViewController" sceneMemberID="viewController">
                     <collectionView key="view" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" pagingEnabled="YES" minimumZoomScale="0.0" maximumZoomScale="0.0" dataMode="prototypes" id="EHs-Yl-Zr8">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -275,24 +275,43 @@
         <!--Main Page View Controller - AirGIF-->
         <scene sceneID="bFS-fS-QT9">
             <objects>
-                <pageViewController autoresizesArchivedViewToFullSize="NO" transitionStyle="scroll" pageSpacing="25" navigationOrientation="horizontal" spineLocation="none" id="mhL-8x-wC6" customClass="GIFMainPageViewController" sceneMemberID="viewController">
+                <pageViewController autoresizesArchivedViewToFullSize="NO" automaticallyAdjustsScrollViewInsets="NO" transitionStyle="scroll" pageSpacing="25" navigationOrientation="horizontal" spineLocation="none" id="mhL-8x-wC6" customClass="GIFMainPageViewController" sceneMemberID="viewController">
                     <toolbarItems>
-                        <barButtonItem systemItem="organize" id="IQc-pZ-Ui9"/>
+                        <barButtonItem systemItem="organize" id="IQc-pZ-Ui9">
+                            <connections>
+                                <segue destination="071-Jf-xhw" kind="modal" id="tmB-e5-TRw"/>
+                            </connections>
+                        </barButtonItem>
                         <barButtonItem style="plain" systemItem="flexibleSpace" id="ufC-3K-g52"/>
                         <barButtonItem systemItem="action" id="HHY-Oc-YOG">
                             <connections>
-                                <action selector="shareButtonTapped:" destination="fuH-ao-EQr" id="NmI-hA-fcN"/>
+                                <action selector="shareButtonTapped:" destination="mhL-8x-wC6" id="U4r-3H-aZo"/>
                             </connections>
                         </barButtonItem>
                         <barButtonItem style="plain" systemItem="flexibleSpace" id="Wf3-VO-fLf"/>
                         <barButtonItem systemItem="trash" id="5Eb-1U-Ybc">
                             <connections>
-                                <action selector="deleteButtonTapped:" destination="fuH-ao-EQr" id="4Vi-q9-c8D"/>
+                                <action selector="deleteButtonTapped:" destination="mhL-8x-wC6" id="nak-D6-R9a"/>
                             </connections>
                         </barButtonItem>
                     </toolbarItems>
                     <navigationItem key="navigationItem" title="AirGIF" id="ckG-XX-uag"/>
+                    <connections>
+                        <outlet property="doubleTapRecognizer" destination="84D-AT-UN0" id="2Fq-Bq-Zx5"/>
+                        <outlet property="tapRecognizer" destination="d3A-aF-8zN" id="clv-pC-RAa"/>
+                        <segue destination="CBn-2t-olR" kind="modal" identifier="openURL" id="TWs-If-xv5"/>
+                    </connections>
                 </pageViewController>
+                <tapGestureRecognizer id="d3A-aF-8zN">
+                    <connections>
+                        <action selector="screenTapped:" destination="mhL-8x-wC6" id="tkW-8S-2ug"/>
+                    </connections>
+                </tapGestureRecognizer>
+                <tapGestureRecognizer numberOfTapsRequired="2" id="84D-AT-UN0">
+                    <connections>
+                        <action selector="screenDoubleTapped:" destination="mhL-8x-wC6" id="Khn-gD-LLh"/>
+                    </connections>
+                </tapGestureRecognizer>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="pfR-rn-TeC" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="369" y="-1820"/>
@@ -300,7 +319,7 @@
         <!--Single Page View Controller-->
         <scene sceneID="1Kv-in-94w">
             <objects>
-                <viewController storyboardIdentifier="GIFSinglePageViewController" id="uNY-Ig-shv" customClass="GIFSinglePageViewController" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="GIFSinglePageViewController" automaticallyAdjustsScrollViewInsets="NO" id="uNY-Ig-shv" customClass="GIFSinglePageViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="Il2-fZ-TEh"/>
                         <viewControllerLayoutGuide type="bottom" id="zWH-Hm-Bkp"/>
@@ -308,8 +327,23 @@
                     <view key="view" contentMode="scaleToFill" id="Suh-xI-XtQ">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <subviews>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Zhi-s5-DaP">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                            </imageView>
+                        </subviews>
+                        <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstAttribute="bottom" secondItem="Zhi-s5-DaP" secondAttribute="bottom" id="1cu-1A-T8p"/>
+                            <constraint firstItem="Zhi-s5-DaP" firstAttribute="top" secondItem="Suh-xI-XtQ" secondAttribute="top" id="McU-45-pdj"/>
+                            <constraint firstItem="Zhi-s5-DaP" firstAttribute="leading" secondItem="Suh-xI-XtQ" secondAttribute="leading" id="Obl-8F-4KE"/>
+                            <constraint firstAttribute="trailing" secondItem="Zhi-s5-DaP" secondAttribute="trailing" id="flp-25-pfy"/>
+                        </constraints>
                     </view>
+                    <connections>
+                        <outlet property="imageView" destination="Zhi-s5-DaP" id="rcN-vT-EtW"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="49Z-Od-2RB" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -415,6 +449,7 @@
         <simulatedScreenMetrics key="destination" type="retina4"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
+        <segue reference="5VF-Zj-Fhr"/>
         <segue reference="q5H-bU-siV"/>
     </inferredMetricsTieBreakers>
 </document>

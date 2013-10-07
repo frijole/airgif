@@ -10,4 +10,16 @@
 
 @interface GIFMainPageViewController : UIPageViewController <UIPageViewControllerDataSource, UIPageViewControllerDelegate>
 
+@property (nonatomic, strong) IBOutlet UIBarButtonItem *customEditButton; // strong property to keep it around when not being displayed
+
+@property (nonatomic, weak) IBOutlet UITapGestureRecognizer *tapRecognizer;
+@property (nonatomic, weak) IBOutlet UITapGestureRecognizer *doubleTapRecognizer;
+
+- (void)openURL:(NSURL *)url;
+
+- (IBAction)screenTapped:(id)sender;
+- (IBAction)screenDoubleTapped:(id)sender;
+- (IBAction)shareButtonTapped:(id)sender;
+- (IBAction)deleteButtonTapped:(id)sender;
+
 @end

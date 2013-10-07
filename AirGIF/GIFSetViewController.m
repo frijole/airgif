@@ -61,23 +61,11 @@
 }
 #endif
 
-
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
     
     [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(hideBars) object:nil];
-}
-
-- (void)dealloc
-{
-    [[UIDevice currentDevice] endGeneratingDeviceOrientationNotifications];
-}
-
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
 }
 
 - (IBAction)screenTapped:(id)sender

@@ -63,9 +63,6 @@
     // self.imageView.image = [UIImage animatedImageWithAnimatedGIFURL:url];
     // self.openedURL = url;
     
-    // ???
-    [self setAutomaticallyAdjustsScrollViewInsets:NO];
-    
     // set up the cell size
     [(UICollectionViewFlowLayout *)self.collectionViewLayout setItemSize:[UIScreen mainScreen].bounds.size];
     NSLog(@"set item size: %@",NSStringFromCGSize([UIScreen mainScreen].bounds.size));
