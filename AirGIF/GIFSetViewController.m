@@ -33,15 +33,13 @@
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
     
-    [self setAutomaticallyAdjustsScrollViewInsets:NO];
-    
-    [self.view setUserInteractionEnabled:YES];
-    
     // load default image
     // NSURL *url = [[NSBundle mainBundle] URLForResource:@"gilles" withExtension:@"gif"];
     NSURL *url = [[GIFLibrary favorites] firstObject];
     self.imageView.image = [UIImage animatedImageWithAnimatedGIFURL:url];
     self.openedURL = url;
+    
+    [self setTitle:[NSString stringWithFormat:@"%d of %lu",1,(unsigned long)[GIFLibrary favorites].count]];
     
     // image view is ScaleAspectFill in storyboard, set default value here.
     self.scaleImages = YES;
@@ -50,13 +48,15 @@
     [self.tapRecognizer requireGestureRecognizerToFail:self.doubleTapRecognizer];
 }
 
-- (void)viewWillAppear:(BOOL)animated
+/*
+#warning for testing
+- (void)viewDidAppear:(BOOL)animated
 {
-    [super viewWillAppear:animated];
-    
-    [self.scrollView setContentSize:CGSizeMake(CGRectGetMaxX(self.nextImageView.frame), CGRectGetMaxY(self.nextImageView.frame))];
-    [self.scrollView setContentOffset:CGPointMake(320.0f, 0.0f)];
+    [self performSelector:@selector(openURL:)
+               withObject:[NSURL URLWithString:@"http://31.media.tumblr.com/17304b5d47e174685c62f61c9d2ffce3/tumblr_mriia3bgMp1r2vcn2o1_500.gif"]
+               afterDelay:1.0f];
 }
+*/
 
 - (void)viewWillDisappear:(BOOL)animated
 {

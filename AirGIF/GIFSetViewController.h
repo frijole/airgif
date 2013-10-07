@@ -10,10 +10,7 @@
 
 @property (strong, nonatomic) UIPopoverController *flipsidePopoverController;
 
-@property (nonatomic, weak) IBOutlet UIScrollView *scrollView;
-@property (nonatomic, weak) IBOutlet UIImageView *previousImageView;
 @property (nonatomic, weak) IBOutlet UIImageView *imageView;
-@property (nonatomic, weak) IBOutlet UIImageView *nextImageView;
 
 @property (nonatomic, strong) IBOutlet UIBarButtonItem *customEditButton; // strong property to keep it around when not being displayed
 
