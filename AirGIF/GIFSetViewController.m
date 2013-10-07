@@ -18,6 +18,9 @@
 
 #define kGIFSetViewControllerAnimationDuration 0.5f
 
+// comment out for normal behavior
+// #define TEST_OPEN_URL YES
+
 @interface GIFSetViewController ()
 
 @property (nonatomic) BOOL statusbarHidden;
@@ -48,15 +51,16 @@
     [self.tapRecognizer requireGestureRecognizerToFail:self.doubleTapRecognizer];
 }
 
-/*
-#warning for testing
+
+#ifdef TEST_OPEN_URL
 - (void)viewDidAppear:(BOOL)animated
 {
     [self performSelector:@selector(openURL:)
                withObject:[NSURL URLWithString:@"http://31.media.tumblr.com/17304b5d47e174685c62f61c9d2ffce3/tumblr_mriia3bgMp1r2vcn2o1_500.gif"]
                afterDelay:1.0f];
 }
-*/
+#endif
+
 
 - (void)viewWillDisappear:(BOOL)animated
 {

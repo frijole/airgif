@@ -9,8 +9,9 @@
 #import "GIFSoloViewController.h"
 
 #import "UIImage+animatedGIF.h"
-#import "GIFActivityProvider.h"
 
+#import "GIFSetViewController.h"
+#import "GIFActivityProvider.h"
 #import "GIFLibrary.h"
 
 #define cellIdentifier @"soloCellIdentifier"
@@ -58,9 +59,15 @@
     
     // image view is ScaleAspectFill in storyboard, set default value here.
     self.scaleImages = YES;
-    
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+
     // tweak the tap handling
     [self.tapRecognizer requireGestureRecognizerToFail:self.doubleTapRecognizer];
+    // moved here from viewDidLoad becuase self.tapRecognizer was nil there. 
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -89,6 +96,19 @@
     
     [self.navigationItem setTitle:url.lastPathComponent];
 }
+
+#pragma mark - Segue Actions
+- (IBAction)discardButtonTappedSegueCallback:(UIStoryboardSegue *)segue
+{
+    [self discardButtonTapped:nil];
+}
+
+- (IBAction)favoritesButtonTappedSegueCallback:(UIStoryboardSegue *)segue
+{
+    [self addToFavoritesButtonTapped:nil];
+}
+
+
 
 #pragma mark - Button Actions
 - (void)discardButtonTapped:(id)sender
@@ -123,12 +143,17 @@
     // did it work?
     NSLog(@"added to favorites: %d",success);
     
-#warning temporary override
     if ( success ) {
         
         // TODO: tell main vc to display new favorite?
+        if ( [self.presentingViewController respondsToSelector:@selector(viewControllers)] ) {
+        GIFSetViewController *tmpParentVC = [(UINavigationController *)[self presentingViewController] viewControllers].firstObject;
         
-        
+        if ( [tmpParentVC respondsToSelector:@selector(imageView)] ) {
+            [tmpParentVC.imageView setImage:self.imageView.image];
+            [tmpParentVC setTitle:[NSString stringWithFormat:@"%lu of %lu",(unsigned long)[[GIFLibrary favorites] indexOfObject:self.openedURL],(unsigned long)[GIFLibrary favorites].count]];
+        }
+        }
         // and go away
         [self.presentingViewController dismissViewControllerAnimated:YES
                                                           completion:nil];

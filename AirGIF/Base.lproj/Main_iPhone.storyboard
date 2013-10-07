@@ -326,13 +326,13 @@
                         <barButtonItem title="Discard" id="Uoy-PA-MHa">
                             <color key="tintColor" red="0.98594826459999996" green="0.0" blue="0.02878310718" alpha="1" colorSpace="calibratedRGB"/>
                             <connections>
-                                <action selector="discardButtonTapped:" destination="Ixa-Rr-Jy1" id="lha-UW-nZX"/>
+                                <action selector="discardButtonTapped:" destination="Ixa-Rr-Jy1" id="2b8-Z4-cQb"/>
                             </connections>
                         </barButtonItem>
                         <barButtonItem width="42" style="plain" systemItem="fixedSpace" id="SNR-7c-JxY"/>
                         <barButtonItem title="Add To Favorites" id="LwK-sK-dh4">
                             <connections>
-                                <action selector="addToFavoritesButtonTapped:" destination="Ixa-Rr-Jy1" id="koK-G1-bad"/>
+                                <action selector="addToFavoritesButtonTapped:" destination="Ixa-Rr-Jy1" id="NmO-B3-lb9"/>
                             </connections>
                         </barButtonItem>
                         <barButtonItem style="plain" systemItem="flexibleSpace" id="IrM-EP-kCK"/>
