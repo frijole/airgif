@@ -204,10 +204,10 @@
             </objects>
             <point key="canvasLocation" x="1085" y="-916"/>
         </scene>
-        <!--Solo View Controller-->
+        <!--Opened File View Controller-->
         <scene sceneID="elV-VH-8rM">
             <objects>
-                <navigationController definesPresentationContext="YES" toolbarHidden="NO" id="CBn-2t-olR" customClass="GIFSoloViewController" sceneMemberID="viewController">
+                <navigationController definesPresentationContext="YES" toolbarHidden="NO" id="CBn-2t-olR" customClass="GIFOpenedFileViewController" sceneMemberID="viewController">
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="MHR-KA-oFp">
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>

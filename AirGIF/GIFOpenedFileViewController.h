@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface GIFSoloViewController : UINavigationController
+@interface GIFOpenedFileViewController : UINavigationController
 
 - (void)openURL:(NSURL *)url; // pass through to root view controller to open (?)
 

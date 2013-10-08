@@ -6,11 +6,10 @@
 //  Copyright (c) 2013 Ian Meyer. All rights reserved.
 //
 
-#import "GIFSoloViewController.h"
+#import "GIFOpenedFileViewController.h"
 
 #import "UIImage+animatedGIF.h"
 
-#import "GIFSetViewController.h"
 #import "GIFSinglePageViewController.h"
 
 #import "GIFMainPageViewController.h"
@@ -22,7 +21,7 @@
 
 #define kGIFSoloViewControllerAnimationDuration 0.5f
 
-@implementation GIFSoloViewController
+@implementation GIFOpenedFileViewController
 
 - (void)openURL:(NSURL *)url
 {

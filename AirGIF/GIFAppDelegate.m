@@ -8,7 +8,7 @@
 
 #import "GIFAppDelegate.h"
 
-#import "GIFSetViewController.h"
+#import "GIFMainPageViewController.h"
 
 @implementation GIFAppDelegate
 
@@ -18,24 +18,16 @@
     NSURL *url = (NSURL *)[launchOptions valueForKey:UIApplicationLaunchOptionsURLKey];
     
     if ( [url isFileURL] ) {
-        NSLog(@"opened file");
+        NSLog(@"application launched with an opened file");
         
         UINavigationController *rootViewController = (UINavigationController *)self.window.rootViewController;
         
         if ( [rootViewController respondsToSelector:@selector(viewControllers)] &&
             [[[rootViewController viewControllers] firstObject] respondsToSelector:@selector(openURL:)] )
         {
-            [(GIFSetViewController *)[[rootViewController viewControllers] firstObject] openURL:url];
+            [(GIFMainPageViewController *)[[rootViewController viewControllers] firstObject] openURL:url];
         }
     }
-    
-    /*
-    [[UINavigationBar appearance] setBarTintColor:[UIColor blackColor]];
-    [[UINavigationBar appearance] setTintColor:[UIColor whiteColor]];
-    
-    [[UIToolbar appearance] setBarTintColor:[UIColor blackColor]];
-    [[UIToolbar appearance] setTintColor:[UIColor whiteColor]];
-    */
     
     return YES;
 }
@@ -49,7 +41,7 @@
     if ( [rootViewController respondsToSelector:@selector(viewControllers)] &&
         [[[rootViewController viewControllers] firstObject] respondsToSelector:@selector(openURL:)] )
     {
-        [(GIFSetViewController *)[[rootViewController viewControllers] firstObject] openURL:url];
+        [(GIFMainPageViewController *)[[rootViewController viewControllers] firstObject] openURL:url];
     }
     
     return YES;

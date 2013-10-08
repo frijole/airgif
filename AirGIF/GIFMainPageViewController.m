@@ -9,7 +9,7 @@
 #import "GIFMainPageViewController.h"
 
 #import "GIFSinglePageViewController.h"
-#import "GIFSoloViewController.h"
+#import "GIFOpenedFileViewController.h"
 #import "GIFActivityProvider.h"
 #import "GIFLibrary.h"
 #import "UIImage+animatedGIF.h"
@@ -51,7 +51,7 @@
     [tmpFirstSinglePageVC.imageView setClipsToBounds:YES]; // TODO: move to a more robust location
     [tmpFirstSinglePageVC setOpenedURL:[GIFLibrary favorites].firstObject];
     
-    [self.currentPageItem setTitle:[NSString stringWithFormat:@"%d of %d", 1, [GIFLibrary favorites].count]];
+    [self.currentPageItem setTitle:[NSString stringWithFormat:@"%d of %lu", 1, (unsigned long)[GIFLibrary favorites].count]];
 
     [self setViewControllers:@[tmpFirstSinglePageVC] direction:UIPageViewControllerNavigationDirectionForward animated:NO completion:nil];
     
