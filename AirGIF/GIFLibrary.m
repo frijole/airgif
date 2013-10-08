@@ -11,9 +11,16 @@
 static NSMutableArray *_randoms = nil;
 static NSMutableArray *_favorites = nil;
 
+static BOOL _fetching = NO; // to prevent multiple requests
+
+@interface GIFLibrary ()
+
+@end
+
 @implementation GIFLibrary
 
-+ (NSArray *)favorites {
++ (NSArray *)favorites
+{
     
     if ( !_favorites ) {
         // load from disk
@@ -42,7 +49,8 @@ static NSMutableArray *_favorites = nil;
     return _favorites;
 }
 
-+ (NSArray *)randoms {
++ (NSArray *)randoms
+{
     
     if ( !_randoms ) {
         
@@ -91,6 +99,9 @@ static NSMutableArray *_favorites = nil;
                                 nil];
         
         _randoms = [NSMutableArray arrayWithArray:tmpDefaults];
+        
+        // and get some more
+        [[self class] fetchRandoms:10];
     }
     
     return _randoms;}
@@ -98,19 +109,52 @@ static NSMutableArray *_favorites = nil;
 
 
 // loads some random gif urls from picbot
-+ (BOOL)fetchRandoms:(NSInteger)quantity {
-    BOOL rtnStatus = NO;
-    
++ (void)fetchRandoms:(NSInteger)quantity
+{
     // do it!
-    
-    return rtnStatus;
+    if ( !_fetching )
+    {
+        _fetching = YES;
+        
+        NSString *tmpURLString = [NSString stringWithFormat:@"http://iank.org/picbot/pic?n=%ld&type=gif",(long)quantity];
+
+        NSURL *URL = [NSURL URLWithString:tmpURLString];
+        
+        NSURLRequest *request = [NSURLRequest requestWithURL:URL];
+        
+        AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc]
+                                             initWithRequest:request];
+        
+        operation.responseSerializer = [AFJSONResponseSerializer serializer];
+        
+        [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject)
+         {
+             NSLog(@"%@", responseObject);
+             // parse 'em
+             for ( NSString *tmpGIFAddress in [responseObject valueForKey:@"pics"] ) {
+                 if ( [self randoms] ) // sets up if necessary
+                     [_randoms addObject:[NSURL URLWithString:tmpGIFAddress]];
+             }
+             NSLog(@"added gifs, new total: %lu",(unsigned long)_randoms.count);
+         }
+                                         failure:^(AFHTTPRequestOperation *operation, NSError *error)
+         {
+             NSLog(@"failed to download new url");
+         }];
+        
+        [operation start];
+
+    }
+
+    // return rtnStatus;
 }
 
 
 
 // adds image at address to favorites.
 // if a remote url, download to Documents and add local url to favorites
-+ (BOOL)addToFavorites:(NSURL *)url {
++ (BOOL)addToFavorites:(NSURL *)url
+{
     BOOL rtnStatus = NO;
     
     // do it!
@@ -136,7 +180,8 @@ static NSMutableArray *_favorites = nil;
 
 
 // removes from favorites and random and adds to blacklist
-+ (BOOL)deleteGif:(NSURL *)url {
++ (BOOL)deleteGif:(NSURL *)url
+{
     BOOL rtnStatus = NO;
     
     // do it!
@@ -147,7 +192,8 @@ static NSMutableArray *_favorites = nil;
 
 
 // report problem to picbot (send 404 command)
-+ (BOOL)reportProblem:(NSURL *)url {
++ (BOOL)reportProblem:(NSURL *)url
+{
     BOOL rtnStatus = NO;
     
     // do it!

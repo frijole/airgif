@@ -50,12 +50,14 @@
     [tmpFirstSinglePageVC.imageView setContentMode:(self.scaleImages?UIViewContentModeScaleAspectFill:UIViewContentModeScaleAspectFit)];
     [tmpFirstSinglePageVC.imageView setClipsToBounds:YES]; // TODO: move to a more robust location
     [tmpFirstSinglePageVC setOpenedURL:[GIFLibrary favorites].firstObject];
+    
+    [self.currentPageItem setTitle:[NSString stringWithFormat:@"%d of %d", 1, [GIFLibrary favorites].count]];
 
     [self setViewControllers:@[tmpFirstSinglePageVC] direction:UIPageViewControllerNavigationDirectionForward animated:NO completion:nil];
     
     [self.tapRecognizer requireGestureRecognizerToFail:self.doubleTapRecognizer];
     
-    [self.view setGestureRecognizers:@[self.tapRecognizer, self.doubleTapRecognizer]];
+    [self.view setGestureRecognizers:@[self.tapRecognizer, self.doubleTapRecognizer, self.longPressRecognizer]];
 }
 
 #ifdef TEST_OPEN_URL
@@ -143,6 +145,30 @@
     }
 }
 
+- (void)pageViewController:(UIPageViewController *)pageViewController didFinishAnimating:(BOOL)finished previousViewControllers:(NSArray *)previousViewControllers transitionCompleted:(BOOL)completed
+{
+    if ( completed ) {
+        // get current view
+        GIFSinglePageViewController *tmpCurrentPage = self.viewControllers.firstObject;
+        
+        // get its url
+        NSURL *tmpCurrentURL = tmpCurrentPage.openedURL;
+        
+        // get its index
+        NSInteger tmpCurrentIndex = [[GIFLibrary favorites] indexOfObject:tmpCurrentURL];
+        
+        // indicies are zero-indexed, add one for display
+        tmpCurrentIndex++;
+        
+        // set it
+        [self.currentPageItem setTitle:[NSString stringWithFormat:@"%ld of %lu", (long)tmpCurrentIndex, (unsigned long)[GIFLibrary favorites].count]];
+    }
+    else
+    {
+        NSLog(@"didFinishAnimating but completed = NO");
+    }
+}
+
 #pragma mark - Gestures & Buttons
 - (IBAction)screenTapped:(id)sender
 {
@@ -222,6 +248,12 @@
                                                        otherButtonTitles:@"Report Problem", nil];
     
     [tmpActionSheet showFromToolbar:self.navigationController.toolbar];
+}
+
+- (void)longPressTriggered:(id)sender
+{
+    // fire up the share sheet, this makes it easy to share things when you're flipping through full screen.
+    [self shareButtonTapped:nil];
 }
 
 

@@ -167,6 +167,8 @@
                 [tmpNewFavoriteVC setOpenedURL:self.openedURL];
                 
                 [tmpParentVC setViewControllers:@[tmpNewFavoriteVC] direction:UIPageViewControllerNavigationDirectionForward animated:NO completion:nil];
+                NSInteger tmpCount = [GIFLibrary favorites].count;
+                [tmpParentVC.currentPageItem setTitle:[NSString stringWithFormat:@"%ld of %ld",(long)tmpCount,(long)tmpCount]];
             }
         }
         // and go away

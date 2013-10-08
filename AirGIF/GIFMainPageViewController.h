@@ -10,10 +10,13 @@
 
 @interface GIFMainPageViewController : UIPageViewController <UIPageViewControllerDataSource, UIPageViewControllerDelegate>
 
-@property (nonatomic, strong) IBOutlet UIBarButtonItem *customEditButton; // strong property to keep it around when not being displayed
+@property (nonatomic, weak) IBOutlet UIBarButtonItem *currentPageItem; // x of y
+
+@property (nonatomic, weak) IBOutlet UISegmentedControl *segmentedControl; // favorites vs random
 
 @property (nonatomic, weak) IBOutlet UITapGestureRecognizer *tapRecognizer;
 @property (nonatomic, weak) IBOutlet UITapGestureRecognizer *doubleTapRecognizer;
+@property (nonatomic, weak) IBOutlet UILongPressGestureRecognizer *longPressRecognizer;
 
 - (void)openURL:(NSURL *)url;
 
@@ -21,5 +24,6 @@
 - (IBAction)screenDoubleTapped:(id)sender;
 - (IBAction)shareButtonTapped:(id)sender;
 - (IBAction)deleteButtonTapped:(id)sender;
+- (IBAction)longPressTriggered:(id)sender;
 
 @end
