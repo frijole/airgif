@@ -1,3 +1,3 @@
 [submodule "Libraries/AFNetworking"]
 	path = Libraries/AFNetworking
-	url = https://github.com/AFNetworking/AFNetworking.git
+	url = https://github.com/frijole/AFNetworking.git
