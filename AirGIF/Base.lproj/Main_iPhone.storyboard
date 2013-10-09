@@ -135,12 +135,15 @@
                             </connections>
                         </barButtonItem>
                         <segmentedControl key="titleView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="bar" selectedSegmentIndex="0" id="wnB-qf-cbi">
-                            <rect key="frame" x="90" y="6" width="141" height="32"/>
+                            <rect key="frame" x="90" y="7" width="141" height="30"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <segments>
-                                <segment title="Random"/>
                                 <segment title="Favorites"/>
+                                <segment title="Random"/>
                             </segments>
+                            <connections>
+                                <action selector="segmentedControlChanged:" destination="mhL-8x-wC6" eventType="valueChanged" id="lEA-ow-piR"/>
+                            </connections>
                         </segmentedControl>
                         <barButtonItem key="rightBarButtonItem" systemItem="add" id="Dtl-VW-7ZA"/>
                     </navigationItem>

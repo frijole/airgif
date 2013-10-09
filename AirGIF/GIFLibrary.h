@@ -10,7 +10,13 @@
 
 
 // Set up some NSUserDefault keys
-#define kGIFLibraryUserDefaultsKeyResetURLs @"resetURLs"
+#define kGIFLibraryUserDefaultsKeyResetURLs             @"resetURLs"
+
+#define kGIFLibraryUserDefaultsKeyCurrentLibraryIndex   @"libraryIndex" // 0 for favorites, 1 for random.
+
+#define kGIFLibraryUserDefaultsKeyFavoriteIndex         @"favoriteIndex"
+#define kGIFLibraryUserDefaultsKeyRandomIndex           @"randomIndex"
+
 
 @interface GIFLibrary : NSObject
 

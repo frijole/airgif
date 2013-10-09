@@ -22,8 +22,11 @@
 
 - (IBAction)screenTapped:(id)sender;
 - (IBAction)screenDoubleTapped:(id)sender;
+- (IBAction)longPressTriggered:(id)sender;
+
 - (IBAction)shareButtonTapped:(id)sender;
 - (IBAction)deleteButtonTapped:(id)sender;
-- (IBAction)longPressTriggered:(id)sender;
+
+- (IBAction)segmentedControlChanged:(id)sender;
 
 @end

@@ -27,6 +27,8 @@
 @property (nonatomic, strong) NSURL *openedURL;
 @property (nonatomic) BOOL scaleImages; // default YES, UIViewContentModeScaleAspectFill. NO results in UIViewContentModeScaleAspectFit.
 
+@property (nonatomic, weak) NSArray *library;
+
 @end
 
 @implementation GIFMainPageViewController
@@ -43,17 +45,7 @@
     [self setScaleImages:YES];
     
     // set initial view controller
-    UIStoryboard *tmpStoryboard = [UIStoryboard storyboardWithName:@"Main_iPhone" bundle:[NSBundle mainBundle]];
-    GIFSinglePageViewController *tmpFirstSinglePageVC = [tmpStoryboard instantiateViewControllerWithIdentifier:@"GIFSinglePageViewController"];
-    [tmpFirstSinglePageVC loadView]; // so we can configure it
-    // TODO: set real image, and use -setOpenedURL
-    [tmpFirstSinglePageVC.imageView setContentMode:(self.scaleImages?UIViewContentModeScaleAspectFill:UIViewContentModeScaleAspectFit)];
-    [tmpFirstSinglePageVC.imageView setClipsToBounds:YES]; // TODO: move to a more robust location
-    [tmpFirstSinglePageVC setOpenedURL:[GIFLibrary favorites].firstObject];
-    
-    [self.currentPageItem setTitle:[NSString stringWithFormat:@"%d of %lu", 1, (unsigned long)[GIFLibrary favorites].count]];
-
-    [self setViewControllers:@[tmpFirstSinglePageVC] direction:UIPageViewControllerNavigationDirectionForward animated:NO completion:nil];
+    [self setupCurrentPageFromPrefsAnimated:NO];
     
     [self.tapRecognizer requireGestureRecognizerToFail:self.doubleTapRecognizer];
     
@@ -84,11 +76,11 @@
 
     NSURL *tmpCurrentURL = [self.viewControllers.firstObject openedURL];
     
-    NSInteger tmpIndex = [[GIFLibrary favorites] indexOfObject:tmpCurrentURL];
+    NSInteger tmpIndex = [self.library indexOfObject:tmpCurrentURL];
     
     if ( tmpIndex > 0 ) // if there is another image before the current one...
     {
-        NSURL *tmpPrevURL = [[GIFLibrary favorites] objectAtIndex:tmpIndex-1];
+        NSURL *tmpPrevURL = [self.library objectAtIndex:tmpIndex-1];
         
         UIStoryboard *tmpStoryboard = [UIStoryboard storyboardWithName:@"Main_iPhone" bundle:[NSBundle mainBundle]];
         rtnVC = [tmpStoryboard instantiateViewControllerWithIdentifier:@"GIFSinglePageViewController"];
@@ -112,11 +104,11 @@
     
     NSURL *tmpCurrentURL = [self.viewControllers.firstObject openedURL];
     
-    NSInteger tmpIndex = [[GIFLibrary favorites] indexOfObject:tmpCurrentURL];
+    NSInteger tmpIndex = [self.library indexOfObject:tmpCurrentURL];
 
-    if ( tmpIndex < [GIFLibrary favorites].count-1 ) // if there is another image after the current one...
+    if ( tmpIndex < self.library.count-1 ) // if there is another image after the current one...
     {
-        NSURL *tmpNextURL = [[GIFLibrary favorites] objectAtIndex:tmpIndex+1];
+        NSURL *tmpNextURL = [self.library objectAtIndex:tmpIndex+1];
 
         UIStoryboard *tmpStoryboard = [UIStoryboard storyboardWithName:@"Main_iPhone" bundle:[NSBundle mainBundle]];
         rtnVC = [tmpStoryboard instantiateViewControllerWithIdentifier:@"GIFSinglePageViewController"];
@@ -155,13 +147,23 @@
         NSURL *tmpCurrentURL = tmpCurrentPage.openedURL;
         
         // get its index
-        NSInteger tmpCurrentIndex = [[GIFLibrary favorites] indexOfObject:tmpCurrentURL];
+        NSInteger tmpCurrentIndex = [self.library indexOfObject:tmpCurrentURL];
+        
+        // update the prefs
+        NSString *tmpLibraryIndexKey = kGIFLibraryUserDefaultsKeyFavoriteIndex;
+        if ( self.segmentedControl.selectedSegmentIndex == 1 )
+            tmpLibraryIndexKey = kGIFLibraryUserDefaultsKeyRandomIndex;
+        [[NSUserDefaults standardUserDefaults] setInteger:tmpCurrentIndex forKey:tmpLibraryIndexKey];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+
+        // and display it.
         
         // indicies are zero-indexed, add one for display
         tmpCurrentIndex++;
         
-        // set it
-        [self.currentPageItem setTitle:[NSString stringWithFormat:@"%ld of %lu", (long)tmpCurrentIndex, (unsigned long)[GIFLibrary favorites].count]];
+        // and display it
+        [self.currentPageItem setTitle:[NSString stringWithFormat:@"%ld of %lu", (long)tmpCurrentIndex, (unsigned long)self.library.count]];
+    
     }
     else
     {
@@ -204,6 +206,12 @@
                                               }];
                          }
                      }];
+}
+
+- (void)longPressTriggered:(id)sender
+{
+    // fire up the share sheet, this makes it easy to share things when you're flipping through full screen.
+    [self shareButtonTapped:nil];
 }
 
 - (void)shareButtonTapped:(id)sender
@@ -250,12 +258,53 @@
     [tmpActionSheet showFromToolbar:self.navigationController.toolbar];
 }
 
-- (void)longPressTriggered:(id)sender
+- (void)segmentedControlChanged:(id)sender
 {
-    // fire up the share sheet, this makes it easy to share things when you're flipping through full screen.
-    [self shareButtonTapped:nil];
+    // save new library selection
+    NSInteger tmpLibraryIndex = [(UISegmentedControl *)sender selectedSegmentIndex];
+    [[NSUserDefaults standardUserDefaults] setInteger:tmpLibraryIndex forKey:kGIFLibraryUserDefaultsKeyCurrentLibraryIndex];
+    [[NSUserDefaults standardUserDefaults] synchronize];
+    
+    // and update the display
+    [self setupCurrentPageFromPrefsAnimated:YES];
 }
 
+- (void)setupCurrentPageFromPrefsAnimated:(BOOL)shouldAnimate;
+{
+    UIStoryboard *tmpStoryboard = [UIStoryboard storyboardWithName:@"Main_iPhone" bundle:[NSBundle mainBundle]];
+    GIFSinglePageViewController *tmpFirstSinglePageVC = [tmpStoryboard instantiateViewControllerWithIdentifier:@"GIFSinglePageViewController"];
+    [tmpFirstSinglePageVC loadView]; // so we can configure it
+    // TODO: set real image, and use -setOpenedURL
+    [tmpFirstSinglePageVC.imageView setContentMode:(self.scaleImages?UIViewContentModeScaleAspectFill:UIViewContentModeScaleAspectFit)];
+    [tmpFirstSinglePageVC.imageView setClipsToBounds:YES]; // TODO: move to a more robust location
+    
+    // setup library and first page
+    NSInteger tmpLibraryIndex = [[NSUserDefaults standardUserDefaults] integerForKey:kGIFLibraryUserDefaultsKeyCurrentLibraryIndex];
+    [self.segmentedControl setSelectedSegmentIndex:tmpLibraryIndex];
+    if ( tmpLibraryIndex == 1 )
+        [self setLibrary:[GIFLibrary randoms]];
+    else
+        [self setLibrary:[GIFLibrary favorites]];
+    
+    NSInteger tmpPageIndex = [[NSUserDefaults standardUserDefaults] integerForKey:(tmpLibraryIndex?kGIFLibraryUserDefaultsKeyRandomIndex:kGIFLibraryUserDefaultsKeyFavoriteIndex)];
+    NSURL *tmpURL = nil;
+    if ( tmpPageIndex < self.library.count ) // aviod out of range exception
+        tmpURL = [self.library objectAtIndex:tmpPageIndex];
+    else
+        tmpURL = self.library.firstObject; // default to first if something weird is going on
+    
+    [tmpFirstSinglePageVC setOpenedURL:tmpURL];
+    
+    // update interface
+    tmpPageIndex = [self.library indexOfObject:tmpURL]; // reset in case we were over and went to the first
+    tmpPageIndex++; // array is zero-indexed, UI starts with one.
+    [self.currentPageItem setTitle:[NSString stringWithFormat:@"%ld of %lu", (long)tmpPageIndex, (unsigned long)self.library.count]];
+    
+    [self setViewControllers:@[tmpFirstSinglePageVC]
+                   direction:(tmpLibraryIndex?UIPageViewControllerNavigationDirectionForward:UIPageViewControllerNavigationDirectionReverse)
+                    animated:shouldAnimate
+                  completion:nil];
+}
 
 #pragma mark - Storyboard
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender

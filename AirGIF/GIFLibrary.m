@@ -8,32 +8,37 @@
 
 #import "GIFLibrary.h"
 
-static NSMutableArray *_randoms = nil;
+#define kGIFLibraryRandomFileName   @"randoms"
+#define kGIFLibraryFavoriteFileName @"favorites"
+#define kGIFLibraryBanFileName      @"bans"
+
+// for keepsies
 static NSMutableArray *_favorites = nil;
 
-static BOOL _fetching = NO; // to prevent multiple requests
+// from picbot
+static NSMutableArray *_randoms = nil;
+static NSMutableArray *_blacklist = nil;
 
-@interface GIFLibrary ()
+// prevent multiple requests
+static BOOL _fetching = NO;
 
-@end
 
 @implementation GIFLibrary
 
-+ (NSArray *)favorites
++ (NSMutableArray *)favorites
 {
     
     if ( !_favorites ) {
         // load from disk
         
-        /*
         NSArray *cacheDirectories = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);
-        NSString *tmpAddressFilePath = [NSString stringWithFormat:@"%@/%@",[cacheDirectories objectAtIndex:0],@"favorites"];
+        NSString *tmpAddressFilePath = [NSString stringWithFormat:@"%@/%@",[cacheDirectories objectAtIndex:0],kGIFLibraryFavoriteFileName];
         NSArray *tmpFavoritesFromDisk = [NSKeyedUnarchiver unarchiveObjectWithFile:tmpAddressFilePath];
-        _favorites = [NSMutableArray arrayWithArray:tmpFavoritesFromDisk];
-         */
+        if ( tmpFavoritesFromDisk && tmpFavoritesFromDisk.count > 0 )
+            _favorites = [NSMutableArray arrayWithArray:tmpFavoritesFromDisk];
     }
     
-    if ( !_favorites ) {
+    if ( !_favorites || _favorites.count == 0 ) {
         // loading failed
         _favorites = [NSMutableArray array];
         
@@ -49,7 +54,7 @@ static BOOL _fetching = NO; // to prevent multiple requests
     return _favorites;
 }
 
-+ (NSArray *)randoms
++ (NSMutableArray *)randoms
 {
     
     if ( !_randoms ) {
@@ -63,8 +68,9 @@ static BOOL _fetching = NO; // to prevent multiple requests
             // and skip loading from disk
         
             // in fact, nuke the disk.
+            // TODO: move `resetLibrary` to standalone method
             NSArray *cacheDirectories = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);
-            NSString *tmpAddressFilePath = [NSString stringWithFormat:@"%@/%@",[cacheDirectories objectAtIndex:0],@"randoms"];
+            NSString *tmpAddressFilePath = [NSString stringWithFormat:@"%@/%@",[cacheDirectories objectAtIndex:0],kGIFLibraryRandomFileName];
             NSError *tmpError;
             [[NSFileManager defaultManager] removeItemAtPath:tmpAddressFilePath error:&tmpError];
             if ( tmpError )
@@ -77,7 +83,7 @@ static BOOL _fetching = NO; // to prevent multiple requests
         {
             // load from disk
             NSArray *cacheDirectories = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);
-            NSString *tmpAddressFilePath = [NSString stringWithFormat:@"%@/%@",[cacheDirectories objectAtIndex:0],@"randoms"];
+            NSString *tmpAddressFilePath = [NSString stringWithFormat:@"%@/%@",[cacheDirectories objectAtIndex:0],kGIFLibraryRandomFileName];
             NSArray *tmpRandomsFromDisk = [NSKeyedUnarchiver unarchiveObjectWithFile:tmpAddressFilePath];
             if ( tmpRandomsFromDisk && tmpRandomsFromDisk.count > 0 )
                 _randoms = [NSMutableArray arrayWithArray:tmpRandomsFromDisk];
@@ -85,7 +91,9 @@ static BOOL _fetching = NO; // to prevent multiple requests
         }
     
     }
-    if ( !_randoms ) {
+    
+    // if we failed to load, or loaded none...
+    if ( !_randoms || _randoms.count == 0 ) {
         // loading failed
         _randoms = [NSMutableArray array];
 
@@ -106,6 +114,24 @@ static BOOL _fetching = NO; // to prevent multiple requests
     
     return _randoms;}
 
++ (NSMutableArray *)blacklist
+{
+    
+    if ( !_blacklist ) {
+        // load from disk
+        NSArray *cacheDirectories = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);
+        NSString *tmpAddressFilePath = [NSString stringWithFormat:@"%@/%@",[cacheDirectories objectAtIndex:0],kGIFLibraryRandomFileName];
+        NSArray *tmpRandomsFromDisk = [NSKeyedUnarchiver unarchiveObjectWithFile:tmpAddressFilePath];
+        if ( tmpRandomsFromDisk && tmpRandomsFromDisk.count > 0 )
+            _blacklist = [NSMutableArray arrayWithArray:tmpRandomsFromDisk];
+    }
+    
+    if ( !_blacklist ) {
+        _blacklist = [NSMutableArray array];
+    }
+
+    return _blacklist;
+}
 
 
 // loads some random gif urls from picbot
@@ -135,6 +161,10 @@ static BOOL _fetching = NO; // to prevent multiple requests
                  if ( [self randoms] ) // sets up if necessary
                      [_randoms addObject:[NSURL URLWithString:tmpGIFAddress]];
              }
+             
+             // save changes
+             [self saveData];
+             
              NSLog(@"added gifs, new total: %lu",(unsigned long)_randoms.count);
          }
                                          failure:^(AFHTTPRequestOperation *operation, NSError *error)
@@ -146,7 +176,6 @@ static BOOL _fetching = NO; // to prevent multiple requests
 
     }
 
-    // return rtnStatus;
 }
 
 
@@ -173,6 +202,9 @@ static BOOL _fetching = NO; // to prevent multiple requests
     // and check to make sure it worked
     if ([_favorites indexOfObject:url] != NSNotFound)
         rtnStatus = YES;
+
+    // save changes
+    [self saveData];
     
     return rtnStatus;
 }
@@ -184,7 +216,28 @@ static BOOL _fetching = NO; // to prevent multiple requests
 {
     BOOL rtnStatus = NO;
     
-    // do it!
+    NSURL *tmpURLtoDelete = nil;
+    
+    // check favorites and randoms for the url
+    for ( NSMutableArray *tmpArray in @[[[self class] favorites], [[self class] randoms]] ) {
+        // check for the url
+        for ( NSURL *tmpURL in tmpArray ) {
+            if ( [tmpURL isEqual:url] )
+                tmpURLtoDelete = tmpURL;
+        }
+        
+        // if we found it, remove it
+        if ( tmpURLtoDelete )
+            [tmpArray removeObject:tmpURLtoDelete];
+    }
+
+
+    // add it to the blacklist
+    [[[self class] blacklist] addObject:url];
+    
+    // save changes
+    [self saveData];
+    
     
     return rtnStatus;
 }
@@ -196,11 +249,47 @@ static BOOL _fetching = NO; // to prevent multiple requests
 {
     BOOL rtnStatus = NO;
     
-    // do it!
+    // delete it
+    [self deleteGif:url];
+    
+    // TODO: hit picbot's 404
+    
+    // save changes
+    [self saveData];
     
     return rtnStatus;
 }
 
+
+// write to disk
++ (void)saveData
+{
+    // save updated list
+    // save the update
+    NSArray *cacheDirectories = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);
+    
+    NSString *tmpAddressFilePath = [NSString stringWithFormat:@"%@/%@",[cacheDirectories objectAtIndex:0],kGIFLibraryFavoriteFileName];
+    if ( [NSKeyedArchiver archiveRootObject:[[self class] favorites] toFile:tmpAddressFilePath] ) {
+        // NSLog(@"saved updated list");
+    } else {
+        NSLog(@"error saving favorites");
+    }
+    
+    NSString *tmpRandomsFilePath = [NSString stringWithFormat:@"%@/%@",[cacheDirectories objectAtIndex:0],kGIFLibraryRandomFileName];
+    if ( [NSKeyedArchiver archiveRootObject:[[self class] randoms] toFile:tmpRandomsFilePath] ) {
+        // NSLog(@"saved updated list");
+    } else {
+        NSLog(@"error saving randoms");
+    }
+    
+    NSString *tmpBlacklistFilePath = [NSString stringWithFormat:@"%@/%@",[cacheDirectories objectAtIndex:0],kGIFLibraryBanFileName];
+    if ( [NSKeyedArchiver archiveRootObject:[[self class] blacklist] toFile:tmpBlacklistFilePath] ) {
+        // NSLog(@"saved updated ban list");
+    } else {
+        NSLog(@"error saving blacklist");
+    }
+    
+}
 
 
 @end

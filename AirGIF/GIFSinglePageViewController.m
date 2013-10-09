@@ -9,8 +9,12 @@
 #import "GIFSinglePageViewController.h"
 
 #import "UIImage+animatedGIF.h"
+#import "UIImageView+AFNetworking.h"
+
 
 @interface GIFSinglePageViewController ()
+
+@property (nonatomic, weak) AFHTTPRequestOperation *operation;
 
 @end
 
@@ -35,7 +39,34 @@
     }
     else
     {
-        [self.imageView setImage:[UIImage animatedImageWithAnimatedGIFURL:openedURL]]; // TODO: load remote images async
+        // if we have an existing one, cancel it and let it go
+        if ( self.operation ) {
+            [self.operation cancel];
+            [self setOperation:nil];
+        }
+        
+        // default black background (in case it was changed due to error, via code below)
+        self.imageView.backgroundColor = [UIColor blackColor];
+        
+        // create an AFHTTPRequestOperation to download the gif data
+        AFHTTPRequestOperation *tmpOperation = [[AFHTTPRequestOperation alloc] initWithRequest:[NSURLRequest requestWithURL:openedURL]];
+        [tmpOperation.responseSerializer setAcceptableContentTypes:[NSSet setWithObjects:@"image/gif", nil]];
+        [tmpOperation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
+            // got it!
+            // NSLog(@"got remote image object: %@",responseObject);
+
+            UIImage *tmpImage = [UIImage animatedImageWithAnimatedGIFData:responseObject];
+            if ( tmpImage )
+                self.imageView.image = tmpImage;
+            else
+                self.imageView.backgroundColor = [UIColor redColor]; // TODO: real error handling
+        }
+                                            failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+                                                NSLog(@"failed to load remote image, error: %@",error);
+                                                self.imageView.backgroundColor = [UIColor redColor]; // TODO: real error handling
+                                            }];
+        // and download it
+        [tmpOperation start];
     }
     
 }
