@@ -28,6 +28,11 @@ typedef NS_ENUM(NSInteger, GIFLibrarySegmentedControlSelectedIndex) {
     GIFLibrarySegmentedControlSelectedIndexRandom
 };
 
+typedef NS_ENUM(NSInteger, GIFLibraryScrollingDirection) {
+	GIFLibraryScrollingDirectionLeft = -1,
+	GIFLibraryScrollingDirectionNone = 0,
+	GIFLibraryScrollingDirectionRight = 1,
+};
 
 // comment out for normal behavior
 // #define TEST_OPEN_URL YES
@@ -40,6 +45,8 @@ typedef NS_ENUM(NSInteger, GIFLibrarySegmentedControlSelectedIndex) {
 @property (nonatomic) BOOL scaleImages; // default YES, UIViewContentModeScaleAspectFill. NO results in UIViewContentModeScaleAspectFit.
 
 @property (nonatomic, weak) NSArray *library;
+
+@property (nonatomic) GIFLibraryScrollingDirection scrollDirection;
 
 @end
 
@@ -62,6 +69,13 @@ typedef NS_ENUM(NSInteger, GIFLibrarySegmentedControlSelectedIndex) {
     [self.tapRecognizer requireGestureRecognizerToFail:self.doubleTapRecognizer];
     
     [self.view setGestureRecognizers:@[self.tapRecognizer, self.doubleTapRecognizer, self.longPressRecognizer]];
+    
+    // monitor scrolling direction to verify correct images displayed
+    // UIPageViewController's _UIPageViewControllerContentView responds to "scrollView"
+    // via https://github.com/nst/iOS-Runtime-Headers/blob/master/Frameworks/UIKit.framework/_UIPageViewControllerContentView.h
+    // UIWebView does too, so casting that type to suppress warning
+    if ( [self.view respondsToSelector:@selector(scrollView)] )
+        [[(UIWebView *)self.view scrollView] addObserver:self forKeyPath:@"contentOffset" options:NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld context:nil];
 }
 
 #ifdef TEST_OPEN_URL
@@ -140,7 +154,11 @@ typedef NS_ENUM(NSInteger, GIFLibrarySegmentedControlSelectedIndex) {
 
 - (void)pageViewController:(UIPageViewController *)pageViewController willTransitionToViewControllers:(NSArray *)pendingViewControllers
 {
-    // make sure pendingViewControllers are properly configured
+    // make sure pendingViewController.firstObject (should only be one) is properly configured.
+    // it may have been cached with an image from a different source (favorites vs randoms).
+    // not sure how to tell which direction we're scrolling to verify the pendingViewController's openedURL though. :| 
+    NSLog(@"willTransition called. scrolling direction: %ld",self.scrollDirection);
+    // this is close, but sometimes is zero, so not quite what we need.
     
     for ( GIFSinglePageViewController *tmpPageVC in pendingViewControllers )
     {
@@ -190,6 +208,29 @@ typedef NS_ENUM(NSInteger, GIFLibrarySegmentedControlSelectedIndex) {
         NSLog(@"didFinishAnimating but completed = NO");
     }
 }
+
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
+{
+	// via http://stackoverflow.com/a/16953031
+    CGFloat newContentOffset = [[change objectForKey:@"new"] CGPointValue].x;
+    CGFloat oldContentOffset = [[change objectForKey:@"old"] CGPointValue].x;
+    CGFloat diff = newContentOffset - oldContentOffset;
+    
+    if ( diff < 0 ) {
+		//scrolling down
+        self.scrollDirection = GIFLibraryScrollingDirectionLeft;
+    }
+	else if ( diff > 0 ) {
+		// scrolling up
+		self.scrollDirection = GIFLibraryScrollingDirectionRight;
+	}
+	else {
+		// not scrolling
+		self.scrollDirection = GIFLibraryScrollingDirectionNone;
+	}
+    
+}
+
 
 #pragma mark - Gestures & Buttons
 - (IBAction)screenTapped:(id)sender
@@ -435,10 +476,10 @@ typedef NS_ENUM(NSInteger, GIFLibrarySegmentedControlSelectedIndex) {
     [[NSUserDefaults standardUserDefaults] synchronize];
     
     // and update the display
-    [self setupCurrentPageFromPrefsAnimated:YES];
+    [self resetCurrentPageFromPrefsAnimated:YES];
 }
 
-- (void)setupCurrentPageFromPrefsAnimated:(BOOL)shouldAnimate;
+- (void)setupCurrentPageFromPrefsAnimated:(BOOL)shouldAnimate
 {
     UIStoryboard *tmpStoryboard = [UIStoryboard storyboardWithName:@"Main_iPhone" bundle:[NSBundle mainBundle]];
     GIFSinglePageViewController *tmpFirstSinglePageVC = [tmpStoryboard instantiateViewControllerWithIdentifier:@"GIFSinglePageViewController"];
@@ -473,6 +514,32 @@ typedef NS_ENUM(NSInteger, GIFLibrarySegmentedControlSelectedIndex) {
                    direction:(tmpLibraryIndex?UIPageViewControllerNavigationDirectionForward:UIPageViewControllerNavigationDirectionReverse)
                     animated:shouldAnimate
                   completion:nil];
+}
+
+- (void)resetCurrentPageFromPrefsAnimated:(BOOL)shouldAnimate
+{
+    // setup library and first page
+    NSInteger tmpLibraryIndex = [[NSUserDefaults standardUserDefaults] integerForKey:kGIFLibraryUserDefaultsKeyCurrentLibraryIndex];
+    [self.segmentedControl setSelectedSegmentIndex:tmpLibraryIndex];
+    if ( tmpLibraryIndex == GIFLibrarySegmentedControlSelectedIndexRandom )
+        [self setLibrary:[GIFLibrary randoms]];
+    else
+        [self setLibrary:[GIFLibrary favorites]];
+    
+    NSInteger tmpPageIndex = [[NSUserDefaults standardUserDefaults] integerForKey:(tmpLibraryIndex?kGIFLibraryUserDefaultsKeyRandomIndex:kGIFLibraryUserDefaultsKeyFavoriteIndex)];
+    NSURL *tmpURL = nil;
+    if ( tmpPageIndex < self.library.count ) // aviod out of range exception
+        tmpURL = [self.library objectAtIndex:tmpPageIndex];
+    else
+        tmpURL = self.library.firstObject; // default to first if something weird is going on
+    
+    GIFSinglePageViewController *tmpCurrentPage = self.viewControllers.firstObject;
+    [tmpCurrentPage setOpenedURL:tmpURL];
+    
+    // update interface
+    tmpPageIndex = [self.library indexOfObject:tmpURL]; // reset in case we were over and went to the first
+    tmpPageIndex++; // array is zero-indexed, UI starts with one.
+    [self.currentPageItem setTitle:[NSString stringWithFormat:@"%ld of %lu", (long)tmpPageIndex, (unsigned long)self.library.count]];
 }
 
 #pragma mark - Storyboard
