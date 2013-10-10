@@ -35,7 +35,8 @@
     
     if ( [openedURL isFileURL] )
     {   // file url, open directly
-        [self.imageView setImage:[UIImage animatedImageWithAnimatedGIFURL:openedURL]];
+        [self setGifData:[NSData dataWithContentsOfURL:openedURL]];
+        [self.imageView setImage:[UIImage animatedImageWithAnimatedGIFData:self.gifData]];
     }
     else
     {
@@ -55,20 +56,30 @@
             // got it!
             // NSLog(@"got remote image object: %@",responseObject);
 
-            UIImage *tmpImage = [UIImage animatedImageWithAnimatedGIFData:responseObject];
-            if ( tmpImage )
-                self.imageView.image = tmpImage;
-            else
-                self.imageView.backgroundColor = [UIColor redColor]; // TODO: real error handling
+            [self setGifData:responseObject];
         }
                                             failure:^(AFHTTPRequestOperation *operation, NSError *error) {
                                                 NSLog(@"failed to load remote image, error: %@",error);
-                                                self.imageView.backgroundColor = [UIColor redColor]; // TODO: real error handling
+                                                self.imageView.backgroundColor = [UIColor orangeColor];
+                                                // TODO: real error handling
                                             }];
         // and download it
         [tmpOperation start];
     }
     
+}
+
+- (void)setGifData:(NSData *)gifData
+{
+    _gifData = gifData;
+    
+    UIImage *tmpImage = [UIImage animatedImageWithAnimatedGIFData:gifData];
+    if ( tmpImage )
+        self.imageView.image = tmpImage;
+    else
+        self.imageView.backgroundColor = [UIColor redColor];
+    
+    // TODO: real error handling
 }
 
 @end

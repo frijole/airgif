@@ -196,6 +196,7 @@ static BOOL _fetching = NO;
 
     // TODO: add downloading/copying/etc
     
+    
     // add the new favorite
     [_favorites addObject:url];
 

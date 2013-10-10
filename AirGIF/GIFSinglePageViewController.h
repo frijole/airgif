@@ -11,6 +11,8 @@
 @interface GIFSinglePageViewController : UIViewController
 
 @property (nonatomic, weak) IBOutlet UIImageView *imageView;
-@property (nonatomic, strong) NSURL *openedURL; // TODO: move image setup to this setter
+
+@property (nonatomic, strong) NSURL *openedURL; // setting will load locally instantly, or remote async
+@property (nonatomic, strong) NSData *gifData; // setting sets the image
 
 @end

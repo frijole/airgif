@@ -12,22 +12,31 @@
 
 #import "UIImage+animatedGIF.h"
 
-@interface GIFActivityProvider ()
 
-@property (nonatomic, strong) UIImage *image;
+@interface GIFActivityProvider ()
 
 @end
 
 
 @implementation GIFActivityProvider
 
-- (id)initWithData:(NSData *)data
+- (id)initWithURL:(NSURL *)url andData:(NSData *)data
 {
     if ( self = [super init] ) {
+        // so dataWithContentsOfURL runs in the background
         [self setData:data];
+        [self setUrl:url];
     }
-
+    
     return self;
+}
+
+- (void)setUrl:(NSURL *)url
+{
+    _url = url;
+
+    if ( !_data )
+        [self setData:[NSData dataWithContentsOfURL:url]];
 }
 
 - (void)setData:(NSData *)data
@@ -39,7 +48,7 @@
 
 - (NSString *)activityViewController:(UIActivityViewController *)activityViewController subjectForActivityType:(NSString *)activityType
 {
-    return @"Check out this gif";
+    return @"Check out this GIF";
 }
 
 - (UIImage *)activityViewController:(UIActivityViewController *)activityViewController thumbnailImageForActivityType:(NSString *)activityType suggestedSize:(CGSize)size
@@ -55,7 +64,17 @@
 - (id)activityViewController:(UIActivityViewController *)activityViewController itemForActivityType:(NSString *)activityType
 {
     if ( [activityType isEqualToString:UIActivityTypePostToTwitter] )
-        return @"$URL from @gifbookapp";
+    {
+        if ( [self.url isFileURL] )
+        {   // local image.
+            // TODO: upload to share?
+            return [NSString stringWithFormat:@"%@ /via @AirGIF",self.url];
+        }
+        else
+        {   // remote url, share it! (shorten it?)
+            return [NSString stringWithFormat:@"%@ /via @AirGIF",self.url];
+        }
+    }
     
     // if ( [activityType isEqualToString:UIActivityTypeAirDrop] )
     //     return self.data;

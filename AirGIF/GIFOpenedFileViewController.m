@@ -183,25 +183,10 @@
 
 - (void)shareButtonTapped:(id)sender
 {
-    GIFActivityProvider *activityProvider = [[GIFActivityProvider alloc] initWithData:[NSData dataWithContentsOfURL:self.openedURL]];
+    GIFActivityProvider *activityProvider = [[GIFActivityProvider alloc] initWithURL:self.openedURL andData:[NSData dataWithContentsOfURL:self.openedURL]];
     UIActivityViewController *activityController = [[UIActivityViewController alloc] initWithActivityItems:@[activityProvider] applicationActivities:nil];
     
-    /*
-     [activityController setCompletionHandler:^(NSString *activityType, BOOL completed){
-     if ( completed ) {
-     if ( [activityType isEqualToString:UIActivityTypeCopyToPasteboard] ) {
-     // custom copy to pasteboard?
-     NSData *gifData = [NSData dataWithContentsOfURL:url];
-     UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
-     [pasteboard setData:gifData forPasteboardType:@"com.compuserve.gif"];
-     }
-     else if ( [activityType isEqualToString:UIActivityTypeMail] ) {
-     NSLog(@"mailed");
-     }
-     }
-     }];
-     */
-    
+
     [activityController setExcludedActivityTypes:[NSArray arrayWithObjects:UIActivityTypePrint, // print a gif? lulz.
                                                   UIActivityTypeAssignToContact, // no animation
                                                   // UIActivityTypeCopyToPasteboard, // default doesn't copy animation, but we're doing our own, so allow it

@@ -10,8 +10,14 @@
 
 @interface GIFActivityProvider : UIActivityItemProvider <UIActivityItemSource>
 
-@property (nonatomic, strong) NSData *data;
+// use this
+@property (nonatomic, strong) NSURL *url; // setting will load data if not present
 
-- (id)initWithData:(NSData *)data;
+// not these
+@property (nonatomic, strong) NSData *data; // cached gif data
+@property (nonatomic, strong) UIImage *image; // cached static image for thumbnails/previews
+
+// new!
+- (instancetype)initWithURL:(NSURL *)url andData:(NSData *)data;
 
 @end

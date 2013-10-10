@@ -24,6 +24,7 @@
 - (IBAction)screenDoubleTapped:(id)sender;
 - (IBAction)longPressTriggered:(id)sender;
 
+- (IBAction)addButtonTapped:(id)sender;
 - (IBAction)shareButtonTapped:(id)sender;
 - (IBAction)deleteButtonTapped:(id)sender;
 
