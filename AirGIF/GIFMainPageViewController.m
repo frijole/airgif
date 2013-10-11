@@ -78,6 +78,12 @@ typedef NS_ENUM(NSInteger, GIFLibraryScrollingDirection) {
         [[(UIWebView *)self.view scrollView] addObserver:self forKeyPath:@"contentOffset" options:NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld context:nil];
 }
 
+- (void)viewWillAppear:(BOOL)animated
+{
+    // in case we're coming back from editing and deleted the current image
+    [self setupCurrentPageFromPrefsAnimated:NO];
+}
+
 #ifdef TEST_OPEN_URL
 - (void)viewDidAppear:(BOOL)animated
 {

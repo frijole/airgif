@@ -22,6 +22,7 @@
 
 + (NSArray *)favorites;
 + (NSArray *)randoms;
++ (NSArray *)blacklist; // deleted URLs
 
 // loads some random gif urls from picbot
 + (void)fetchRandoms:(NSInteger)quantity;

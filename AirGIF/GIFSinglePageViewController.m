@@ -37,6 +37,9 @@
     {   // file url, open directly
         [self setGifData:[NSData dataWithContentsOfURL:openedURL]];
         [self.imageView setImage:[UIImage animatedImageWithAnimatedGIFData:self.gifData]];
+        
+        // and stop the spinner
+        [self.spinner stopAnimating];
     }
     else
     {
@@ -46,8 +49,11 @@
             [self setOperation:nil];
         }
         
-        // default black background (in case it was changed due to error, via code below)
-        self.imageView.backgroundColor = [UIColor blackColor];
+        // default background (in case it was changed due to error, via code below)
+        self.imageView.backgroundColor = [UIColor clearColor];
+
+        // and start the spinner
+        [self.spinner startAnimating];
         
         // create an AFHTTPRequestOperation to download the gif data
         AFHTTPRequestOperation *tmpOperation = [[AFHTTPRequestOperation alloc] initWithRequest:[NSURLRequest requestWithURL:openedURL]];
@@ -75,7 +81,11 @@
     
     UIImage *tmpImage = [UIImage animatedImageWithAnimatedGIFData:gifData];
     if ( tmpImage )
+    {
         self.imageView.image = tmpImage;
+
+        [self.spinner stopAnimating];
+    }
     else
         self.imageView.backgroundColor = [UIColor redColor];
     

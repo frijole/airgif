@@ -10,6 +10,8 @@
 
 @interface GIFSinglePageViewController : UIViewController
 
+@property (nonatomic, weak) IBOutlet UIActivityIndicatorView *spinner;
+
 @property (nonatomic, weak) IBOutlet UIImageView *imageView;
 
 @property (nonatomic, strong) NSURL *openedURL; // setting will load locally instantly, or remote async

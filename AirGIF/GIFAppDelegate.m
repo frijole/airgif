@@ -29,6 +29,18 @@
         }
     }
     
+    
+    // appearance
+    BOOL darkUI = NO; // set via NSUserDefaults?
+    if ( darkUI )
+    {
+        [[UINavigationBar appearance] setBarTintColor:[UIColor blackColor]];
+        [[UIToolbar appearance] setBarTintColor:[UIColor blackColor]];
+        
+        [self.window setTintColor:[UIColor whiteColor]];
+    }
+    
+    
     return YES;
 }
 

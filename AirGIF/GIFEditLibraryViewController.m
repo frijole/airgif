@@ -8,7 +8,16 @@
 
 #import "GIFEditLibraryViewController.h"
 
+#import "GIFLibrary.h"
+
 #define CellIdentifier @"GIFEditLibraryCellIdentifier"
+
+typedef NS_ENUM(NSInteger, GIFEditLibraryTableSection) {
+    GIFEditLibraryTableSectionFavorites = 0,
+    GIFEditLibraryTableSectionRandom,
+    GIFEditLibraryTableSectionBans,
+    GIFEditLibraryTableSectionCount
+};
 
 @interface GIFEditLibraryViewController ()
 
@@ -55,13 +64,29 @@
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
     // Return the number of sections.
-    return 3;
+    return GIFEditLibraryTableSectionCount;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     // Return the number of rows in the section.
-    return 3;
+    NSInteger rtnCount = 0;
+    
+    switch ( section ) {
+        case GIFEditLibraryTableSectionFavorites:
+            rtnCount = [GIFLibrary favorites].count;
+            break;
+        case GIFEditLibraryTableSectionRandom:
+            rtnCount = [GIFLibrary randoms].count;
+            break;
+        case GIFEditLibraryTableSectionBans:
+            rtnCount = [GIFLibrary blacklist].count;
+            break;
+        default:
+            break;
+    }
+    
+    return rtnCount;
 }
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
@@ -69,14 +94,14 @@
     NSString *rtnString = @"";
     
     switch ( section ) {
-        case 0:
+        case GIFEditLibraryTableSectionFavorites:
             rtnString = @"Favorites";
             break;
-        case 1:
+        case GIFEditLibraryTableSectionRandom:
             rtnString = @"Cached Random URLs";
             break;
-        case 2:
-            rtnString = @"URL Blacklist";
+        case GIFEditLibraryTableSectionBans:
+            rtnString = @"Deleted URLs";
             break;
         default:
             break;
@@ -90,7 +115,21 @@
     UITableViewCell *rtnCell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier forIndexPath:indexPath];
     
     // Configure the cell...
-    [rtnCell.textLabel setText:@"http://foo.bar/baz.gif"];
+    // [rtnCell.textLabel setText:@"http://foo.bar/baz.gif"];
+    
+    switch ( indexPath.section ) {
+        case GIFEditLibraryTableSectionFavorites:
+            [rtnCell.textLabel setText:[[(NSURL *)[GIFLibrary favorites][indexPath.row] absoluteString] lastPathComponent]];
+            break;
+        case GIFEditLibraryTableSectionRandom:
+            [rtnCell.textLabel setText:[(NSURL *)[GIFLibrary randoms][indexPath.row] absoluteString]];
+            break;
+        case GIFEditLibraryTableSectionBans:
+            [rtnCell.textLabel setText:[(NSURL *)[GIFLibrary blacklist][indexPath.row] absoluteString]];
+            break;
+        default:
+            break;
+    }
     
     return rtnCell;
 }
@@ -126,18 +165,34 @@
 // Override to support editing the table view.
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (editingStyle == UITableViewCellEditingStyleDelete) {
-        // Delete the row from the data source
+    if (editingStyle == UITableViewCellEditingStyleDelete)
+    {   // Delete the row from the data source
+        
+        switch ( indexPath.section ) {
+            case GIFEditLibraryTableSectionFavorites:
+                [(NSMutableArray *)[GIFLibrary favorites] removeObjectAtIndex:indexPath.row];
+                break;
+            case GIFEditLibraryTableSectionRandom:
+                [(NSMutableArray *)[GIFLibrary randoms] removeObjectAtIndex:indexPath.row];
+                break;
+            case GIFEditLibraryTableSectionBans:
+                [(NSMutableArray *)[GIFLibrary blacklist] removeObjectAtIndex:indexPath.row];
+                break;
+        }
+        
         [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
-    }   
-    else if (editingStyle == UITableViewCellEditingStyleInsert) {
-        // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-    }   
+    }
+    /*
+    else if (editingStyle == UITableViewCellEditingStyleInsert)
+    {   // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
+    } 
+    */
 }
 
 
 
 // Override to support rearranging the table view.
+/*
 - (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath
 {
     if ( fromIndexPath.section != 0 ) {
@@ -149,14 +204,14 @@
     
     [tableView reloadRowsAtIndexPaths:@[toIndexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
 }
-
+*/
 
 
 // Override to support conditional rearranging of the table view.
 - (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath
 {
     // Return NO if you do not want the item to be re-orderable.
-    return YES;
+    return NO;
 }
 
 

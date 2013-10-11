@@ -112,7 +112,8 @@ static BOOL _fetching = NO;
         [[self class] fetchRandoms:10];
     }
     
-    return _randoms;}
+    return _randoms;
+}
 
 + (NSMutableArray *)blacklist
 {
@@ -234,7 +235,7 @@ static BOOL _fetching = NO;
 
 
     // add it to the blacklist
-    [[[self class] blacklist] addObject:url];
+    [(NSMutableArray *)[[self class] blacklist] addObject:url];
     
     // save changes
     [self saveData];
