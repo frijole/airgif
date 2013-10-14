@@ -30,6 +30,7 @@
 // adds image at address to favorites.
 // if a remote url, downloads and adds local url to favorites
 + (BOOL)addToFavorites:(NSURL *)url;
++ (void)addToFavorites:(NSURL *)url withCompletionBlock:(void (^)(BOOL success, NSURL *newFavoriteURL))completionBlock;
 
 // removes from favorites and random and adds to blacklist
 + (BOOL)deleteGif:(NSURL *)url;

@@ -156,7 +156,7 @@ static BOOL _fetching = NO;
         
         [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject)
          {
-             NSLog(@"%@", responseObject);
+             // NSLog(@"%@", responseObject);
              // parse 'em
              for ( NSString *tmpGIFAddress in [responseObject valueForKey:@"pics"] ) {
                  if ( [self randoms] ) // sets up if necessary
@@ -167,10 +167,14 @@ static BOOL _fetching = NO;
              [self saveData];
              
              NSLog(@"added gifs, new total: %lu",(unsigned long)_randoms.count);
+             
+             _fetching = NO;
          }
                                          failure:^(AFHTTPRequestOperation *operation, NSError *error)
          {
              NSLog(@"failed to download new url");
+
+             _fetching = NO;
          }];
         
         [operation start];
@@ -185,8 +189,15 @@ static BOOL _fetching = NO;
 // if a remote url, download to Documents and add local url to favorites
 + (BOOL)addToFavorites:(NSURL *)url
 {
-    BOOL rtnStatus = NO;
+    [[self class] addToFavorites:url withCompletionBlock:nil];
     
+    NSLog(@"addToFavorites called, returning YES immediately. running withCompletionBlock in background.");
+    
+    return YES;
+}
+
++ (void)addToFavorites:(NSURL *)url withCompletionBlock:(void (^)(BOOL success, NSURL *newFavoriteURL))inCompletionBlock
+{
     // do it!
     
     // make sure we have a place to put the new favorite...
@@ -196,19 +207,34 @@ static BOOL _fetching = NO;
     }
 
     // TODO: add downloading/copying/etc
+    NSURLRequest *request = [NSURLRequest requestWithURL:url];
+    AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc] initWithRequest:request];
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *path = [[paths objectAtIndex:0] stringByAppendingPathComponent:url.lastPathComponent];
+    operation.outputStream = [NSOutputStream outputStreamToFileAtPath:path append:NO];
     
-    
-    // add the new favorite
-    [_favorites addObject:url];
+    [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
+        NSLog(@"Successfully downloaded file to %@", path);
 
-    // and check to make sure it worked
-    if ([_favorites indexOfObject:url] != NSNotFound)
-        rtnStatus = YES;
+        NSURL *tmpNewFavoriteURL = [[NSURL alloc] initFileURLWithPath:path];
+        
+        // add the new favorite
+        [_favorites addObject:tmpNewFavoriteURL];
+        
+        // save changes
+        [self saveData];
+        
+        if ( inCompletionBlock )
+            inCompletionBlock(YES,tmpNewFavoriteURL);
+        
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        NSLog(@"Error: %@", error);
 
-    // save changes
-    [self saveData];
+        if ( inCompletionBlock )
+            inCompletionBlock(NO,nil);
+    }];
     
-    return rtnStatus;
+    [operation start];
 }
 
 

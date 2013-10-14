@@ -40,14 +40,14 @@
 
 		if (inCancelButtonTitle && inCancelBlock)
 		{
-			// MMActionSheetButtonPressedBlockType tmpBlock = [inCancelBlock copy];
-			[_blockDictionary setObject:inCancelBlock forKey:inCancelButtonTitle];
+			MMActionSheetButtonPressedBlockType tmpBlock = [inCancelBlock copy];
+			[_blockDictionary setObject:tmpBlock forKey:inCancelButtonTitle];
 			// [tmpBlock release];
 		}
 		if (inDestructiveButtonTitle && inDestructiveBlock)
 		{
-			// MMActionSheetButtonPressedBlockType tmpBlock = [inDestructiveBlock copy];
-			[_blockDictionary setObject:inDestructiveBlock forKey:inDestructiveButtonTitle];
+			MMActionSheetButtonPressedBlockType tmpBlock = [inDestructiveBlock copy];
+			[_blockDictionary setObject:tmpBlock forKey:inDestructiveButtonTitle];
 			// [tmpBlock release];
 		}
 	}
@@ -69,8 +69,8 @@
 {
 	if (inButtonBlock)
 	{
-		// MMActionSheetButtonPressedBlockType tmpBlock = [inButtonBlock copy];
-		[_blockDictionary setObject:inButtonBlock forKey:inTitle];
+		MMActionSheetButtonPressedBlockType tmpBlock = [inButtonBlock copy];
+		[_blockDictionary setObject:tmpBlock forKey:inTitle];
 		// [tmpBlock release];
 	}
 

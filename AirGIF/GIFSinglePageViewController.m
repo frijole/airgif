@@ -37,7 +37,8 @@
     {   // file url, open directly
         [self setGifData:[NSData dataWithContentsOfURL:openedURL]];
         [self.imageView setImage:[UIImage animatedImageWithAnimatedGIFData:self.gifData]];
-        
+        [self.imageView setClipsToBounds:YES];
+
         // and stop the spinner
         [self.spinner stopAnimating];
     }
@@ -49,7 +50,8 @@
             [self setOperation:nil];
         }
         
-        // default background (in case it was changed due to error, via code below)
+        // clear image and set default background (in case it was changed due to error, via code below)
+        self.imageView.image = nil;
         self.imageView.backgroundColor = [UIColor clearColor];
 
         // and start the spinner
@@ -61,7 +63,7 @@
         [tmpOperation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
             // got it!
             // NSLog(@"got remote image object: %@",responseObject);
-
+            
             [self setGifData:responseObject];
         }
                                             failure:^(AFHTTPRequestOperation *operation, NSError *error) {
@@ -82,7 +84,8 @@
     UIImage *tmpImage = [UIImage animatedImageWithAnimatedGIFData:gifData];
     if ( tmpImage )
     {
-        self.imageView.image = tmpImage;
+        [self.imageView setImage:tmpImage];
+        [self.imageView setClipsToBounds:YES];
 
         [self.spinner stopAnimating];
     }
