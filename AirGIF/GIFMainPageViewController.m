@@ -17,6 +17,7 @@
 #import "UIImage+animatedGIF.h"
 #import "MMActionSheet.h"
 #import "MMAlertView.h"
+#import "MBProgressHUD.h"
 
 #define kGIFPageViewControllerAnimationDuration 0.5f
 
@@ -321,6 +322,8 @@ typedef NS_ENUM(NSInteger, GIFLibraryScrollingDirection) {
 
 - (void)addButtonTapped:(id)sender
 {
+    // TODO: ask to enter a filename?
+    
     [MMAlertView showAlertViewWithTitle:nil
                                 message:@"Add to Favorites?"
                       cancelButtonTitle:@"No"
@@ -338,29 +341,39 @@ typedef NS_ENUM(NSInteger, GIFLibraryScrollingDirection) {
                                     // remove it
                                     [GIFLibrary deleteGif:tmpURL];
                                     
-                                    // and see if we can add it to the favorites
-                                    BOOL success = [GIFLibrary addToFavorites:tmpURL];
+                                    // throw up a HUD while we download the new favorite
+                                    MBProgressHUD *tmpProgressHUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+                                    [tmpProgressHUD setLabelText:@"Saving..."];
                                     
-                                    if ( success )
-                                    {
-                                        // switch to favorites
-                                        [self.segmentedControl setSelectedSegmentIndex:GIFLibrarySegmentedControlSelectedIndexFavorites];
-                                        
-                                        // set the index to the newly-selected, last image
-                                        [[NSUserDefaults standardUserDefaults] setInteger:[GIFLibrary favorites].count forKey:kGIFLibraryUserDefaultsKeyFavoriteIndex];
-                                        [[NSUserDefaults standardUserDefaults] setInteger:GIFLibrarySegmentedControlSelectedIndexFavorites forKey:kGIFLibraryUserDefaultsKeyCurrentLibraryIndex];
-                                        [[NSUserDefaults standardUserDefaults] synchronize];
-                                        
-                                        
-                                        // and reload
-                                        [self setupCurrentPageFromPrefsAnimated:NO];
-                                    }
-                                    else
-                                    {
-                                        NSLog(@"lolwut");
-                                    }
+                                    // and see if we can add it to the favorites
+                                    [GIFLibrary addToFavorites:tmpURL
+                                           withCompletionBlock:^(BOOL success, NSURL *newFavoriteURL) {
+                                               
+                                               NSLog(@"addToFavorites completion block firing...");
+                                               
+                                               // dismiss HUD
+                                               [tmpProgressHUD hide:YES];
+                                               
+                                               if ( success )
+                                               {
+                                                   // switch to favorites
+                                                   [self.segmentedControl setSelectedSegmentIndex:GIFLibrarySegmentedControlSelectedIndexFavorites];
+                                                   
+                                                   // set the index to the newly-selected, last image
+                                                   [[NSUserDefaults standardUserDefaults] setInteger:[GIFLibrary favorites].count forKey:kGIFLibraryUserDefaultsKeyFavoriteIndex];
+                                                   [[NSUserDefaults standardUserDefaults] setInteger:GIFLibrarySegmentedControlSelectedIndexFavorites forKey:kGIFLibraryUserDefaultsKeyCurrentLibraryIndex];
+                                                   [[NSUserDefaults standardUserDefaults] synchronize];
+                                                   
+                                                   
+                                                   // and reload
+                                                   [self setupCurrentPageFromPrefsAnimated:NO];
+                                               }
+                                               else
+                                               {
+                                                   [MMAlertView showAlertViewWithTitle:@"💩" message:@"LOLWUT"];
+                                               }
+                                           }];
                                 }
-
                             }];
    
 }

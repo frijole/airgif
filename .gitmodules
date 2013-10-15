@@ -1,3 +1,6 @@
 [submodule "Libraries/AFNetworking"]
 	path = Libraries/AFNetworking
 	url = https://github.com/frijole/AFNetworking.git
+[submodule "Libraries/MBProgressHUD"]
+	path = Libraries/MBProgressHUD
+	url = https://github.com/jdg/MBProgressHUD.git

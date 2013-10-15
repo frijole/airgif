@@ -12,6 +12,8 @@
 		3C33541A1801DE6E00522F89 /* GIFOpenedFileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C3354191801DE6E00522F89 /* GIFOpenedFileViewController.m */; };
 		3C33541E1806259300522F89 /* MMActionSheet.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C33541D1806259300522F89 /* MMActionSheet.m */; };
 		3C33541F1806259300522F89 /* MMActionSheet.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C33541D1806259300522F89 /* MMActionSheet.m */; };
+		3C5B40B9180D873200ACDAAF /* MBProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C5B40B8180D873200ACDAAF /* MBProgressHUD.m */; };
+		3C5B40BC180DCD2000ACDAAF /* GIFNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C5B40BB180DCD2000ACDAAF /* GIFNavigationController.m */; };
 		3C8E271F18033B5B00619359 /* GIFMainPageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C8E271E18033B5B00619359 /* GIFMainPageViewController.m */; };
 		3C8E272618034A1800619359 /* GIFSinglePageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C8E272518034A1800619359 /* GIFSinglePageViewController.m */; };
 		3C8E28041804483A00619359 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C8E28031804483A00619359 /* MobileCoreServices.framework */; };
@@ -88,6 +90,10 @@
 		3C3354191801DE6E00522F89 /* GIFOpenedFileViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIFOpenedFileViewController.m; sourceTree = "<group>"; };
 		3C33541C1806259300522F89 /* MMActionSheet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMActionSheet.h; sourceTree = "<group>"; };
 		3C33541D1806259300522F89 /* MMActionSheet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMActionSheet.m; sourceTree = "<group>"; };
+		3C5B40B7180D873200ACDAAF /* MBProgressHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MBProgressHUD.h; path = Libraries/MBProgressHUD/MBProgressHUD.h; sourceTree = SOURCE_ROOT; };
+		3C5B40B8180D873200ACDAAF /* MBProgressHUD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MBProgressHUD.m; path = Libraries/MBProgressHUD/MBProgressHUD.m; sourceTree = SOURCE_ROOT; };
+		3C5B40BA180DCD2000ACDAAF /* GIFNavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIFNavigationController.h; sourceTree = "<group>"; };
+		3C5B40BB180DCD2000ACDAAF /* GIFNavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIFNavigationController.m; sourceTree = "<group>"; };
 		3C8E271D18033B5B00619359 /* GIFMainPageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIFMainPageViewController.h; sourceTree = "<group>"; };
 		3C8E271E18033B5B00619359 /* GIFMainPageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIFMainPageViewController.m; sourceTree = "<group>"; };
 		3C8E272418034A1800619359 /* GIFSinglePageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIFSinglePageViewController.h; sourceTree = "<group>"; };
@@ -196,6 +202,16 @@
 			path = MMActionSheet;
 			sourceTree = "<group>";
 		};
+		3C5B40B6180D872200ACDAAF /* MBProgressHUD */ = {
+			isa = PBXGroup;
+			children = (
+				3C5B40B7180D873200ACDAAF /* MBProgressHUD.h */,
+				3C5B40B8180D873200ACDAAF /* MBProgressHUD.m */,
+			);
+			name = MBProgressHUD;
+			path = MMActionSheet;
+			sourceTree = "<group>";
+		};
 		3C8E28051804485500619359 /* AFNetworking */ = {
 			isa = PBXGroup;
 			children = (
@@ -262,6 +278,8 @@
 				3CA3509B17ED225E00F17A03 /* GIFAppDelegate.h */,
 				3CA3509C17ED225E00F17A03 /* GIFAppDelegate.m */,
 				3CA3509E17ED225E00F17A03 /* Main_iPhone.storyboard */,
+				3C5B40BA180DCD2000ACDAAF /* GIFNavigationController.h */,
+				3C5B40BB180DCD2000ACDAAF /* GIFNavigationController.m */,
 				3CA350A117ED225E00F17A03 /* Main_iPad.storyboard */,
 				3C8E271D18033B5B00619359 /* GIFMainPageViewController.h */,
 				3C8E271E18033B5B00619359 /* GIFMainPageViewController.m */,
@@ -369,6 +387,7 @@
 			children = (
 				3CBFEE0D18062C6E00725EE1 /* MMAlertView */,
 				3C33541B1806259300522F89 /* MMActionSheet */,
+				3C5B40B6180D872200ACDAAF /* MBProgressHUD */,
 				3CC6D2B917EF68D300422505 /* UIImage+animatedGIF */,
 				3C8E28051804485500619359 /* AFNetworking */,
 				3CE7D8851805B992005A190A /* UIKit+AFNetworking */,
@@ -485,8 +504,10 @@
 				3CE1FD0C17F8E1F6001C8685 /* GIFEditLibraryViewController.m in Sources */,
 				3C8E28291804485500619359 /* AFURLSessionManager.m in Sources */,
 				3CE7D89F1805B992005A190A /* UIProgressView+AFNetworking.m in Sources */,
+				3C5B40BC180DCD2000ACDAAF /* GIFNavigationController.m in Sources */,
 				3CE7D8991805B992005A190A /* UIAlertView+AFNetworking.m in Sources */,
 				3CE7D8951805B992005A190A /* AFNetworkActivityIndicatorManager.m in Sources */,
+				3C5B40B9180D873200ACDAAF /* MBProgressHUD.m in Sources */,
 				3CA3509917ED225E00F17A03 /* main.m in Sources */,
 				3CE7D8A11805B992005A190A /* UIWebView+AFNetworking.m in Sources */,
 				3CE7D89B1805B992005A190A /* UIButton+AFNetworking.m in Sources */,
