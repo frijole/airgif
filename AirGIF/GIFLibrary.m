@@ -160,7 +160,22 @@ static BOOL _fetching = NO;
              // parse 'em
              for ( NSString *tmpGIFAddress in [responseObject valueForKey:@"pics"] ) {
                  if ( [self randoms] ) // sets up if necessary
-                     [_randoms addObject:[NSURL URLWithString:tmpGIFAddress]];
+                 {
+                     // do we want to add the new url?
+                     BOOL shouldAdd = YES;
+                     
+                     // check for collisions
+                     for ( NSURL *tmpRandom in [self randoms] ) {
+                         if ( [tmpRandom.absoluteString isEqualToString:tmpGIFAddress] ) {
+                             NSLog(@"fetched URL is already in library, skipping: %@", tmpGIFAddress);
+                             shouldAdd = NO;
+                         }
+                     }
+                     
+                     if ( shouldAdd ) {
+                         [_randoms addObject:[NSURL URLWithString:tmpGIFAddress]];
+                     }
+                 }
              }
              
              // save changes
