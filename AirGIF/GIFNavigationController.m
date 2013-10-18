@@ -28,8 +28,6 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
-
-    [self.navigationBar setBarTintColor:[UIColor orangeColor]];
 }
 
 - (void)didReceiveMemoryWarning
