@@ -38,7 +38,7 @@ static BOOL _fetching = NO;
             _favorites = [NSMutableArray arrayWithArray:tmpFavoritesFromDisk];
     }
     
-    if ( !_favorites || _favorites.count == 0 ) {
+    if ( !_favorites ) {
         // loading failed
         _favorites = [NSMutableArray array];
         
@@ -121,7 +121,7 @@ static BOOL _fetching = NO;
     if ( !_blacklist ) {
         // load from disk
         NSArray *cacheDirectories = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);
-        NSString *tmpAddressFilePath = [NSString stringWithFormat:@"%@/%@",[cacheDirectories objectAtIndex:0],kGIFLibraryRandomFileName];
+        NSString *tmpAddressFilePath = [NSString stringWithFormat:@"%@/%@",[cacheDirectories objectAtIndex:0],kGIFLibraryBanFileName];
         NSArray *tmpRandomsFromDisk = [NSKeyedUnarchiver unarchiveObjectWithFile:tmpAddressFilePath];
         if ( tmpRandomsFromDisk && tmpRandomsFromDisk.count > 0 )
             _blacklist = [NSMutableArray arrayWithArray:tmpRandomsFromDisk];
@@ -134,6 +134,25 @@ static BOOL _fetching = NO;
     return _blacklist;
 }
 
++ (void)addToBlacklist:(NSURL *)url
+{
+    // TODO: add to blacklist, ensuring not a dupe
+    [(NSMutableArray *)[[self class] blacklist] addObject:url];
+}
+
++ (void)removeFromBlacklist:(NSURL *)url
+{
+    NSURL *tmpURLtoUnban = nil; // look for a match in the blacklist
+    
+    for ( NSURL *tmpBannedURL in [[self class] blacklist] )
+    {
+        if ( [tmpBannedURL.absoluteString isEqualToString:url.absoluteString] )
+            tmpURLtoUnban = tmpBannedURL;
+    }
+    
+    if ( tmpURLtoUnban )
+        [(NSMutableArray *)[[self class] blacklist] removeObject:tmpURLtoUnban];
+}
 
 // loads some random gif urls from picbot
 + (void)fetchRandoms:(NSInteger)quantity
@@ -202,63 +221,76 @@ static BOOL _fetching = NO;
 
 // adds image at address to favorites.
 // if a remote url, download to Documents and add local url to favorites
-+ (BOOL)addToFavorites:(NSURL *)url
++ (void)addToFavorites:(NSURL *)url
 {
     [[self class] addToFavorites:url withCompletionBlock:nil];
     
     NSLog(@"addToFavorites called, returning YES immediately. running withCompletionBlock in background.");
     
-    return YES;
+    return;
 }
 
 + (void)addToFavorites:(NSURL *)url withCompletionBlock:(void (^)(BOOL success, NSURL *newFavoriteURL))inCompletionBlock
 {
-    // do it!
     
-    // make sure we have a place to put the new favorite...
-    if ( !_favorites ) {
-        // loading failed, set it up
-        _favorites = [NSMutableArray array];
-    }
-
-    // TODO: add downloading/copying/etc
-    NSURLRequest *request = [NSURLRequest requestWithURL:url];
-    AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc] initWithRequest:request];
-    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-    NSString *path = [[paths objectAtIndex:0] stringByAppendingPathComponent:url.lastPathComponent];
-    operation.outputStream = [NSOutputStream outputStreamToFileAtPath:path append:NO];
-    
-    [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
-        NSLog(@"Successfully downloaded file to %@", path);
-
-        NSURL *tmpNewFavoriteURL = [[NSURL alloc] initFileURLWithPath:path];
+    if ( [url isFileURL] )
+    {
+        NSLog(@"adding file to favorites: %@",url);
         
+        // add to array
         // add the new favorite
-        [_favorites addObject:tmpNewFavoriteURL];
+        [(NSMutableArray *)[[self class] favorites] addObject:url];
         
         // save changes
         [self saveData];
         
         if ( inCompletionBlock )
-            inCompletionBlock(YES,tmpNewFavoriteURL);
-        
-    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        NSLog(@"Error: %@", error);
+            inCompletionBlock(YES,url);
+    }
+    else
+    {
+        NSLog(@"adding remote image to favorites: %@",url);
 
-        if ( inCompletionBlock )
-            inCompletionBlock(NO,nil);
-    }];
+        // download it and add the saved file to the favorites array
+
+        // save it!
+        NSURLRequest *request = [NSURLRequest requestWithURL:url];
+        AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc] initWithRequest:request];
+        NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+        NSString *path = [[paths objectAtIndex:0] stringByAppendingPathComponent:url.lastPathComponent];
+        operation.outputStream = [NSOutputStream outputStreamToFileAtPath:path append:NO];
+        
+        [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
+            NSLog(@"Successfully downloaded file to %@", path);
+            
+            NSURL *tmpNewFavoriteURL = [[NSURL alloc] initFileURLWithPath:path];
+            
+            // add the new favorite
+            [(NSMutableArray *)[[self class] favorites] addObject:tmpNewFavoriteURL];
+            
+            // save changes
+            [self saveData];
+            
+            if ( inCompletionBlock )
+                inCompletionBlock(YES,tmpNewFavoriteURL);
+            
+        } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+            NSLog(@"Error: %@", error);
+            
+            if ( inCompletionBlock )
+                inCompletionBlock(NO,nil);
+        }];
+        
+        [operation start];
+    }
     
-    [operation start];
 }
 
 
 
 // removes from favorites and random and adds to blacklist
-+ (BOOL)deleteGif:(NSURL *)url
++ (void)deleteGif:(NSURL *)url
 {
-    BOOL rtnStatus = NO;
-    
     NSURL *tmpURLtoDelete = nil;
     
     // check favorites and randoms for the url
@@ -269,29 +301,39 @@ static BOOL _fetching = NO;
                 tmpURLtoDelete = tmpURL;
         }
         
-        // if we found it, remove it
+        // and remove it if we found it
         if ( tmpURLtoDelete )
+        {
+            // if we found it, remove it
             [tmpArray removeObject:tmpURLtoDelete];
+            
+            if ( ![tmpURLtoDelete isFileURL] )
+            {   // add deleted remote url to blacklist
+                [self addToBlacklist:url];
+            }
+            else
+            {   // TODO: delete local url
+
+            }
+        }
     }
-
-
-    // add it to the blacklist
-    [(NSMutableArray *)[[self class] blacklist] addObject:url];
+    
+    // after checking favorites and randoms, if we didn't find anything...
+    if ( !tmpURLtoDelete )
+        // see if its in the blacklist, and remove it from there
+        [self removeFromBlacklist:url];
+    
     
     // save changes
     [self saveData];
     
-    
-    return rtnStatus;
+    return;
 }
 
 
-
 // report problem to picbot (send 404 command)
-+ (BOOL)reportProblem:(NSURL *)url
++ (void)reportProblem:(NSURL *)url
 {
-    BOOL rtnStatus = NO;
-    
     // delete it
     [self deleteGif:url];
     
@@ -299,8 +341,6 @@ static BOOL _fetching = NO;
     
     // save changes
     [self saveData];
-    
-    return rtnStatus;
 }
 
 

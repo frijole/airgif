@@ -29,13 +29,13 @@
 
 // adds image at address to favorites.
 // if a remote url, downloads and adds local url to favorites
-+ (BOOL)addToFavorites:(NSURL *)url;
++ (void)addToFavorites:(NSURL *)url;
 + (void)addToFavorites:(NSURL *)url withCompletionBlock:(void (^)(BOOL success, NSURL *newFavoriteURL))completionBlock;
 
 // removes from favorites and random and adds to blacklist
-+ (BOOL)deleteGif:(NSURL *)url;
++ (void)deleteGif:(NSURL *)url;
 
 // report problem to picbot (send 404 command)
-+ (BOOL)reportProblem:(NSURL *)url;
++ (void)reportProblem:(NSURL *)url;
 
 @end

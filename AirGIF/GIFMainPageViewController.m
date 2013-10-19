@@ -68,8 +68,9 @@ typedef NS_ENUM(NSInteger, GIFLibraryScrollingDirection) {
     [self setupCurrentPageFromPrefsAnimated:NO];
     
     [self.tapRecognizer requireGestureRecognizerToFail:self.doubleTapRecognizer];
+    [self.doubleLongPressRecognizer requireGestureRecognizerToFail:self.longPressRecognizer];
     
-    [self.view setGestureRecognizers:@[self.tapRecognizer, self.doubleTapRecognizer, self.longPressRecognizer]];
+    [self.view setGestureRecognizers:@[self.tapRecognizer, self.doubleTapRecognizer, self.longPressRecognizer, self.doubleLongPressRecognizer]];
     
     // monitor scrolling direction to verify correct images displayed
     // UIPageViewController's _UIPageViewControllerContentView responds to "scrollView"
@@ -94,6 +95,13 @@ typedef NS_ENUM(NSInteger, GIFLibraryScrollingDirection) {
 }
 #endif
 
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    
+    [self performSelector:@selector(hideBars) withObject:nil afterDelay:1.0f];
+}
+
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
@@ -111,7 +119,7 @@ typedef NS_ENUM(NSInteger, GIFLibraryScrollingDirection) {
     
     NSInteger tmpIndex = [self.library indexOfObject:tmpCurrentURL];
     
-    if ( tmpIndex > 0 ) // if there is another image before the current one...
+    if ( tmpIndex != NSNotFound && tmpIndex > 0 ) // if there is another image before the current one...
     {
         NSURL *tmpPrevURL = [self.library objectAtIndex:tmpIndex-1];
         
@@ -138,7 +146,7 @@ typedef NS_ENUM(NSInteger, GIFLibraryScrollingDirection) {
     
     NSInteger tmpIndex = [self.library indexOfObject:tmpCurrentURL];
     
-    if ( tmpIndex < self.library.count-1 ) // if there is another image after the current one...
+    if ( tmpIndex != NSNotFound && tmpIndex < self.library.count-1 ) // if there is another image after the current one...
     {
         NSURL *tmpNextURL = [self.library objectAtIndex:tmpIndex+1];
         
@@ -229,22 +237,29 @@ typedef NS_ENUM(NSInteger, GIFLibraryScrollingDirection) {
         
         // and display it.
         
-        // indicies are zero-indexed, add one for display
-        tmpCurrentIndex++;
-        
-        // and display it
-        NSInteger tmpTotal = self.library.count;
-        NSString *tmpTitleString = [NSString stringWithFormat:@"%ld of %lu", (long)tmpCurrentIndex, (unsigned long)self.library.count];
-        // add a "+" to the end for random since it'll load more as you go
-        if ( self.segmentedControl.selectedSegmentIndex == GIFLibrarySegmentedControlSelectedIndexRandom )
-            tmpTitleString = [tmpTitleString stringByAppendingString:@"+"];
-        [self.currentPageItem setTitle:tmpTitleString];
-
-        // and if we're close to the end and displaying randoms, get some more.
-        if ( self.segmentedControl.selectedSegmentIndex == GIFLibrarySegmentedControlSelectedIndexRandom &&
-             tmpCurrentIndex > tmpTotal - 5 )
+        if ( tmpCurrentIndex != NSNotFound )
         {
-            [GIFLibrary fetchRandoms:10];
+            // indicies are zero-indexed, add one for display
+            tmpCurrentIndex++;
+            
+            // and display it
+            NSInteger tmpTotal = self.library.count;
+            NSString *tmpTitleString = [NSString stringWithFormat:@"%ld of %lu", (long)tmpCurrentIndex, (unsigned long)self.library.count];
+            // add a "+" to the end for random since it'll load more as you go
+            if ( self.segmentedControl.selectedSegmentIndex == GIFLibrarySegmentedControlSelectedIndexRandom )
+                tmpTitleString = [tmpTitleString stringByAppendingString:@"+"];
+            [self.currentPageItem setTitle:tmpTitleString];
+            
+            // and if we're close to the end and displaying randoms, get some more.
+            if ( self.segmentedControl.selectedSegmentIndex == GIFLibrarySegmentedControlSelectedIndexRandom &&
+                tmpCurrentIndex > tmpTotal - 5 )
+            {
+                [GIFLibrary fetchRandoms:10];
+            }
+        }
+        else
+        {
+            [MMAlertView showAlertViewWithTitle:@"AirGIF" message:@"LOL WUT"];
         }
         
     }
@@ -314,66 +329,126 @@ typedef NS_ENUM(NSInteger, GIFLibraryScrollingDirection) {
                      }];
 }
 
-- (void)longPressTriggered:(id)sender
+- (void)longPressTriggered:(UIGestureRecognizer *)gestureRecognizer
 {
-    // fire up the share sheet, this makes it easy to share things when you're flipping through full screen.
-    [self shareButtonTapped:nil];
+    if ( gestureRecognizer.state == UIGestureRecognizerStateBegan )
+    {
+        // fire up the share sheet, this makes it easy to share things when you're flipping through full screen.
+        [self shareButtonTapped:nil];
+    }
+}
+
+- (void)doubleLongPressTriggered:(UIGestureRecognizer *)gestureRecognizer
+{
+    if ( gestureRecognizer.state == UIGestureRecognizerStateBegan )
+    {
+        MMActionSheet *tmpActionSheet = [[MMActionSheet alloc] initWithTitle:nil
+                                                           cancelButtonTitle:nil
+                                                                 cancelBlock:nil
+                                                      destructiveButtonTitle:@"Delete GIF"
+                                                            destructiveBlock:^{
+                                                                // delete it
+                                                                [self deleteFrontmostGIF];
+                                                                
+                                                                // update the display
+                                                                // by keeping the index and refreshing
+                                                                [self setupCurrentPageFromPrefsAnimated:NO];
+                                                                
+                                                                // TODO: check if the deleted was the last.
+                                                                // currently, will reset to first if the
+                                                                // index is out of range
+                                                            }];
+        
+        if ( self.segmentedControl.selectedSegmentIndex == GIFLibrarySegmentedControlSelectedIndexRandom )
+        {
+            [tmpActionSheet addButtonWithTitle:@"Add to Favorites"
+                                   buttonBlock:^{
+                                       [self addFrontmostGIFtoFavorites];
+                                   }];
+        }
+        
+        [tmpActionSheet addCancelButtonWithTitle:@"Cancel"
+                               cancelButtonBlock:nil];
+        
+        [tmpActionSheet showInView:self.view];
+        
+    }
+    
+}
+
+- (void)editButtonTapped:(id)sender
+{
+    // TODO: promopt to edit filename
+    
+}
+
+- (void)deleteFrontmostGIF
+{
+    if ( [self.viewControllers.firstObject respondsToSelector:@selector(openedURL)] )
+    {
+        
+        NSURL *tmpURL = [self.viewControllers.firstObject openedURL];
+        
+        // remove it
+        [GIFLibrary deleteGif:tmpURL];
+    }
+    
+}
+
+- (void)addFrontmostGIFtoFavorites
+{
+    if ( [self.viewControllers.firstObject respondsToSelector:@selector(openedURL)] )
+    {
+        
+        NSURL *tmpURL = [self.viewControllers.firstObject openedURL];
+        
+        // remove it
+        [GIFLibrary deleteGif:tmpURL];
+        
+        // throw up a HUD while we download the new favorite
+        MBProgressHUD *tmpProgressHUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+        [tmpProgressHUD setLabelText:@"Saving..."];
+        
+        // and see if we can add it to the favorites
+        [GIFLibrary addToFavorites:tmpURL
+               withCompletionBlock:^(BOOL success, NSURL *newFavoriteURL) {
+                   
+                   NSLog(@"addToFavorites completion block firing...");
+                   
+                   // dismiss HUD
+                   [tmpProgressHUD hide:YES];
+                   
+                   if ( success )
+                   {
+                       // switch to favorites
+                       [self.segmentedControl setSelectedSegmentIndex:GIFLibrarySegmentedControlSelectedIndexFavorites];
+                       
+                       // set the index to the newly-selected, last image
+                       [[NSUserDefaults standardUserDefaults] setInteger:[GIFLibrary favorites].count forKey:kGIFLibraryUserDefaultsKeyFavoriteIndex];
+                       [[NSUserDefaults standardUserDefaults] setInteger:GIFLibrarySegmentedControlSelectedIndexFavorites forKey:kGIFLibraryUserDefaultsKeyCurrentLibraryIndex];
+                       [[NSUserDefaults standardUserDefaults] synchronize];
+                       
+                       
+                       // and reload
+                       [self setupCurrentPageFromPrefsAnimated:NO];
+                   }
+                   else
+                   {
+                       [MMAlertView showAlertViewWithTitle:@"💩" message:@"LOLWUT"];
+                   }
+               }];
+    }
 }
 
 - (void)addButtonTapped:(id)sender
 {
-    // TODO: ask to enter a filename?
-    
     [MMAlertView showAlertViewWithTitle:nil
                                 message:@"Add to Favorites?"
                       cancelButtonTitle:@"No"
                       acceptButtonTitle:@"Yes"
                             cancelBlock:nil
                             acceptBlock:^{
-                                
-                                NSLog(@"addToFavorites button block firing...");
-                                
-                                if ( [self.viewControllers.firstObject respondsToSelector:@selector(openedURL)] )
-                                {
-                                    
-                                    NSURL *tmpURL = [self.viewControllers.firstObject openedURL];
-                                    
-                                    // remove it
-                                    [GIFLibrary deleteGif:tmpURL];
-                                    
-                                    // throw up a HUD while we download the new favorite
-                                    MBProgressHUD *tmpProgressHUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-                                    [tmpProgressHUD setLabelText:@"Saving..."];
-                                    
-                                    // and see if we can add it to the favorites
-                                    [GIFLibrary addToFavorites:tmpURL
-                                           withCompletionBlock:^(BOOL success, NSURL *newFavoriteURL) {
-                                               
-                                               NSLog(@"addToFavorites completion block firing...");
-                                               
-                                               // dismiss HUD
-                                               [tmpProgressHUD hide:YES];
-                                               
-                                               if ( success )
-                                               {
-                                                   // switch to favorites
-                                                   [self.segmentedControl setSelectedSegmentIndex:GIFLibrarySegmentedControlSelectedIndexFavorites];
-                                                   
-                                                   // set the index to the newly-selected, last image
-                                                   [[NSUserDefaults standardUserDefaults] setInteger:[GIFLibrary favorites].count forKey:kGIFLibraryUserDefaultsKeyFavoriteIndex];
-                                                   [[NSUserDefaults standardUserDefaults] setInteger:GIFLibrarySegmentedControlSelectedIndexFavorites forKey:kGIFLibraryUserDefaultsKeyCurrentLibraryIndex];
-                                                   [[NSUserDefaults standardUserDefaults] synchronize];
-                                                   
-                                                   
-                                                   // and reload
-                                                   [self setupCurrentPageFromPrefsAnimated:NO];
-                                               }
-                                               else
-                                               {
-                                                   [MMAlertView showAlertViewWithTitle:@"💩" message:@"LOLWUT"];
-                                               }
-                                           }];
-                                }
+                                [self addFrontmostGIFtoFavorites];
                             }];
    
 }
@@ -388,8 +463,9 @@ typedef NS_ENUM(NSInteger, GIFLibraryScrollingDirection) {
         
         // bail out if we didn't get a url
         if ( !tmpURL ) {
-            UIAlertView *tmpAlert = [[UIAlertView alloc] initWithTitle:@"AirGIF" message:@"Oops, the GIF got lost between there and here." delegate:nil cancelButtonTitle:@"Bummer, Dude." otherButtonTitles:nil];
-            [tmpAlert show];
+            [MMAlertView showAlertViewWithTitle:nil
+                                        message:@"I'm sorry Dave,\nI can't do that."
+                               closeButtonTitle:@"OK"];
             return;
         }
         
@@ -468,12 +544,9 @@ typedef NS_ENUM(NSInteger, GIFLibraryScrollingDirection) {
 - (void)segmentedControlChanged:(id)sender
 {
     // save new library selection
-    NSInteger tmpLibraryIndex = [(UISegmentedControl *)sender selectedSegmentIndex];
+    GIFLibrarySegmentedControlSelectedIndex tmpLibraryIndex = [(UISegmentedControl *)sender selectedSegmentIndex];
     [[NSUserDefaults standardUserDefaults] setInteger:tmpLibraryIndex forKey:kGIFLibraryUserDefaultsKeyCurrentLibraryIndex];
     [[NSUserDefaults standardUserDefaults] synchronize];
-    
-    // only enable "Add to Favorites" for random library
-    [self.navigationItem.leftBarButtonItem setEnabled:(self.segmentedControl.selectedSegmentIndex==GIFLibrarySegmentedControlSelectedIndexRandom)];
     
     // and update the display
     [self setupCurrentPageFromPrefsAnimated:NO];
@@ -487,16 +560,30 @@ typedef NS_ENUM(NSInteger, GIFLibraryScrollingDirection) {
     [tmpFirstSinglePageVC.imageView setContentMode:(self.scaleImages?UIViewContentModeScaleAspectFill:UIViewContentModeScaleAspectFit)];
     
     // setup library and first page
-    NSInteger tmpLibraryIndex = [[NSUserDefaults standardUserDefaults] integerForKey:kGIFLibraryUserDefaultsKeyCurrentLibraryIndex];
+    GIFLibrarySegmentedControlSelectedIndex tmpLibraryIndex = [[NSUserDefaults standardUserDefaults] integerForKey:kGIFLibraryUserDefaultsKeyCurrentLibraryIndex];
     [self.segmentedControl setSelectedSegmentIndex:tmpLibraryIndex];
-    if ( tmpLibraryIndex == GIFLibrarySegmentedControlSelectedIndexRandom )
-        [self setLibrary:[GIFLibrary randoms]];
-    else
-        [self setLibrary:[GIFLibrary favorites]];
+    
+    switch ( tmpLibraryIndex ) {
+        case GIFLibrarySegmentedControlSelectedIndexRandom:
+            // set library
+            [self setLibrary:[GIFLibrary randoms]];
+            
+            // and button "Add to Favorites" for random items
+            [self.navigationItem setRightBarButtonItem:self.addToFavoritesButton animated:YES];
+            break;
+            
+        case GIFLibrarySegmentedControlSelectedIndexFavorites:
+            // set library
+            [self setLibrary:[GIFLibrary favorites]];
+
+            // and button is edit for favorites
+            [self.navigationItem setRightBarButtonItem:self.customEditButton animated:YES];
+            break;
+    }
     
     NSInteger tmpPageIndex = [[NSUserDefaults standardUserDefaults] integerForKey:(tmpLibraryIndex?kGIFLibraryUserDefaultsKeyRandomIndex:kGIFLibraryUserDefaultsKeyFavoriteIndex)];
     NSURL *tmpURL = nil;
-    if ( tmpPageIndex < self.library.count ) // aviod out of range exception
+    if ( tmpPageIndex < self.library.count ) // avoid out of range exception
         tmpURL = [self.library objectAtIndex:tmpPageIndex];
     else
         tmpURL = self.library.lastObject; // out of range, probably deleted one at the end or something.
@@ -505,16 +592,24 @@ typedef NS_ENUM(NSInteger, GIFLibraryScrollingDirection) {
     
     // update interface
     tmpPageIndex = [self.library indexOfObject:tmpURL]; // reset in case we were over and went to the first
-    tmpPageIndex++; // array is zero-indexed, UI starts with one.
-    NSString *tmpTitleString = [NSString stringWithFormat:@"%ld of %lu", (long)tmpPageIndex, (unsigned long)self.library.count];
-    // add a "+" to the end for random since it'll load more as you go
-    if ( tmpLibraryIndex == GIFLibrarySegmentedControlSelectedIndexRandom )
-        tmpTitleString = [tmpTitleString stringByAppendingString:@"+"];
-    
-    [self.currentPageItem setTitle:tmpTitleString];
-    
-    // only enable "Add to Favorites" for random library
-    [self.navigationItem.leftBarButtonItem setEnabled:(self.segmentedControl.selectedSegmentIndex==GIFLibrarySegmentedControlSelectedIndexRandom)];
+
+    if ( tmpPageIndex != NSNotFound )
+    {
+        tmpPageIndex++; // array is zero-indexed, UI starts with one.
+        NSString *tmpTitleString = [NSString stringWithFormat:@"%ld of %lu", (long)tmpPageIndex, (unsigned long)self.library.count];
+        // add a "+" to the end for random since it'll load more as you go
+        if ( tmpLibraryIndex == GIFLibrarySegmentedControlSelectedIndexRandom )
+            tmpTitleString = [tmpTitleString stringByAppendingString:@"+"];
+        [self.currentPageItem setTitle:tmpTitleString];
+    }
+    else if ( self.library.count > 0 )
+    {
+        [self.currentPageItem setTitle:@"???"];
+    }
+    else
+    {
+        [self.currentPageItem setTitle:@"No Favorites"];
+    }
 
     [self setViewControllers:@[tmpFirstSinglePageVC]
                    direction:(tmpLibraryIndex?UIPageViewControllerNavigationDirectionForward:UIPageViewControllerNavigationDirectionReverse)

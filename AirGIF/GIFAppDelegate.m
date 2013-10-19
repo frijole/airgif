@@ -36,6 +36,7 @@
     {
         [[UINavigationBar appearance] setBarTintColor:[UIColor blackColor]];
         [[UIToolbar appearance] setBarTintColor:[UIColor blackColor]];
+        [[UISegmentedControl appearance] setTintColor:[UIColor lightGrayColor]];
         
         [self.window setTintColor:[UIColor whiteColor]];
     }

@@ -116,7 +116,7 @@
 #pragma mark - Button Actions
 - (void)discardButtonTapped:(id)sender
 {
-    // TODO: delete file?
+    // TODO: delete file
 
     // go away
     [self.presentingViewController dismissViewControllerAnimated:YES
@@ -143,15 +143,9 @@
         // savedDocumentURL = [NSURL URLWithString:@"file://"];
     }
     
-    BOOL success = [GIFLibrary addToFavorites:savedDocumentURL];
-    
-    // did it work?
-    NSLog(@"added to favorites: %d",success);
-    
-    if ( success ) {
-        
-        // TODO: tell main vc to display new favorite
-        if ( [self.presentingViewController respondsToSelector:@selector(viewControllers)] )
+    [GIFLibrary addToFavorites:self.openedURL withCompletionBlock:^(BOOL success, NSURL *newFavoriteURL) {
+        // TODO: tell main vc to display new favorite (uh, doesn't this work?)
+        if ( success && [self.presentingViewController respondsToSelector:@selector(viewControllers)] )
         {
             GIFMainPageViewController *tmpParentVC = [(UINavigationController *)[self presentingViewController] viewControllers].firstObject;
             
@@ -160,7 +154,7 @@
                 UIStoryboard *tmpStoryboard = [UIStoryboard storyboardWithName:@"Main_iPhone" bundle:[NSBundle mainBundle]];
                 GIFSinglePageViewController *tmpNewFavoriteVC = [tmpStoryboard instantiateViewControllerWithIdentifier:@"GIFSinglePageViewController"];
                 [tmpNewFavoriteVC loadView]; // so we can configure it
-                // TODO: set real image, and use -setOpenedURL
+                                             // TODO: set real image, and use -setOpenedURL
                 [tmpNewFavoriteVC.imageView setContentMode:(self.scaleImages?UIViewContentModeScaleAspectFill:UIViewContentModeScaleAspectFit)];
                 [tmpNewFavoriteVC.imageView setClipsToBounds:YES]; // TODO: move to a more robust location
                 [tmpNewFavoriteVC setOpenedURL:self.openedURL];
@@ -173,12 +167,7 @@
         // and go away
         [self.presentingViewController dismissViewControllerAnimated:YES
                                                           completion:nil];
-    }
-    else {
-        // TODO: alert?
-        [self.presentingViewController dismissViewControllerAnimated:YES
-                                                          completion:nil];
-    }
+    }];
 }
 
 - (void)shareButtonTapped:(id)sender

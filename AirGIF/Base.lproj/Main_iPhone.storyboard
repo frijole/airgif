@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="4510" systemVersion="13A598" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="Qaj-Jz-HYl">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="4510" systemVersion="12F45" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="Qaj-Jz-HYl">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3742"/>
     </dependencies>
@@ -23,7 +23,7 @@
         <scene sceneID="OzW-eR-PQs">
             <objects>
                 <tableViewController id="RXD-DE-PzT" customClass="GIFEditLibraryViewController" sceneMemberID="viewController">
-                    <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" indicatorStyle="black" dataMode="prototypes" style="grouped" separatorStyle="default" allowsSelection="NO" rowHeight="44" sectionHeaderHeight="10" sectionFooterHeight="10" id="TTX-YP-TbO">
+                    <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" indicatorStyle="black" keyboardDismissMode="interactive" dataMode="prototypes" style="grouped" separatorStyle="default" allowsSelection="NO" rowHeight="44" sectionHeaderHeight="10" sectionFooterHeight="10" id="TTX-YP-TbO">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
@@ -36,7 +36,7 @@
                     </tableView>
                     <navigationItem key="navigationItem" title="Edit GIFs" id="R9a-gw-ZkZ">
                         <barButtonItem key="backBarButtonItem" title="Edit" id="LfU-9z-lJt"/>
-                        <barButtonItem key="rightBarButtonItem" systemItem="done" id="WuG-Ps-ZbD">
+                        <barButtonItem key="leftBarButtonItem" systemItem="done" id="WuG-Ps-ZbD">
                             <connections>
                                 <action selector="done:" destination="RXD-DE-PzT" id="PMO-VX-Gcp"/>
                             </connections>
@@ -129,12 +129,12 @@
                     </toolbarItems>
                     <navigationItem key="navigationItem" id="ckG-XX-uag">
                         <nil key="title"/>
-                        <barButtonItem key="leftBarButtonItem" systemItem="add" id="Dtl-VW-7ZA">
+                        <barButtonItem key="leftBarButtonItem" systemItem="organize" id="G83-Ey-4B9">
                             <connections>
-                                <action selector="addButtonTapped:" destination="mhL-8x-wC6" id="IlK-y6-AcV"/>
+                                <segue destination="071-Jf-xhw" kind="modal" id="aEQ-pt-fhU"/>
                             </connections>
                         </barButtonItem>
-                        <segmentedControl key="titleView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="bar" selectedSegmentIndex="0" id="wnB-qf-cbi">
+                        <segmentedControl key="titleView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" id="wnB-qf-cbi">
                             <rect key="frame" x="90" y="7" width="141" height="30"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <segments>
@@ -145,14 +145,17 @@
                                 <action selector="segmentedControlChanged:" destination="mhL-8x-wC6" eventType="valueChanged" id="lEA-ow-piR"/>
                             </connections>
                         </segmentedControl>
-                        <barButtonItem key="rightBarButtonItem" systemItem="edit" id="G83-Ey-4B9">
+                        <barButtonItem key="rightBarButtonItem" style="plain" systemItem="compose" id="eWG-FG-Af0">
                             <connections>
-                                <segue destination="071-Jf-xhw" kind="modal" id="aEQ-pt-fhU"/>
+                                <action selector="editButtonTapped:" destination="mhL-8x-wC6" id="hsh-sF-adU"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
                     <connections>
+                        <outlet property="addToFavoritesButton" destination="6hD-UP-BzY" id="Ftn-yw-fNI"/>
                         <outlet property="currentPageItem" destination="w8f-G7-WFy" id="NbY-ET-Q3y"/>
+                        <outlet property="customEditButton" destination="eWG-FG-Af0" id="5TV-yD-Rg2"/>
+                        <outlet property="doubleLongPressRecognizer" destination="Iq6-PE-inU" id="aAR-Pl-iDq"/>
                         <outlet property="doubleTapRecognizer" destination="84D-AT-UN0" id="2Fq-Bq-Zx5"/>
                         <outlet property="longPressRecognizer" destination="tcF-am-Brk" id="x1i-9v-GY5"/>
                         <outlet property="segmentedControl" destination="wnB-qf-cbi" id="TDz-b5-rYS"/>
@@ -175,7 +178,17 @@
                         <action selector="longPressTriggered:" destination="mhL-8x-wC6" id="U3t-0W-9HK"/>
                     </connections>
                 </pongPressGestureRecognizer>
+                <pongPressGestureRecognizer allowableMovement="10" minimumPressDuration="0.5" numberOfTouchesRequired="2" id="Iq6-PE-inU">
+                    <connections>
+                        <action selector="doubleLongPressTriggered:" destination="mhL-8x-wC6" id="mna-y7-Q1f"/>
+                    </connections>
+                </pongPressGestureRecognizer>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="pfR-rn-TeC" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <barButtonItem systemItem="add" id="6hD-UP-BzY">
+                    <connections>
+                        <action selector="addButtonTapped:" destination="mhL-8x-wC6" id="uNP-D8-IGK"/>
+                    </connections>
+                </barButtonItem>
             </objects>
             <point key="canvasLocation" x="409" y="-142"/>
         </scene>
@@ -191,26 +204,38 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" hidesWhenStopped="YES" animating="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="mbH-EH-9TA">
-                                <rect key="frame" x="142" y="410" width="37" height="37"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                            </activityIndicatorView>
                             <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Zhi-s5-DaP">
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                            </imageView>
+                            <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" animating="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="mbH-EH-9TA">
+                                <rect key="frame" x="142" y="410" width="37" height="37"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            </activityIndicatorView>
+                            <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" fixedFrame="YES" progress="0.5" progressImage="bar" trackImage="track" translatesAutoresizingMaskIntoConstraints="NO" id="0jo-de-Sbq">
+                                <rect key="frame" x="85" y="417" width="150" height="23"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            </progressView>
+                            <imageView hidden="YES" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" fixedFrame="YES" image="x" translatesAutoresizingMaskIntoConstraints="NO" id="QQ4-rA-BLn">
+                                <rect key="frame" x="145" y="414" width="30" height="30"/>
+                                <autoresizingMask key="autoresizingMask"/>
                             </imageView>
                         </subviews>
                         <color key="backgroundColor" white="0.10000000000000001" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstAttribute="bottom" secondItem="Zhi-s5-DaP" secondAttribute="bottom" id="1cu-1A-T8p"/>
+                            <constraint firstAttribute="centerX" secondItem="mbH-EH-9TA" secondAttribute="centerX" constant="-0.5" id="GVZ-Wo-cJd"/>
                             <constraint firstItem="Zhi-s5-DaP" firstAttribute="top" secondItem="Suh-xI-XtQ" secondAttribute="top" id="McU-45-pdj"/>
                             <constraint firstItem="Zhi-s5-DaP" firstAttribute="leading" secondItem="Suh-xI-XtQ" secondAttribute="leading" id="Obl-8F-4KE"/>
                             <constraint firstAttribute="trailing" secondItem="Zhi-s5-DaP" secondAttribute="trailing" id="flp-25-pfy"/>
+                            <constraint firstItem="zWH-Hm-Bkp" firstAttribute="top" secondItem="mbH-EH-9TA" secondAttribute="bottom" constant="121" id="q6p-7C-GC0"/>
                         </constraints>
                     </view>
                     <connections>
                         <outlet property="imageView" destination="Zhi-s5-DaP" id="rcN-vT-EtW"/>
+                        <outlet property="progressBar" destination="0jo-de-Sbq" id="JHB-Db-ERj"/>
                         <outlet property="spinner" destination="mbH-EH-9TA" id="leG-2L-M4h"/>
+                        <outlet property="xImageView" destination="QQ4-rA-BLn" id="wZw-z7-RTz"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="49Z-Od-2RB" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -309,6 +334,11 @@
             <point key="canvasLocation" x="1648" y="-142"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="bar" width="232" height="23"/>
+        <image name="track" width="232" height="23"/>
+        <image name="x" width="30" height="30"/>
+    </resources>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>
         <simulatedOrientationMetrics key="orientation"/>

@@ -10,6 +10,8 @@
 
 @interface GIFSinglePageViewController : UIViewController
 
+@property (nonatomic, weak) IBOutlet UIProgressView *progressBar;
+@property (nonatomic, weak) IBOutlet UIImageView *xImageView;
 @property (nonatomic, weak) IBOutlet UIActivityIndicatorView *spinner;
 
 @property (nonatomic, weak) IBOutlet UIImageView *imageView;

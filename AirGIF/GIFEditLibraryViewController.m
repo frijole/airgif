@@ -19,7 +19,133 @@ typedef NS_ENUM(NSInteger, GIFEditLibraryTableSection) {
     GIFEditLibraryTableSectionCount
 };
 
-@interface GIFEditLibraryViewController ()
+@class GIFEditLibraryViewController, GIFEditLibraryTableViewCell;
+
+@protocol GIFEditLibraryCellDelegate <NSObject>
+
+@optional
+- (BOOL)editLibraryCellCanEdit:(GIFEditLibraryTableViewCell *)cell;
+- (void)editLibraryCellDidBeginEditing:(GIFEditLibraryTableViewCell *)cell;
+- (void)editLibraryCellDidEndEditing:(GIFEditLibraryTableViewCell *)cell;
+@end
+
+@interface GIFEditLibraryTableViewCell : UITableViewCell <UITextFieldDelegate>
+@property (nonatomic, weak) NSURL *gifurl;
+@property (nonatomic, weak) UITextField *textField;
+@property (nonatomic, weak) id<GIFEditLibraryCellDelegate>cellDelegate;
+@end
+
+@implementation GIFEditLibraryTableViewCell
+
+- (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
+{
+    if ( self = [super initWithStyle:style reuseIdentifier:reuseIdentifier] )
+    {
+        // start off by taking up the whole space. later, we'll resize to match the label.
+        UITextField *tmpTextField = [[UITextField alloc] initWithFrame:self.contentView.bounds];
+        
+        [tmpTextField setBackgroundColor:[UIColor clearColor]];
+        [tmpTextField setAutoresizingMask:(UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth)];
+        [tmpTextField setTextAlignment:NSTextAlignmentLeft];
+        [tmpTextField setFont:self.textLabel.font];
+        [tmpTextField setKeyboardType:UIKeyboardTypeURL];
+        [tmpTextField setReturnKeyType:UIReturnKeyDone];
+        [tmpTextField setDelegate:self];
+        
+        [self.contentView addSubview:tmpTextField];
+        [self setTextField:tmpTextField];
+
+        [self.textLabel setBackgroundColor:[UIColor clearColor]];
+    }
+    
+    return self;
+}
+
+- (void)setGifurl:(NSURL *)gifurl
+{
+    _gifurl = gifurl;
+    
+    NSString *tmpTextLabelString = [[gifurl absoluteString] lastPathComponent];
+    
+    [self.textLabel setText:tmpTextLabelString];
+}
+
+- (void)prepareForReuse
+{
+    [super prepareForReuse];
+    
+    [self.textField resignFirstResponder];
+}
+
+- (BOOL)textFieldShouldBeginEditing:(UITextField *)textField
+{
+    // default yes
+    BOOL rtnValue = YES;
+
+    // unless the delegate has something else to say
+    if ( self.cellDelegate && [self.cellDelegate respondsToSelector:@selector(editLibraryCellCanEdit:)] )
+        rtnValue = [self.cellDelegate editLibraryCellCanEdit:self];
+    
+    return rtnValue;
+}
+
+- (void)textFieldDidBeginEditing:(UITextField *)textField
+{
+    // get ready to edit
+    // grab the label frame and text
+    CGRect tmpNewFrame = self.textLabel.frame;
+    tmpNewFrame.size.width = CGRectGetWidth(self.contentView.bounds)-CGRectGetMinX(tmpNewFrame);
+    [self.textField setFrame:tmpNewFrame];
+    [self.textField setText:self.textLabel.text];
+    
+    // hide the text label (clearing the text messes up its autolayout when the cell changes state eg: to delete)
+    [self.textLabel setHidden:YES];
+
+    if ( self.cellDelegate && [self.cellDelegate respondsToSelector:@selector(editLibraryCellDidBeginEditing:)] )
+        [self.cellDelegate editLibraryCellDidBeginEditing:self];
+}
+
+- (void)textFieldDidEndEditing:(UITextField *)textField
+{
+    // update the label text
+    [self.textLabel setText:textField.text];
+    [self.textLabel setHidden:NO];
+    
+    // clear the text field
+    [textField setText:@""];
+    
+    // and reset to take up the whole frame (to make activation easy)
+    [textField setFrame:self.contentView.bounds];
+
+    if ( self.cellDelegate && [self.cellDelegate respondsToSelector:@selector(editLibraryCellDidEndEditing:)] )
+        [self.cellDelegate editLibraryCellDidEndEditing:self];
+}
+
+- (BOOL)textFieldShouldReturn:(UITextField *)textField
+{
+    // end editing
+    [textField resignFirstResponder];
+    
+    // and don't return
+    return NO;
+}
+
+- (BOOL)textFieldShouldEndEditing:(UITextField *)textField
+{
+    // TODO: validate
+
+    return YES;
+}
+
+@end
+
+
+
+
+
+@interface GIFEditLibraryViewController () <GIFEditLibraryCellDelegate>
+
+@property (nonatomic, weak) UITextField *currentTextField;
 
 @end
 
@@ -44,7 +170,7 @@ typedef NS_ENUM(NSInteger, GIFEditLibraryTableSection) {
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
 
-    [self.tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:CellIdentifier];
+    [self.tableView registerClass:[GIFEditLibraryTableViewCell class] forCellReuseIdentifier:CellIdentifier];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -56,7 +182,53 @@ typedef NS_ENUM(NSInteger, GIFEditLibraryTableSection) {
 
 - (IBAction)done:(id)sender
 {
-    [self.presentingViewController dismissViewControllerAnimated:YES completion:nil];
+    if ( self.currentTextField )
+        [self.currentTextField resignFirstResponder];
+    else
+        [self.presentingViewController dismissViewControllerAnimated:YES completion:nil];
+}
+
+#pragma mark - Cell Delegate
+// this supports the done button, but keeps the actual text field encapsulated in the cell
+- (void)editLibraryCellDidBeginEditing:(GIFEditLibraryTableViewCell *)cell
+{
+    [self setCurrentTextField:cell.textField];
+}
+
+- (void)editLibraryCellDidEndEditing:(GIFEditLibraryTableViewCell *)cell
+{
+    // TODO: save changed filename
+    // NOTE: if the cell was deleted while the text field was active,
+    // this is called after the item was removed via commitEditingStyle
+    // so don't rename something that's been deleted!
+
+    NSURL *tmpEditedURL = cell.gifurl;
+    NSInteger tmpFavoritesIndex = [[GIFLibrary favorites] indexOfObject:tmpEditedURL];
+    if ( tmpFavoritesIndex != NSNotFound )
+    {
+        // TODO: move the file, change the name, update the data store, cell, etc.
+    }
+    else
+    {
+        NSLog(@"finished editing a file that's been deleted");
+    }
+    
+    [self setCurrentTextField:nil];
+}
+
+// and allows preventing editing of items without the cells having to know everything
+- (BOOL)editLibraryCellCanEdit:(GIFEditLibraryTableViewCell *)cell
+{
+    // default no
+    BOOL rtnValue = NO;
+    
+    NSIndexPath *tmpIndexPath = [self.tableView indexPathForCell:cell];
+    
+    // but we can edit our favorites' filenames
+    if ( tmpIndexPath.section == GIFEditLibraryTableSectionFavorites )
+        rtnValue = YES;
+
+    return rtnValue;
 }
 
 #pragma mark - Table view data source
@@ -112,24 +284,34 @@ typedef NS_ENUM(NSInteger, GIFEditLibraryTableSection) {
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    UITableViewCell *rtnCell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier forIndexPath:indexPath];
+    GIFEditLibraryTableViewCell *rtnCell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier forIndexPath:indexPath];
     
     // Configure the cell...
     // [rtnCell.textLabel setText:@"http://foo.bar/baz.gif"];
     
+    NSURL *tmpURLforCell = nil;
+    
     switch ( indexPath.section ) {
         case GIFEditLibraryTableSectionFavorites:
-            [rtnCell.textLabel setText:[[(NSURL *)[GIFLibrary favorites][indexPath.row] absoluteString] lastPathComponent]];
+            tmpURLforCell = [GIFLibrary favorites][indexPath.row];
             break;
         case GIFEditLibraryTableSectionRandom:
-            [rtnCell.textLabel setText:[(NSURL *)[GIFLibrary randoms][indexPath.row] absoluteString]];
+            tmpURLforCell = [GIFLibrary randoms][indexPath.row];
             break;
         case GIFEditLibraryTableSectionBans:
-            [rtnCell.textLabel setText:[(NSURL *)[GIFLibrary blacklist][indexPath.row] absoluteString]];
+            tmpURLforCell = [GIFLibrary blacklist][indexPath.row];
             break;
         default:
             break;
     }
+    
+    // send url to cell to display
+    if ( tmpURLforCell && [rtnCell respondsToSelector:@selector(setGifurl:)] )
+        [rtnCell setGifurl:tmpURLforCell];
+    
+    // listen for editing events
+    if ( [rtnCell respondsToSelector:@selector(setCellDelegate:)] )
+        [rtnCell setCellDelegate:self];
     
     return rtnCell;
 }
@@ -167,20 +349,43 @@ typedef NS_ENUM(NSInteger, GIFEditLibraryTableSection) {
 {
     if (editingStyle == UITableViewCellEditingStyleDelete)
     {   // Delete the row from the data source
+
+        NSURL *tmpURLToDelete = nil;
         
         switch ( indexPath.section ) {
             case GIFEditLibraryTableSectionFavorites:
-                [(NSMutableArray *)[GIFLibrary favorites] removeObjectAtIndex:indexPath.row];
+                tmpURLToDelete = [GIFLibrary favorites][indexPath.row];
                 break;
             case GIFEditLibraryTableSectionRandom:
-                [(NSMutableArray *)[GIFLibrary randoms] removeObjectAtIndex:indexPath.row];
+                tmpURLToDelete = [GIFLibrary randoms][indexPath.row];
                 break;
             case GIFEditLibraryTableSectionBans:
-                [(NSMutableArray *)[GIFLibrary blacklist] removeObjectAtIndex:indexPath.row];
+                tmpURLToDelete = [GIFLibrary blacklist][indexPath.row];
                 break;
         }
         
-        [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
+        if ( tmpURLToDelete )
+        {
+            [GIFLibrary deleteGif:tmpURLToDelete];
+        
+            [tableView beginUpdates];
+            
+            [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationLeft];
+            
+            // if the deleted item was in the randoms...
+            if ( indexPath.section == GIFEditLibraryTableSectionRandom )
+            {
+                // see if its been added to the blacklist...
+                NSInteger tmpBanIndex = [[GIFLibrary blacklist] indexOfObject:tmpURLToDelete];
+                if ( tmpBanIndex != NSNotFound )
+                {   // and if it has, insert it
+                    NSIndexPath *tmpIndexPath = [NSIndexPath indexPathForRow:tmpBanIndex inSection:GIFEditLibraryTableSectionBans];
+                    [tableView insertRowsAtIndexPaths:@[tmpIndexPath] withRowAnimation:UITableViewRowAnimationLeft];
+                }
+            }
+            
+            [tableView endUpdates];
+        }
     }
     /*
     else if (editingStyle == UITableViewCellEditingStyleInsert)
@@ -212,20 +417,6 @@ typedef NS_ENUM(NSInteger, GIFEditLibraryTableSection) {
 {
     // Return NO if you do not want the item to be re-orderable.
     return NO;
-}
-
-
-
-#pragma mark - Navigation
-
-// In a story board-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
-{
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-    if ( [segue.identifier isEqualToString:@"done"] ) {
-        [self.presentingViewController dismissViewControllerAnimated:YES completion:nil];
-    }
 }
 
 

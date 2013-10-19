@@ -43,7 +43,6 @@
 		3CA3509917ED225E00F17A03 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CA3509817ED225E00F17A03 /* main.m */; };
 		3CA3509D17ED225E00F17A03 /* GIFAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CA3509C17ED225E00F17A03 /* GIFAppDelegate.m */; };
 		3CA350A017ED225E00F17A03 /* Main_iPhone.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3CA3509E17ED225E00F17A03 /* Main_iPhone.storyboard */; };
-		3CA350A317ED225E00F17A03 /* Main_iPad.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3CA350A117ED225E00F17A03 /* Main_iPad.storyboard */; };
 		3CA350A917ED225E00F17A03 /* GIFSettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CA350A817ED225E00F17A03 /* GIFSettingsViewController.m */; };
 		3CA350AB17ED225E00F17A03 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3CA350AA17ED225E00F17A03 /* Images.xcassets */; };
 		3CA350B217ED225E00F17A03 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3CA350B117ED225E00F17A03 /* XCTest.framework */; };
@@ -131,7 +130,6 @@
 		3CA3509B17ED225E00F17A03 /* GIFAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GIFAppDelegate.h; sourceTree = "<group>"; };
 		3CA3509C17ED225E00F17A03 /* GIFAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GIFAppDelegate.m; sourceTree = "<group>"; };
 		3CA3509F17ED225E00F17A03 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main_iPhone.storyboard; sourceTree = "<group>"; };
-		3CA350A217ED225E00F17A03 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main_iPad.storyboard; sourceTree = "<group>"; };
 		3CA350A717ED225E00F17A03 /* GIFSettingsViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GIFSettingsViewController.h; sourceTree = "<group>"; };
 		3CA350A817ED225E00F17A03 /* GIFSettingsViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GIFSettingsViewController.m; sourceTree = "<group>"; };
 		3CA350AA17ED225E00F17A03 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
@@ -280,7 +278,6 @@
 				3CA3509E17ED225E00F17A03 /* Main_iPhone.storyboard */,
 				3C5B40BA180DCD2000ACDAAF /* GIFNavigationController.h */,
 				3C5B40BB180DCD2000ACDAAF /* GIFNavigationController.m */,
-				3CA350A117ED225E00F17A03 /* Main_iPad.storyboard */,
 				3C8E271D18033B5B00619359 /* GIFMainPageViewController.h */,
 				3C8E271E18033B5B00619359 /* GIFMainPageViewController.m */,
 				3C8E272418034A1800619359 /* GIFSinglePageViewController.h */,
@@ -473,7 +470,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3CA350A317ED225E00F17A03 /* Main_iPad.storyboard in Resources */,
 				3C2DFF2917FF8BE600E71D57 /* rally.gif in Resources */,
 				3C2DFF2B17FF8BF100E71D57 /* senna prost.gif in Resources */,
 				3CA350AB17ED225E00F17A03 /* Images.xcassets in Resources */,
@@ -581,14 +577,6 @@
 				3CA3509F17ED225E00F17A03 /* Base */,
 			);
 			name = Main_iPhone.storyboard;
-			sourceTree = "<group>";
-		};
-		3CA350A117ED225E00F17A03 /* Main_iPad.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				3CA350A217ED225E00F17A03 /* Base */,
-			);
-			name = Main_iPad.storyboard;
 			sourceTree = "<group>";
 		};
 		3CA350BA17ED225E00F17A03 /* InfoPlist.strings */ = {
