@@ -127,22 +127,6 @@
 {
     NSAssert(self.openedURL, @"addToFavorites tapped, but no openedURL set");
     
-    // check url, if a file, copy to Documents folder, and add url there to favorites
-    NSURL *savedDocumentURL = self.openedURL; // TODO: disable default pass-through after implementing below
-    
-    if ( self.openedURL.isFileURL )
-    {   // is file
-        
-        // TODO: check for location, move to Documents if necessary and save final path
-        // savedDocumentURL = [NSURL URLWithString:@"file://"];
-    }
-    else
-    {   // is remote,
-
-        // TODO: download into Documents and save path
-        // savedDocumentURL = [NSURL URLWithString:@"file://"];
-    }
-    
     [GIFLibrary addToFavorites:self.openedURL withCompletionBlock:^(BOOL success, NSURL *newFavoriteURL) {
         // TODO: tell main vc to display new favorite (uh, doesn't this work?)
         if ( success && [self.presentingViewController respondsToSelector:@selector(viewControllers)] )
