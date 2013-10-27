@@ -10,6 +10,8 @@
 
 #import "GIFLibrary.h"
 
+#import "MMAlertView.h"
+
 #define CellIdentifier @"GIFEditLibraryCellIdentifier"
 
 typedef NS_ENUM(NSInteger, GIFEditLibraryTableSection) {
@@ -45,17 +47,23 @@ typedef NS_ENUM(NSInteger, GIFEditLibraryTableSection) {
         UITextField *tmpTextField = [[UITextField alloc] initWithFrame:self.contentView.bounds];
         
         [tmpTextField setBackgroundColor:[UIColor clearColor]];
+        [tmpTextField setTextColor:[UIColor blackColor]];
+        [tmpTextField setFont:self.textLabel.font];
         [tmpTextField setAutoresizingMask:(UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth)];
         [tmpTextField setTextAlignment:NSTextAlignmentLeft];
-        [tmpTextField setFont:self.textLabel.font];
         [tmpTextField setKeyboardType:UIKeyboardTypeURL];
         [tmpTextField setReturnKeyType:UIReturnKeyDone];
         [tmpTextField setDelegate:self];
+        [tmpTextField setClearButtonMode:UITextFieldViewModeWhileEditing];
         
         [self.contentView addSubview:tmpTextField];
         [self setTextField:tmpTextField];
 
         [self.textLabel setBackgroundColor:[UIColor clearColor]];
+        
+        // for some reason, cursor was white and setting tint color here resolved it.
+        [self setTintColor:[[[UIApplication sharedApplication] delegate] window].tintColor];
+        
     }
     
     return self;
@@ -65,7 +73,14 @@ typedef NS_ENUM(NSInteger, GIFEditLibraryTableSection) {
 {
     _gifurl = gifurl;
     
+    // get the filename
     NSString *tmpTextLabelString = [[gifurl absoluteString] lastPathComponent];
+
+    // get rid of percent encoding
+    tmpTextLabelString = [tmpTextLabelString stringByRemovingPercentEncoding];
+    
+    // and drop the extension
+    tmpTextLabelString = [tmpTextLabelString stringByReplacingOccurrencesOfString:@".gif" withString:@""];
     
     [self.textLabel setText:tmpTextLabelString];
 }
@@ -92,12 +107,14 @@ typedef NS_ENUM(NSInteger, GIFEditLibraryTableSection) {
 - (void)textFieldDidBeginEditing:(UITextField *)textField
 {
     // get ready to edit
+    
     // grab the label frame and text
     CGRect tmpNewFrame = self.textLabel.frame;
     tmpNewFrame.size.width = CGRectGetWidth(self.contentView.bounds)-CGRectGetMinX(tmpNewFrame);
     [self.textField setFrame:tmpNewFrame];
     [self.textField setText:self.textLabel.text];
-    
+    [self.textField setFont:self.textLabel.font];
+
     // hide the text label (clearing the text messes up its autolayout when the cell changes state eg: to delete)
     [self.textLabel setHidden:YES];
 
@@ -114,9 +131,9 @@ typedef NS_ENUM(NSInteger, GIFEditLibraryTableSection) {
     // clear the text field
     [textField setText:@""];
     
-    // and reset to take up the whole frame (to make activation easy)
+    // reset to take up the whole frame (to make activation easy)
     [textField setFrame:self.contentView.bounds];
-
+    
     if ( self.cellDelegate && [self.cellDelegate respondsToSelector:@selector(editLibraryCellDidEndEditing:)] )
         [self.cellDelegate editLibraryCellDidEndEditing:self];
 }
@@ -171,6 +188,8 @@ typedef NS_ENUM(NSInteger, GIFEditLibraryTableSection) {
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
 
     [self.tableView registerClass:[GIFEditLibraryTableViewCell class] forCellReuseIdentifier:CellIdentifier];
+    
+    [self.tableView setAllowsSelectionDuringEditing:YES];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -202,15 +221,51 @@ typedef NS_ENUM(NSInteger, GIFEditLibraryTableSection) {
     // this is called after the item was removed via commitEditingStyle
     // so don't rename something that's been deleted!
 
-    NSURL *tmpEditedURL = cell.gifurl;
-    NSInteger tmpFavoritesIndex = [[GIFLibrary favorites] indexOfObject:tmpEditedURL];
+    NSURL *tmpCurrentFavorite = cell.gifurl;
+    NSString *tmpNewFilename = cell.textLabel.text;
+    NSInteger tmpFavoritesIndex = [[GIFLibrary favorites] indexOfObject:tmpCurrentFavorite];
     if ( tmpFavoritesIndex != NSNotFound )
     {
-        // TODO: move the file, change the name, update the data store, cell, etc.
+        // clean off partial file extensions
+        if ( tmpNewFilename.length > 1 && [[[tmpNewFilename substringFromIndex:tmpNewFilename.length-1] lowercaseString] isEqualToString:@"."] ) {
+            tmpNewFilename = [tmpNewFilename substringToIndex:tmpNewFilename.length-1];
+        }
+        
+        if ( tmpNewFilename.length > 2 && [[[tmpNewFilename substringFromIndex:tmpNewFilename.length-2] lowercaseString] isEqualToString:@".g"] ) {
+            tmpNewFilename = [tmpNewFilename substringToIndex:tmpNewFilename.length-2];
+        }
+        
+        if ( tmpNewFilename.length > 3 && [[[tmpNewFilename substringFromIndex:tmpNewFilename.length-3] lowercaseString] isEqualToString:@".gi"] ) {
+            tmpNewFilename = [tmpNewFilename substringToIndex:tmpNewFilename.length-3];
+        }
+        
+        // now, if its too short to have an extension, or doesn't have one, add one.
+        if ( tmpNewFilename.length < 4 || ![[[tmpNewFilename substringFromIndex:tmpNewFilename.length-4] lowercaseString] isEqualToString:@".gif"] )
+            tmpNewFilename = [tmpNewFilename stringByAppendingString:@".gif"];
+        
+        if ( [[tmpCurrentFavorite lastPathComponent] isEqualToString:tmpNewFilename] ) {
+            // NSLog(@"new name is same as old name");
+        }
+        else
+        {
+            // NSLog(@"want to rename %@ to %@",[tmpCurrentFavorite lastPathComponent],tmpNewFilename);
+            [GIFLibrary renameFavorite:tmpCurrentFavorite toFilename:tmpNewFilename withCompletionBlock:^(BOOL success, NSURL *newFavoriteURL) {
+                
+                if ( success ) {
+                    NSIndexPath *tmpIndexPath = [self.tableView indexPathForCell:cell];
+                    [self.tableView reloadRowsAtIndexPaths:@[tmpIndexPath] withRowAnimation:UITableViewRowAnimationAutomatic]; // reload with the new name
+                }
+                else
+                {
+                    [cell.textField becomeFirstResponder];
+                    [MMAlertView showAlertViewWithTitle:@"💩" message:@"An error occurred." ];
+                }
+            }];
+        }
     }
     else
     {
-        NSLog(@"finished editing a file that's been deleted");
+        // NSLog(@"finished editing a file that's been deleted?");
     }
     
     [self setCurrentTextField:nil];
@@ -267,7 +322,7 @@ typedef NS_ENUM(NSInteger, GIFEditLibraryTableSection) {
     
     switch ( section ) {
         case GIFEditLibraryTableSectionFavorites:
-            rtnString = @"Favorites";
+            rtnString = @"Favorites - Tap to edit name";
             break;
         case GIFEditLibraryTableSectionRandom:
             rtnString = @"Cached Random URLs";
@@ -394,24 +449,6 @@ typedef NS_ENUM(NSInteger, GIFEditLibraryTableSection) {
     */
 }
 
-
-
-// Override to support rearranging the table view.
-/*
-- (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath
-{
-    if ( fromIndexPath.section != 0 ) {
-        // ?
-    }
-    else {
-        // ?
-    }
-    
-    [tableView reloadRowsAtIndexPaths:@[toIndexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
-}
-*/
-
-
 // Override to support conditional rearranging of the table view.
 - (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -419,6 +456,9 @@ typedef NS_ENUM(NSInteger, GIFEditLibraryTableSection) {
     return NO;
 }
 
-
+- (BOOL)tableView:(UITableView *)tableView shouldHighlightRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return NO;
+}
 
 @end

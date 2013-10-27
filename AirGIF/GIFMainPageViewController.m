@@ -106,9 +106,13 @@ typedef NS_ENUM(NSInteger, GIFLibraryScrollingDirection) {
 {
     [super viewWillDisappear:animated];
     
-    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(hideBars) object:nil];
+    [self cancelHideBars];
 }
 
+- (void)cancelHideBars
+{
+    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(hideBars) object:nil];
+}
 
 #pragma mark - Page View Controller
 - (UIViewController *)pageViewController:(UIPageViewController *)pageViewController viewControllerBeforeViewController:(UIViewController *)viewController
@@ -366,6 +370,13 @@ typedef NS_ENUM(NSInteger, GIFLibraryScrollingDirection) {
                                        [self addFrontmostGIFtoFavorites];
                                    }];
         }
+        else
+        {
+            [tmpActionSheet addButtonWithTitle:@"Rename GIF"
+                                   buttonBlock:^{
+                                       [self editButtonTapped:nil];
+                                   }];
+        }
         
         [tmpActionSheet addCancelButtonWithTitle:@"Cancel"
                                cancelButtonBlock:nil];
@@ -378,9 +389,96 @@ typedef NS_ENUM(NSInteger, GIFLibraryScrollingDirection) {
 
 - (void)editButtonTapped:(id)sender
 {
-    // TODO: promopt to edit filename
+    [self cancelHideBars];
+    
+    UIAlertView *tmpAlertView = [[UIAlertView alloc] initWithTitle:@"Rename GIF"
+                                                           message:@"Enter a new name for this GIF"
+                                                          delegate:self
+                                                 cancelButtonTitle:@"Cancel"
+                                                 otherButtonTitles:@"Save", nil];
+
+    [tmpAlertView setAlertViewStyle:UIAlertViewStylePlainTextInput];
+    
+    NSString *tmpFilename = [[[self.viewControllers.firstObject openedURL] lastPathComponent] stringByRemovingPercentEncoding];
+    // tmpFilename = [tmpFilename stringByReplacingOccurrencesOfString:@".gif" withString:@""];
+    
+    UITextField *tmpTextField = [tmpAlertView textFieldAtIndex:0];
+    [tmpTextField setText:tmpFilename];
+    [tmpTextField setClearButtonMode:UITextFieldViewModeAlways];
+    
+    [tmpAlertView show];
     
 }
+
+// edit button uialertview delegate
+
+- (BOOL)alertViewShouldEnableFirstOtherButton:(UIAlertView *)alertView
+{
+    BOOL rtnValue = NO;
+    
+    NSString *tmpString = [alertView textFieldAtIndex:0].text;
+    // NSLog(@"entered: %@",tmpString);
+    
+    // as long as its longer than nothing, but not too long
+    if ( tmpString.length > 0 && tmpString.length < 24 )
+        rtnValue = YES;
+    
+    return rtnValue;
+}
+
+- (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex
+{
+    if ( buttonIndex == [alertView firstOtherButtonIndex] )
+    {
+        // NSLog(@"alert dismissed with button index: %d",buttonIndex);
+        
+        NSString *tmpNewFilename = [alertView textFieldAtIndex:0].text;
+        
+        // clean off partial file extensions
+        if ( tmpNewFilename.length > 1 && [[[tmpNewFilename substringFromIndex:tmpNewFilename.length-1] lowercaseString] isEqualToString:@"."] ) {
+            tmpNewFilename = [tmpNewFilename substringToIndex:tmpNewFilename.length-1];
+        }
+        
+        if ( tmpNewFilename.length > 2 && [[[tmpNewFilename substringFromIndex:tmpNewFilename.length-2] lowercaseString] isEqualToString:@".g"] ) {
+            tmpNewFilename = [tmpNewFilename substringToIndex:tmpNewFilename.length-2];
+        }
+        
+        if ( tmpNewFilename.length > 3 && [[[tmpNewFilename substringFromIndex:tmpNewFilename.length-3] lowercaseString] isEqualToString:@".gi"] ) {
+            tmpNewFilename = [tmpNewFilename substringToIndex:tmpNewFilename.length-3];
+        }
+        
+        // now, if its too short to have an extension, or doesn't have one, add one.
+        if ( tmpNewFilename.length < 4 || ![[[tmpNewFilename substringFromIndex:tmpNewFilename.length-4] lowercaseString] isEqualToString:@".gif"] )
+            tmpNewFilename = [tmpNewFilename stringByAppendingString:@".gif"];
+        
+        NSURL *tmpCurrentFavorite = [self.viewControllers.firstObject openedURL];
+        
+        if ( [[tmpCurrentFavorite lastPathComponent] isEqualToString:tmpNewFilename] ) {
+            NSLog(@"new name is same as old name");
+        }
+        else
+        {
+            NSLog(@"want to rename %@ to %@",[tmpCurrentFavorite lastPathComponent],tmpNewFilename);
+            [GIFLibrary renameFavorite:tmpCurrentFavorite toFilename:tmpNewFilename withCompletionBlock:^(BOOL success, NSURL *newFavoriteURL) {
+                
+                if ( success ) {
+                    [self setupCurrentPageFromPrefsAnimated:NO]; // reload with the URL
+                }
+                else
+                {
+                    [MMAlertView showAlertViewWithTitle:@"💩" message:@"An error occurred."];
+                }
+            }];
+        }
+    }
+//    else
+//    {
+//        NSLog(@"cancel button pressed");
+//    }
+    
+}
+
+// end edit button uialertview delegate
 
 - (void)deleteFrontmostGIF
 {

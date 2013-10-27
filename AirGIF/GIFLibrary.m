@@ -287,6 +287,39 @@ static BOOL _fetching = NO;
 }
 
 
+// renames an existing favorite
++ (void)renameFavorite:(NSURL *)favoriteURL toFilename:(NSString *)newFileName withCompletionBlock:(void (^)(BOOL success, NSURL *newFavoriteURL))completionBlock
+{
+    if ( [[self favorites] indexOfObject:favoriteURL] == NSNotFound ) {
+        if ( completionBlock )
+            completionBlock(NO,nil);
+        
+        return;
+    }
+
+    NSURL *newURL = [[favoriteURL URLByDeletingLastPathComponent] URLByAppendingPathComponent:newFileName];
+    NSError *error = nil;
+    
+    // if a file exists at the destination... well, crap.
+    [[NSFileManager defaultManager] moveItemAtURL:favoriteURL toURL:newURL error:&error];
+    if (error) {
+        NSLog(@"%@", [error localizedDescription]);
+        
+        if ( completionBlock )
+            completionBlock(NO,nil);
+    }
+    else
+    {
+        NSInteger tmpIndex = [_favorites indexOfObject:favoriteURL];
+        [_favorites replaceObjectAtIndex:tmpIndex withObject:newURL];
+        [self saveData];
+        
+        if ( completionBlock )
+            completionBlock(YES,newURL);
+    }
+    
+}
+
 
 // removes from favorites and random and adds to blacklist
 + (void)deleteGif:(NSURL *)url
@@ -338,6 +371,25 @@ static BOOL _fetching = NO;
     [self deleteGif:url];
     
     // TODO: hit picbot's 404
+    // /pic?404=yes&url=foo
+
+    NSString *tmpURLString = [@"http://iank.org/picbot/pic?404=yes&url=" stringByAppendingString:url.absoluteString];
+    NSURL *URL = [NSURL URLWithString:tmpURLString];
+    
+    NSURLRequest *request = [NSURLRequest requestWithURL:URL];
+    AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc]
+                                         initWithRequest:request];
+    operation.responseSerializer = [AFJSONResponseSerializer serializer];
+    [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject)
+     {
+         NSLog(@"reported gif. response: %@", responseObject);
+     }
+                                     failure:^(AFHTTPRequestOperation *operation, NSError *error)
+     {
+         NSLog(@"failed to report gif");
+     }];
+    
+    [operation start];
     
     // save changes
     [self saveData];

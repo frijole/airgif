@@ -39,9 +39,8 @@
         [self.imageView setImage:[UIImage animatedImageWithAnimatedGIFData:self.gifData]];
         [self.imageView setClipsToBounds:YES];
 
-        // take care of any spinner or progress bar or x
+        // take care of any progress bar or x
         self.progressBar.hidden = YES;
-        self.spinner.hidden = YES;
         self.xImageView.hidden = YES;
     }
     else
@@ -57,10 +56,8 @@
         self.imageView.backgroundColor = [UIColor clearColor];
 
         // prep the progress bar
-        [self.progressBar setHidden:NO];
         [self.progressBar setProgress:0.0f animated:NO];
-        [self.spinner stopAnimating];
-        [self.spinner setHidden:YES];
+        [self.progressBar setHidden:NO];
         [self.xImageView setHidden:YES];
         
         // create an AFHTTPRequestOperation to download the gif data
@@ -69,29 +66,26 @@
         [tmpOperation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
             // got it!
             // NSLog(@"got remote image object: %@",responseObject);
-            
-            self.progressBar.hidden = YES;
-            self.spinner.hidden = NO;
-            [self.spinner startAnimating];
-            
+
             [self setGifData:responseObject];
         }
                                             failure:^(AFHTTPRequestOperation *operation, NSError *error) {
                                                 NSLog(@"failed to load remote image, error: %@",error);
                                                 
                                                 self.progressBar.hidden = YES;
-                                                self.spinner.hidden = YES;
                                                 self.xImageView.hidden = NO;
 
                                                 // TODO: real error handling
-                                                // self.imageView.backgroundColor = [UIColor orangeColor];
+                                                self.imageView.backgroundColor = [UIColor orangeColor];
+                                                
+                                                NSLog(@"download failed");
                                             }];
         
         [tmpOperation setDownloadProgressBlock:^(NSUInteger bytesRead, long long totalBytesRead, long long totalBytesExpectedToRead) {
             CGFloat tmpProgress = totalBytesRead/totalBytesExpectedToRead;
             [self.progressBar setProgress:tmpProgress animated:YES];
         }];
-
+        
         // and download it
         [tmpOperation start];
     }
@@ -105,22 +99,21 @@
     UIImage *tmpImage = [UIImage animatedImageWithAnimatedGIFData:gifData];
     if ( tmpImage && tmpImage.images.count > 1 )
     {
-        [self.spinner stopAnimating];
-        [self.spinner setHidden:YES];
-        
+        [self.progressBar setHidden:YES];
+        [self.xImageView setHidden:YES];
+
         [self.imageView setImage:tmpImage];
         [self.imageView setClipsToBounds:YES];
-
-        [self.spinner stopAnimating];
     }
     else
     {
-        [self.spinner stopAnimating];
-        [self.spinner setHidden:YES];
-
+        [self.progressBar setHidden:YES];
+        
         // TODO: real error handling
         [self.xImageView setHidden:NO];
         self.imageView.backgroundColor = [UIColor colorWithRed:0.2f green:0.0f blue:0.0f alpha:1.0f];
+        
+        NSLog(@"failed to load animation, or gif had only one frame");
     }
 }
 

@@ -32,6 +32,9 @@
 + (void)addToFavorites:(NSURL *)url;
 + (void)addToFavorites:(NSURL *)url withCompletionBlock:(void (^)(BOOL success, NSURL *newFavoriteURL))completionBlock;
 
+// rename a favorite
++ (void)renameFavorite:(NSURL *)favoriteURL toFilename:(NSString *)newFileName withCompletionBlock:(void (^)(BOOL success, NSURL *newFavoriteURL))completionBlock;
+
 // removes from favorites and random and adds to blacklist
 + (void)deleteGif:(NSURL *)url;
 

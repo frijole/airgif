@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface GIFMainPageViewController : UIPageViewController <UIPageViewControllerDataSource, UIPageViewControllerDelegate>
+@interface GIFMainPageViewController : UIPageViewController <UIPageViewControllerDataSource, UIPageViewControllerDelegate, UIAlertViewDelegate>
 
 @property (nonatomic, strong) IBOutlet UIBarButtonItem *customEditButton; // x of y
 @property (nonatomic, strong) IBOutlet UIBarButtonItem *addToFavoritesButton;
