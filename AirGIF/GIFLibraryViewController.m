@@ -6,7 +6,7 @@
 //  Copyright (c) 2013 Ian Meyer. All rights reserved.
 //
 
-#import "GIFEditLibraryViewController.h"
+#import "GIFLibraryViewController.h"
 
 #import "GIFLibrary.h"
 
@@ -21,7 +21,7 @@ typedef NS_ENUM(NSInteger, GIFEditLibraryTableSection) {
     GIFEditLibraryTableSectionCount
 };
 
-@class GIFEditLibraryViewController, GIFEditLibraryTableViewCell;
+@class GIFLibraryViewController, GIFEditLibraryTableViewCell;
 
 @protocol GIFEditLibraryCellDelegate <NSObject>
 
@@ -160,13 +160,13 @@ typedef NS_ENUM(NSInteger, GIFEditLibraryTableSection) {
 
 
 
-@interface GIFEditLibraryViewController () <GIFEditLibraryCellDelegate>
+@interface GIFLibraryViewController () <GIFEditLibraryCellDelegate>
 
 @property (nonatomic, weak) UITextField *currentTextField;
 
 @end
 
-@implementation GIFEditLibraryViewController
+@implementation GIFLibraryViewController
 
 - (id)initWithStyle:(UITableViewStyle)style
 {
@@ -280,7 +280,7 @@ typedef NS_ENUM(NSInteger, GIFEditLibraryTableSection) {
     NSIndexPath *tmpIndexPath = [self.tableView indexPathForCell:cell];
     
     // but we can edit our favorites' filenames
-    if ( tmpIndexPath.section == GIFEditLibraryTableSectionFavorites )
+    if ( self.isEditing && tmpIndexPath.section == GIFEditLibraryTableSectionFavorites )
         rtnValue = YES;
 
     return rtnValue;

@@ -19,10 +19,10 @@
             </objects>
             <point key="canvasLocation" x="1085" y="638"/>
         </scene>
-        <!--Edit Library View Controller - Edit GIFs-->
+        <!--Library View Controller - Edit GIFs-->
         <scene sceneID="OzW-eR-PQs">
             <objects>
-                <tableViewController id="RXD-DE-PzT" customClass="GIFEditLibraryViewController" sceneMemberID="viewController">
+                <tableViewController id="RXD-DE-PzT" customClass="GIFLibraryViewController" sceneMemberID="viewController">
                     <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" indicatorStyle="black" keyboardDismissMode="interactive" dataMode="prototypes" style="grouped" separatorStyle="default" allowsSelection="NO" rowHeight="44" sectionHeaderHeight="10" sectionFooterHeight="10" id="TTX-YP-TbO">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -35,8 +35,8 @@
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" title="Edit GIFs" id="R9a-gw-ZkZ">
-                        <barButtonItem key="backBarButtonItem" title="Edit" id="LfU-9z-lJt"/>
-                        <barButtonItem key="leftBarButtonItem" systemItem="done" id="WuG-Ps-ZbD">
+                        <barButtonItem key="backBarButtonItem" title="Library" id="LfU-9z-lJt"/>
+                        <barButtonItem key="leftBarButtonItem" style="done" systemItem="done" id="WuG-Ps-ZbD">
                             <connections>
                                 <action selector="done:" destination="RXD-DE-PzT" id="PMO-VX-Gcp"/>
                             </connections>
