@@ -54,7 +54,7 @@
 		3CC6D2B517EF67AD00422505 /* gilles.gif in Resources */ = {isa = PBXBuildFile; fileRef = 3CC6D2B417EF67AD00422505 /* gilles.gif */; };
 		3CC6D2B817EF68CE00422505 /* UIImage+animatedGIF.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CC6D2B617EF68CE00422505 /* UIImage+animatedGIF.m */; };
 		3CC6D30017EF7CF000422505 /* GIFActivityProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CC6D2FF17EF7CF000422505 /* GIFActivityProvider.m */; };
-		3CE1FD0C17F8E1F6001C8685 /* GIFEditLibraryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CE1FD0B17F8E1F6001C8685 /* GIFEditLibraryViewController.m */; };
+		3CE1FD0C17F8E1F6001C8685 /* GIFLibraryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CE1FD0B17F8E1F6001C8685 /* GIFLibraryViewController.m */; };
 		3CE7D8951805B992005A190A /* AFNetworkActivityIndicatorManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CE7D8871805B992005A190A /* AFNetworkActivityIndicatorManager.m */; };
 		3CE7D8961805B992005A190A /* AFNetworkActivityIndicatorManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CE7D8871805B992005A190A /* AFNetworkActivityIndicatorManager.m */; };
 		3CE7D8971805B992005A190A /* UIActivityIndicatorView+AFNetworking.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CE7D8891805B992005A190A /* UIActivityIndicatorView+AFNetworking.m */; };
@@ -145,8 +145,8 @@
 		3CC6D2B717EF68CE00422505 /* UIImage+animatedGIF.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+animatedGIF.h"; sourceTree = "<group>"; };
 		3CC6D2FE17EF7CF000422505 /* GIFActivityProvider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIFActivityProvider.h; sourceTree = "<group>"; };
 		3CC6D2FF17EF7CF000422505 /* GIFActivityProvider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIFActivityProvider.m; sourceTree = "<group>"; };
-		3CE1FD0A17F8E1F6001C8685 /* GIFEditLibraryViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIFEditLibraryViewController.h; sourceTree = "<group>"; };
-		3CE1FD0B17F8E1F6001C8685 /* GIFEditLibraryViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIFEditLibraryViewController.m; sourceTree = "<group>"; };
+		3CE1FD0A17F8E1F6001C8685 /* GIFLibraryViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIFLibraryViewController.h; sourceTree = "<group>"; };
+		3CE1FD0B17F8E1F6001C8685 /* GIFLibraryViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIFLibraryViewController.m; sourceTree = "<group>"; };
 		3CE7D8861805B992005A190A /* AFNetworkActivityIndicatorManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFNetworkActivityIndicatorManager.h; sourceTree = "<group>"; };
 		3CE7D8871805B992005A190A /* AFNetworkActivityIndicatorManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFNetworkActivityIndicatorManager.m; sourceTree = "<group>"; };
 		3CE7D8881805B992005A190A /* UIActivityIndicatorView+AFNetworking.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIActivityIndicatorView+AFNetworking.h"; sourceTree = "<group>"; };
@@ -284,8 +284,8 @@
 				3C8E272518034A1800619359 /* GIFSinglePageViewController.m */,
 				3C3354181801DE6E00522F89 /* GIFOpenedFileViewController.h */,
 				3C3354191801DE6E00522F89 /* GIFOpenedFileViewController.m */,
-				3CE1FD0A17F8E1F6001C8685 /* GIFEditLibraryViewController.h */,
-				3CE1FD0B17F8E1F6001C8685 /* GIFEditLibraryViewController.m */,
+				3CE1FD0A17F8E1F6001C8685 /* GIFLibraryViewController.h */,
+				3CE1FD0B17F8E1F6001C8685 /* GIFLibraryViewController.m */,
 				3C9D91AE17F9C419007DEDF8 /* GIFLibrary.h */,
 				3C9D91AF17F9C419007DEDF8 /* GIFLibrary.m */,
 				3CC6D2FE17EF7CF000422505 /* GIFActivityProvider.h */,
@@ -497,7 +497,7 @@
 				3C33541E1806259300522F89 /* MMActionSheet.m in Sources */,
 				3C8E28191804485500619359 /* AFHTTPRequestOperation.m in Sources */,
 				3C8E272618034A1800619359 /* GIFSinglePageViewController.m in Sources */,
-				3CE1FD0C17F8E1F6001C8685 /* GIFEditLibraryViewController.m in Sources */,
+				3CE1FD0C17F8E1F6001C8685 /* GIFLibraryViewController.m in Sources */,
 				3C8E28291804485500619359 /* AFURLSessionManager.m in Sources */,
 				3CE7D89F1805B992005A190A /* UIProgressView+AFNetworking.m in Sources */,
 				3C5B40BC180DCD2000ACDAAF /* GIFNavigationController.m in Sources */,

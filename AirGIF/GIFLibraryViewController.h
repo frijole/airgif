@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface GIFEditLibraryViewController : UITableViewController
+@interface GIFLibraryViewController : UITableViewController
 
 - (IBAction)done:(id)sender;
 
