@@ -74,11 +74,16 @@
                                                 
                                                 self.progressBar.hidden = YES;
                                                 self.xImageView.hidden = NO;
-
-                                                // TODO: real error handling
-                                                self.imageView.backgroundColor = [UIColor orangeColor];
                                                 
-                                                NSLog(@"download failed");
+                                                if ( self.delegate && [self.delegate respondsToSelector:@selector(singlePageViewController:encounteredErrorLoadingURL:)] ) {
+                                                    // notify delegate of failure
+                                                    [self.delegate singlePageViewController:self
+                                                                 encounteredErrorLoadingURL:openedURL];
+                                                }
+
+                                                self.imageView.backgroundColor = [UIColor colorWithRed:0.2f green:0.0f blue:0.0f alpha:1.0f];
+                                                
+                                                // NSLog(@"download failed");
                                             }];
         
         [tmpOperation setDownloadProgressBlock:^(NSUInteger bytesRead, long long totalBytesRead, long long totalBytesExpectedToRead) {
@@ -103,17 +108,23 @@
         [self.xImageView setHidden:YES];
 
         [self.imageView setImage:tmpImage];
+        [self.imageView setBackgroundColor:[UIColor clearColor]];
         [self.imageView setClipsToBounds:YES];
     }
     else
     {
         [self.progressBar setHidden:YES];
-        
-        // TODO: real error handling
         [self.xImageView setHidden:NO];
-        self.imageView.backgroundColor = [UIColor colorWithRed:0.2f green:0.0f blue:0.0f alpha:1.0f];
         
-        NSLog(@"failed to load animation, or gif had only one frame");
+        // NSLog(@"failed to load animation, or gif had only one frame");
+
+        if ( self.delegate && [self.delegate respondsToSelector:@selector(singlePageViewController:encounteredErrorLoadingURL:)] ) {
+            // notify delegate of failure
+            [self.delegate singlePageViewController:self
+                         encounteredErrorLoadingURL:self.openedURL];
+        }
+
+        self.imageView.backgroundColor = [UIColor colorWithRed:0.2f green:0.0f blue:0.0f alpha:1.0f];
     }
 }
 

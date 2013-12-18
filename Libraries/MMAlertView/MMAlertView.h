@@ -64,6 +64,16 @@ typedef void (^MMAlertViewButtonPressedBlockType)();
 + (void)showAlertViewWithTitle:(NSString *)inTitle message:(NSString *)inMessage closeButtonTitle:(NSString *)inCloseButtonTitle closeBlock:(MMAlertViewButtonPressedBlockType)inCloseBlock;
 
 /**
+ Creates and returns a `UIAlertView` with the specified title, message, and close button title.
+ 
+ @param inTitle The title for the alert view.
+ @param inMessage The message for the alert view.
+ @param inCloseButtonTitle The title for the close button.
+ */
++ (MMAlertView *)alertViewWithTitle:(NSString *)inTitle message:(NSString *)inMessage closeButtonTitle:(NSString *)inCloseButtonTitle closeBlock:(MMAlertViewButtonPressedBlockType)inCloseBlock;
+
+
+/**
  Creates and shows a `UIAlertView` with the specified title, message, a cancel button, and an accept button. The titles of the buttons and the blocks to execute when the alert view is dismissed for each button type is also defined.
  
  @param inTitle The title for the alert view.
@@ -74,5 +84,18 @@ typedef void (^MMAlertViewButtonPressedBlockType)();
  @param inAcceptBlock A block to execute when the alert view is dismissed with the accept button.
  */
 + (void)showAlertViewWithTitle:(NSString *)inTitle message:(NSString *)inMessage cancelButtonTitle:(NSString *)inCancelButtonTitle acceptButtonTitle:(NSString *)inAcceptButtonTitle cancelBlock:(MMAlertViewButtonPressedBlockType)inCancelBlock acceptBlock:(MMAlertViewButtonPressedBlockType)inAcceptBlock;
+
+
+/**
+ Creates and returns a `UIAlertView` with the specified title, message, a cancel button, and an accept button. The titles of the buttons and the blocks to execute when the alert view is dismissed for each button type is also defined.
+ 
+ @param inTitle The title for the alert view.
+ @param inMessage The message for the alert view.
+ @param inCancelButtonTitle The title for the cancel button.
+ @param inAcceptButtonTitle The title for the accept button.
+ @param inCancelBlock A block to execute when the alert view is dismissed with the cancel button.
+ @param inAcceptBlock A block to execute when the alert view is dismissed with the accept button.
+ */
++ (MMAlertView *)alertViewWithTitle:(NSString *)inTitle message:(NSString *)inMessage cancelButtonTitle:(NSString *)inCancelButtonTitle acceptButtonTitle:(NSString *)inAcceptButtonTitle cancelBlock:(MMAlertViewButtonPressedBlockType)inCancelBlock acceptBlock:(MMAlertViewButtonPressedBlockType)inAcceptBlock;
 
 @end

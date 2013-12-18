@@ -11,6 +11,9 @@
 #import "GIFSinglePageViewController.h"
 #import "GIFOpenedFileViewController.h"
 
+#import "GIFWebViewController.h"
+#import "Reachability.h"
+
 #import "GIFLibrary.h"
 #import "GIFActivityProvider.h"
 
@@ -21,8 +24,10 @@
 
 #define kGIFPageViewControllerAnimationDuration 0.5f
 
-#define kGIFPageViewControllerKBaseAirDropAddress @"http://support.apple.com/kb/HT5887"
-#define kGIFPageViewControllerKBaseSharingAddress @"http://support.apple.com/kb/HT5887"
+#define kGIFPageViewControllerKBaseAirDropAddress   @"http://support.apple.com/kb/HT5887"
+#define kGIFPageViewControllerKBaseSharingAddress   @"http://support.apple.com/kb/HT5887"
+
+#define kGIFPageViewControllerLearnMoreAddress      @"http://example.com" // TODO: replace with live page!
 
 typedef NS_ENUM(NSInteger, GIFLibrarySegmentedControlSelectedIndex) {
     GIFLibrarySegmentedControlSelectedIndexFavorites = 0,
@@ -39,7 +44,7 @@ typedef NS_ENUM(NSInteger, GIFLibraryScrollingDirection) {
 // #define TEST_OPEN_URL YES
 
 
-@interface GIFMainPageViewController ()
+@interface GIFMainPageViewController () <GIFSinglePageViewControllerDelegate>
 
 @property (nonatomic) BOOL statusbarHidden;
 @property (nonatomic, strong) NSURL *openedURL;
@@ -82,24 +87,22 @@ typedef NS_ENUM(NSInteger, GIFLibraryScrollingDirection) {
 
 - (void)viewWillAppear:(BOOL)animated
 {
+    // see if we're a new or migrated user
+    [self checkForFirstRun];
+    
     // in case we're coming back from editing and deleted the current image
     [self setupCurrentPageFromPrefsAnimated:NO];
 }
-
-#ifdef TEST_OPEN_URL
-- (void)viewDidAppear:(BOOL)animated
-{
-    [self performSelector:@selector(openURL:)
-               withObject:[NSURL URLWithString:@"http://31.media.tumblr.com/17304b5d47e174685c62f61c9d2ffce3/tumblr_mriia3bgMp1r2vcn2o1_500.gif"]
-               afterDelay:1.0f];
-}
-#endif
 
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
     
-    [self performSelector:@selector(hideBars) withObject:nil afterDelay:1.0f];
+#ifdef TEST_OPEN_URL
+    [self performSelector:@selector(openURL:)
+               withObject:[NSURL URLWithString:@"http://31.media.tumblr.com/17304b5d47e174685c62f61c9d2ffce3/tumblr_mriia3bgMp1r2vcn2o1_500.gif"]
+               afterDelay:1.0f];
+#endif
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -112,6 +115,19 @@ typedef NS_ENUM(NSInteger, GIFLibraryScrollingDirection) {
 - (void)cancelHideBars
 {
     [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(hideBars) object:nil];
+}
+
+- (void)singlePageViewController:(GIFSinglePageViewController *)singlePageViewController encounteredErrorLoadingURL:(NSURL *)url
+{
+    // nuke the probem GIF
+    [GIFLibrary deleteGif:url];
+
+    // grab the current url
+    NSURL *tmpCurrentURL = [self.viewControllers.firstObject openedURL];
+
+    // if its bad, update for the next one
+    if ( [url isEqual:tmpCurrentURL] )
+        [self setupCurrentPageFromPrefsAnimated:NO];
 }
 
 #pragma mark - Page View Controller
@@ -134,6 +150,7 @@ typedef NS_ENUM(NSInteger, GIFLibraryScrollingDirection) {
         if ( [rtnVC respondsToSelector:@selector(imageView)] ) {
             GIFSinglePageViewController *tmpPrevPage = (GIFSinglePageViewController *)rtnVC;
             [tmpPrevPage.imageView setContentMode:(self.scaleImages?UIViewContentModeScaleAspectFill:UIViewContentModeScaleAspectFit)];
+            [tmpPrevPage setDelegate:self];
             [tmpPrevPage setOpenedURL:tmpPrevURL];
         }
         
@@ -161,6 +178,7 @@ typedef NS_ENUM(NSInteger, GIFLibraryScrollingDirection) {
         if ( [rtnVC respondsToSelector:@selector(imageView)] ) {
             GIFSinglePageViewController *tmpNextPage = (GIFSinglePageViewController *)rtnVC;
             [tmpNextPage.imageView setContentMode:(self.scaleImages?UIViewContentModeScaleAspectFill:UIViewContentModeScaleAspectFit)];
+            [tmpNextPage setDelegate:self];
             [tmpNextPage setOpenedURL:tmpNextURL];
         }
         
@@ -198,20 +216,31 @@ typedef NS_ENUM(NSInteger, GIFLibraryScrollingDirection) {
         NSURL *tmpURLforPendingVC = self.library[tmpIndexForPendingVC];
         NSURL *tmpURLinPendingVC = [(GIFSinglePageViewController *)[pendingViewControllers firstObject] openedURL];
         if ( ![tmpURLinPendingVC isEqual:tmpURLforPendingVC] ) {
-            NSLog(@"pendingVC's openedURL does not match expected value \n pending:  %@ \n expected: %@",
+            /* NSLog(@"pendingVC's openedURL does not match expected value \n pending:  %@ \n expected: %@",
                   [(GIFSinglePageViewController *)[self.viewControllers firstObject] openedURL],
-                  tmpURLforPendingVC);
+                  tmpURLforPendingVC); */
             [pendingViewControllers.firstObject setOpenedURL:tmpURLforPendingVC];
         }
-        else
         {
-            NSLog(@"pendingVC's openedURL is expected value, proceeding.");
+            // NSLog(@"pendingVC's openedURL is expected value, proceeding.");
+            
+            // the openedURL is set, see if it had an issue
+            // if the background isn't normal, there was an issue with the url
+            if ( [(GIFSinglePageViewController *)[pendingViewControllers firstObject] imageView].backgroundColor != [UIColor clearColor] )
+            {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    NSURL *tmpCurrentUrl = [[[self viewControllers] firstObject] openedURL];
+                    [GIFLibrary deleteGif:tmpCurrentUrl];
+                    [self setupCurrentPageFromPrefsAnimated:NO];
+                });
+            }
+
         }
     }
-    else
+    /* else
     {
         NSLog(@"couldn't check url on pending view controller");
-    }
+    } */
     
     for ( GIFSinglePageViewController *tmpPageVC in pendingViewControllers )
     {
@@ -261,16 +290,27 @@ typedef NS_ENUM(NSInteger, GIFLibraryScrollingDirection) {
                 [GIFLibrary fetchRandoms:10];
             }
         }
-        else
-        {
-            [MMAlertView showAlertViewWithTitle:@"AirGIF" message:@"LOL WUT"];
-        }
+//        else
+//        {
+//            [MMAlertView showAlertViewWithTitle:@"AirGIF" message:@"LOL WUT"];
+//        }
         
+        // if the background isn't normal, there was an issue with the url
+        if ( tmpCurrentPage.imageView.backgroundColor != [UIColor clearColor] )
+        {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                NSURL *tmpCurrentUrl = [[[self viewControllers] firstObject] openedURL];
+                [GIFLibrary deleteGif:tmpCurrentUrl];
+                [self setupCurrentPageFromPrefsAnimated:NO];
+
+            });
+        }
+
     }
-    else
-    {
-        NSLog(@"didFinishAnimating but completed = NO");
-    }
+//    else
+//    {
+//        NSLog(@"didFinishAnimating but completed = NO");
+//    }
 }
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
@@ -454,11 +494,11 @@ typedef NS_ENUM(NSInteger, GIFLibraryScrollingDirection) {
         NSURL *tmpCurrentFavorite = [self.viewControllers.firstObject openedURL];
         
         if ( [[tmpCurrentFavorite lastPathComponent] isEqualToString:tmpNewFilename] ) {
-            NSLog(@"new name is same as old name");
+            // NSLog(@"new name is same as old name");
         }
         else
         {
-            NSLog(@"want to rename %@ to %@",[tmpCurrentFavorite lastPathComponent],tmpNewFilename);
+            // NSLog(@"want to rename %@ to %@",[tmpCurrentFavorite lastPathComponent],tmpNewFilename);
             [GIFLibrary renameFavorite:tmpCurrentFavorite toFilename:tmpNewFilename withCompletionBlock:^(BOOL success, NSURL *newFavoriteURL) {
                 
                 if ( success ) {
@@ -511,7 +551,7 @@ typedef NS_ENUM(NSInteger, GIFLibraryScrollingDirection) {
         [GIFLibrary addToFavorites:tmpURL
                withCompletionBlock:^(BOOL success, NSURL *newFavoriteURL) {
                    
-                   NSLog(@"addToFavorites completion block firing...");
+                   // NSLog(@"addToFavorites completion block firing...");
                    
                    // dismiss HUD
                    [tmpProgressHUD hide:YES];
@@ -578,7 +618,7 @@ typedef NS_ENUM(NSInteger, GIFLibraryScrollingDirection) {
                                                       nil]];
         
         while ( !activityProvider.image ) {
-            NSLog(@"no image to share yet");
+            // NSLog(@"no image to share yet");
         }
         
         [self presentViewController:activityController animated:YES completion:nil];
@@ -641,13 +681,28 @@ typedef NS_ENUM(NSInteger, GIFLibraryScrollingDirection) {
 
 - (void)segmentedControlChanged:(id)sender
 {
-    // save new library selection
-    GIFLibrarySegmentedControlSelectedIndex tmpLibraryIndex = [(UISegmentedControl *)sender selectedSegmentIndex];
-    [[NSUserDefaults standardUserDefaults] setInteger:tmpLibraryIndex forKey:kGIFLibraryUserDefaultsKeyCurrentLibraryIndex];
-    [[NSUserDefaults standardUserDefaults] synchronize];
-    
-    // and update the display
-    [self setupCurrentPageFromPrefsAnimated:NO];
+    // check connectivity before switching to randoms
+    if ( [(UISegmentedControl *)sender selectedSegmentIndex] == GIFLibrarySegmentedControlSelectedIndexRandom &&
+        [[Reachability reachabilityForInternetConnection] currentReachabilityStatus] == NotReachable )
+    {
+        // selected randoms, but offline. alert and revert.
+        [self.segmentedControl setSelectedSegmentIndex:GIFLibrarySegmentedControlSelectedIndexFavorites];
+        
+        [MMAlertView showAlertViewWithTitle:@"AirGIF"
+                                    message:@"Sorry, an internet connection is required to view random GIFs."
+                           closeButtonTitle:@"Bummer"];
+    }
+    else
+    {   // selected Favorites, or Randoms and are online. Proceed.
+        
+        // save new library selection
+        GIFLibrarySegmentedControlSelectedIndex tmpLibraryIndex = [(UISegmentedControl *)sender selectedSegmentIndex];
+        [[NSUserDefaults standardUserDefaults] setInteger:tmpLibraryIndex forKey:kGIFLibraryUserDefaultsKeyCurrentLibraryIndex];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+        
+        // and update the display
+        [self setupCurrentPageFromPrefsAnimated:NO];
+    }
 }
 
 - (void)setupCurrentPageFromPrefsAnimated:(BOOL)shouldAnimate
@@ -656,6 +711,7 @@ typedef NS_ENUM(NSInteger, GIFLibraryScrollingDirection) {
     GIFSinglePageViewController *tmpFirstSinglePageVC = [tmpStoryboard instantiateViewControllerWithIdentifier:@"GIFSinglePageViewController"];
     [tmpFirstSinglePageVC loadView]; // so we can configure it
     [tmpFirstSinglePageVC.imageView setContentMode:(self.scaleImages?UIViewContentModeScaleAspectFill:UIViewContentModeScaleAspectFit)];
+    [tmpFirstSinglePageVC setDelegate:self];
     
     // setup library and first page
     GIFLibrarySegmentedControlSelectedIndex tmpLibraryIndex = [[NSUserDefaults standardUserDefaults] integerForKey:kGIFLibraryUserDefaultsKeyCurrentLibraryIndex];
@@ -730,6 +786,91 @@ typedef NS_ENUM(NSInteger, GIFLibraryScrollingDirection) {
 
 
 #pragma mark - Utilities
+- (void)checkForFirstRun
+{
+    if ( [[NSUserDefaults standardUserDefaults] boolForKey:kGIFLibraryUserDefaultsMigratedData] ) {
+        // upgraded from GIFBOOK
+        
+        // if we're online, start with randoms
+        if ( [[Reachability reachabilityForInternetConnection] currentReachabilityStatus] != NotReachable )
+        {
+            [self.segmentedControl setSelectedSegmentIndex:GIFLibrarySegmentedControlSelectedIndexRandom];
+            // setSelectedSegmentIndex won't trigger the action, so do it manually.
+            [self segmentedControlChanged:self.segmentedControl];
+        }
+
+        [MMAlertView showAlertViewWithTitle:@"Welcome to AirGIF!"
+                                    message:@"\nGIFBOOK is now AirGIF.\n\nYou can still swipe through random GIFs, and now you can save your Favorites, share with AirDrop, and open GIFs from other apps."
+                          cancelButtonTitle:@"Learn More"
+                          acceptButtonTitle:@"Let's GIF!"
+                                cancelBlock:^{
+                                    [self showLearnMore];
+                                    
+                                    // we're done migrating, and after saving we're good to proceed as normal
+                                    [GIFLibrary saveData];
+                                    [[NSUserDefaults standardUserDefaults] setBool:NO forKey:kGIFLibraryUserDefaultsMigratedData];
+                                    [[NSUserDefaults standardUserDefaults] setBool:YES forKey:kGIFLibraryUserDefaultsInitialSetupDone];
+                                    // and save the prefs, too.
+                                    [[NSUserDefaults standardUserDefaults] synchronize];
+                                }
+                                acceptBlock:^{
+                                    // we're done migrating, and after saving we're good to proceed as normal
+                                    [GIFLibrary saveData];
+                                    [[NSUserDefaults standardUserDefaults] setBool:NO forKey:kGIFLibraryUserDefaultsMigratedData];
+                                    [[NSUserDefaults standardUserDefaults] setBool:YES forKey:kGIFLibraryUserDefaultsInitialSetupDone];
+                                    // and save the prefs, too.
+                                    [[NSUserDefaults standardUserDefaults] synchronize];
+                                }];
+    }
+    else if ( ![[NSUserDefaults standardUserDefaults] boolForKey:kGIFLibraryUserDefaultsInitialSetupDone] ) {
+        // first run
+        
+        // if we're online, start with randoms
+        if ( [[Reachability reachabilityForInternetConnection] currentReachabilityStatus] != NotReachable )
+        {
+            [self.segmentedControl setSelectedSegmentIndex:GIFLibrarySegmentedControlSelectedIndexRandom];
+            // setSelectedSegmentIndex won't trigger the action, so do it manually.
+            [self segmentedControlChanged:self.segmentedControl];
+        }
+        
+        // and show some info
+        [MMAlertView showAlertViewWithTitle:@"Welcome to AirGIF!"
+                                    message:@"\nAirGIF makes it easy to find,\ncollect, and share GIFs.\n\nSwipe through random GIFs, save your Favorites, share with AirDrop, and open GIFs from other apps."
+                          cancelButtonTitle:@"Learn More"
+                          acceptButtonTitle:@"Let's GIF!"
+                                cancelBlock:^{
+                                    [self showLearnMore];
+                                    
+                                    // and with that, we're done with the initial setup
+                                    [[NSUserDefaults standardUserDefaults] setBool:YES forKey:kGIFLibraryUserDefaultsInitialSetupDone];
+                                    [[NSUserDefaults standardUserDefaults] synchronize];
+                                }
+                                acceptBlock:^{
+                                    // we're done with the initial setup!
+                                    [[NSUserDefaults standardUserDefaults] setBool:YES forKey:kGIFLibraryUserDefaultsInitialSetupDone];
+                                    [[NSUserDefaults standardUserDefaults] synchronize];
+                                }];
+    }
+    else {
+        // not the first run, hide the bars after a short delay
+        [self performSelector:@selector(hideBars) withObject:nil afterDelay:1.0f];
+    }
+}
+
+- (void)showLearnMore
+{
+    // create and set up a GIFWebViewController
+    GIFWebViewController *tmpWebViewController = [[GIFWebViewController alloc] initWithNibName:nil bundle:nil];
+    [tmpWebViewController setTitle:@"About AirGIF"];
+    [tmpWebViewController.webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:kGIFPageViewControllerLearnMoreAddress]]];
+    
+    // wrap it in a Navigation Controller
+    UINavigationController *tmpNavController = [[UINavigationController alloc] initWithRootViewController:tmpWebViewController];
+
+    // and present it!
+    [self presentViewController:tmpNavController animated:YES completion:nil];
+}
+
 - (void)openURL:(NSURL *)url
 {
     [self performSegueWithIdentifier:@"openURL" sender:url];

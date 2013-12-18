@@ -7,11 +7,13 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3C03C8C4184CEA3E00796434 /* MMActionSheet.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C03C8C3184CEA3E00796434 /* MMActionSheet.m */; };
+		3C03C8C7184CEA5D00796434 /* MMAlertView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C03C8C6184CEA5D00796434 /* MMAlertView.m */; };
+		3C03C8CA184D068000796434 /* GIFWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C03C8C9184D068000796434 /* GIFWebViewController.m */; };
+		3C03C8CE184D0D2C00796434 /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C03C8CD184D0D2C00796434 /* Reachability.m */; };
 		3C2DFF2917FF8BE600E71D57 /* rally.gif in Resources */ = {isa = PBXBuildFile; fileRef = 3C2DFF2817FF8BE600E71D57 /* rally.gif */; };
 		3C2DFF2B17FF8BF100E71D57 /* senna prost.gif in Resources */ = {isa = PBXBuildFile; fileRef = 3C2DFF2A17FF8BF100E71D57 /* senna prost.gif */; };
 		3C33541A1801DE6E00522F89 /* GIFOpenedFileViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C3354191801DE6E00522F89 /* GIFOpenedFileViewController.m */; };
-		3C33541E1806259300522F89 /* MMActionSheet.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C33541D1806259300522F89 /* MMActionSheet.m */; };
-		3C33541F1806259300522F89 /* MMActionSheet.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C33541D1806259300522F89 /* MMActionSheet.m */; };
 		3C5B40B9180D873200ACDAAF /* MBProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C5B40B8180D873200ACDAAF /* MBProgressHUD.m */; };
 		3C5B40BC180DCD2000ACDAAF /* GIFNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C5B40BB180DCD2000ACDAAF /* GIFNavigationController.m */; };
 		3C8E271F18033B5B00619359 /* GIFMainPageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3C8E271E18033B5B00619359 /* GIFMainPageViewController.m */; };
@@ -50,7 +52,6 @@
 		3CA350B417ED225E00F17A03 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3CA3509017ED225E00F17A03 /* UIKit.framework */; };
 		3CA350BC17ED225E00F17A03 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 3CA350BA17ED225E00F17A03 /* InfoPlist.strings */; };
 		3CA350BE17ED225E00F17A03 /* AirGIFTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CA350BD17ED225E00F17A03 /* AirGIFTests.m */; };
-		3CBFEE0C18062C6B00725EE1 /* MMAlertView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CBFEE0B18062C6B00725EE1 /* MMAlertView.m */; };
 		3CC6D2B517EF67AD00422505 /* gilles.gif in Resources */ = {isa = PBXBuildFile; fileRef = 3CC6D2B417EF67AD00422505 /* gilles.gif */; };
 		3CC6D2B817EF68CE00422505 /* UIImage+animatedGIF.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CC6D2B617EF68CE00422505 /* UIImage+animatedGIF.m */; };
 		3CC6D30017EF7CF000422505 /* GIFActivityProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CC6D2FF17EF7CF000422505 /* GIFActivityProvider.m */; };
@@ -83,12 +84,18 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		3C03C8C2184CEA3E00796434 /* MMActionSheet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MMActionSheet.h; path = Libraries/MMActionSheet/MMActionSheet.h; sourceTree = SOURCE_ROOT; };
+		3C03C8C3184CEA3E00796434 /* MMActionSheet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MMActionSheet.m; path = Libraries/MMActionSheet/MMActionSheet.m; sourceTree = SOURCE_ROOT; };
+		3C03C8C5184CEA5D00796434 /* MMAlertView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MMAlertView.h; path = Libraries/MMAlertView/MMAlertView.h; sourceTree = SOURCE_ROOT; };
+		3C03C8C6184CEA5D00796434 /* MMAlertView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MMAlertView.m; path = Libraries/MMAlertView/MMAlertView.m; sourceTree = SOURCE_ROOT; };
+		3C03C8C8184D068000796434 /* GIFWebViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIFWebViewController.h; sourceTree = "<group>"; };
+		3C03C8C9184D068000796434 /* GIFWebViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIFWebViewController.m; sourceTree = "<group>"; };
+		3C03C8CC184D0D2C00796434 /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reachability.h; sourceTree = "<group>"; };
+		3C03C8CD184D0D2C00796434 /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Reachability.m; sourceTree = "<group>"; };
 		3C2DFF2817FF8BE600E71D57 /* rally.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = rally.gif; sourceTree = "<group>"; };
 		3C2DFF2A17FF8BF100E71D57 /* senna prost.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = "senna prost.gif"; sourceTree = "<group>"; };
 		3C3354181801DE6E00522F89 /* GIFOpenedFileViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIFOpenedFileViewController.h; sourceTree = "<group>"; };
 		3C3354191801DE6E00522F89 /* GIFOpenedFileViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GIFOpenedFileViewController.m; sourceTree = "<group>"; };
-		3C33541C1806259300522F89 /* MMActionSheet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMActionSheet.h; sourceTree = "<group>"; };
-		3C33541D1806259300522F89 /* MMActionSheet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMActionSheet.m; sourceTree = "<group>"; };
 		3C5B40B7180D873200ACDAAF /* MBProgressHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MBProgressHUD.h; path = Libraries/MBProgressHUD/MBProgressHUD.h; sourceTree = SOURCE_ROOT; };
 		3C5B40B8180D873200ACDAAF /* MBProgressHUD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MBProgressHUD.m; path = Libraries/MBProgressHUD/MBProgressHUD.m; sourceTree = SOURCE_ROOT; };
 		3C5B40BA180DCD2000ACDAAF /* GIFNavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GIFNavigationController.h; sourceTree = "<group>"; };
@@ -138,8 +145,6 @@
 		3CA350B917ED225E00F17A03 /* AirGIFTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "AirGIFTests-Info.plist"; sourceTree = "<group>"; };
 		3CA350BB17ED225E00F17A03 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		3CA350BD17ED225E00F17A03 /* AirGIFTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AirGIFTests.m; sourceTree = "<group>"; };
-		3CBFEE0A18062C6B00725EE1 /* MMAlertView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MMAlertView.h; sourceTree = "<group>"; };
-		3CBFEE0B18062C6B00725EE1 /* MMAlertView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MMAlertView.m; sourceTree = "<group>"; };
 		3CC6D2B417EF67AD00422505 /* gilles.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = gilles.gif; sourceTree = "<group>"; };
 		3CC6D2B617EF68CE00422505 /* UIImage+animatedGIF.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+animatedGIF.m"; sourceTree = "<group>"; };
 		3CC6D2B717EF68CE00422505 /* UIImage+animatedGIF.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+animatedGIF.h"; sourceTree = "<group>"; };
@@ -191,11 +196,20 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		3C03C8CB184D0D2C00796434 /* Reachability */ = {
+			isa = PBXGroup;
+			children = (
+				3C03C8CC184D0D2C00796434 /* Reachability.h */,
+				3C03C8CD184D0D2C00796434 /* Reachability.m */,
+			);
+			path = Reachability;
+			sourceTree = "<group>";
+		};
 		3C33541B1806259300522F89 /* MMActionSheet */ = {
 			isa = PBXGroup;
 			children = (
-				3C33541C1806259300522F89 /* MMActionSheet.h */,
-				3C33541D1806259300522F89 /* MMActionSheet.m */,
+				3C03C8C2184CEA3E00796434 /* MMActionSheet.h */,
+				3C03C8C3184CEA3E00796434 /* MMActionSheet.m */,
 			);
 			path = MMActionSheet;
 			sourceTree = "<group>";
@@ -286,6 +300,8 @@
 				3C3354191801DE6E00522F89 /* GIFOpenedFileViewController.m */,
 				3CE1FD0A17F8E1F6001C8685 /* GIFLibraryViewController.h */,
 				3CE1FD0B17F8E1F6001C8685 /* GIFLibraryViewController.m */,
+				3C03C8C8184D068000796434 /* GIFWebViewController.h */,
+				3C03C8C9184D068000796434 /* GIFWebViewController.m */,
 				3C9D91AE17F9C419007DEDF8 /* GIFLibrary.h */,
 				3C9D91AF17F9C419007DEDF8 /* GIFLibrary.m */,
 				3CC6D2FE17EF7CF000422505 /* GIFActivityProvider.h */,
@@ -332,8 +348,8 @@
 		3CBFEE0D18062C6E00725EE1 /* MMAlertView */ = {
 			isa = PBXGroup;
 			children = (
-				3CBFEE0A18062C6B00725EE1 /* MMAlertView.h */,
-				3CBFEE0B18062C6B00725EE1 /* MMAlertView.m */,
+				3C03C8C5184CEA5D00796434 /* MMAlertView.h */,
+				3C03C8C6184CEA5D00796434 /* MMAlertView.m */,
 			);
 			name = MMAlertView;
 			sourceTree = "<group>";
@@ -388,6 +404,7 @@
 				3CC6D2B917EF68D300422505 /* UIImage+animatedGIF */,
 				3C8E28051804485500619359 /* AFNetworking */,
 				3CE7D8851805B992005A190A /* UIKit+AFNetworking */,
+				3C03C8CB184D0D2C00796434 /* Reachability */,
 			);
 			name = Libraries;
 			path = AirGIF;
@@ -494,8 +511,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3C33541E1806259300522F89 /* MMActionSheet.m in Sources */,
 				3C8E28191804485500619359 /* AFHTTPRequestOperation.m in Sources */,
+				3C03C8CA184D068000796434 /* GIFWebViewController.m in Sources */,
 				3C8E272618034A1800619359 /* GIFSinglePageViewController.m in Sources */,
 				3CE1FD0C17F8E1F6001C8685 /* GIFLibraryViewController.m in Sources */,
 				3C8E28291804485500619359 /* AFURLSessionManager.m in Sources */,
@@ -510,15 +527,17 @@
 				3CE7D8971805B992005A190A /* UIActivityIndicatorView+AFNetworking.m in Sources */,
 				3C8E28231804485500619359 /* AFURLConnectionOperation.m in Sources */,
 				3C8E281B1804485500619359 /* AFHTTPRequestOperationManager.m in Sources */,
+				3C03C8C4184CEA3E00796434 /* MMActionSheet.m in Sources */,
 				3C33541A1801DE6E00522F89 /* GIFOpenedFileViewController.m in Sources */,
 				3C8E281F1804485500619359 /* AFNetworkReachabilityManager.m in Sources */,
 				3C9D91B017F9C419007DEDF8 /* GIFLibrary.m in Sources */,
-				3CBFEE0C18062C6B00725EE1 /* MMAlertView.m in Sources */,
+				3C03C8C7184CEA5D00796434 /* MMAlertView.m in Sources */,
 				3CA3509D17ED225E00F17A03 /* GIFAppDelegate.m in Sources */,
 				3C8E28211804485500619359 /* AFSecurityPolicy.m in Sources */,
 				3C8E271F18033B5B00619359 /* GIFMainPageViewController.m in Sources */,
 				3C8E28251804485500619359 /* AFURLRequestSerialization.m in Sources */,
 				3CC6D30017EF7CF000422505 /* GIFActivityProvider.m in Sources */,
+				3C03C8CE184D0D2C00796434 /* Reachability.m in Sources */,
 				3CE7D89D1805B992005A190A /* UIImageView+AFNetworking.m in Sources */,
 				3C8E28271804485500619359 /* AFURLResponseSerialization.m in Sources */,
 				3CC6D2B817EF68CE00422505 /* UIImage+animatedGIF.m in Sources */,
@@ -540,7 +559,6 @@
 				3C8E281A1804485500619359 /* AFHTTPRequestOperation.m in Sources */,
 				3CA350BE17ED225E00F17A03 /* AirGIFTests.m in Sources */,
 				3CE7D8961805B992005A190A /* AFNetworkActivityIndicatorManager.m in Sources */,
-				3C33541F1806259300522F89 /* MMActionSheet.m in Sources */,
 				3C8E28201804485500619359 /* AFNetworkReachabilityManager.m in Sources */,
 				3CE7D8A21805B992005A190A /* UIWebView+AFNetworking.m in Sources */,
 				3CE7D8981805B992005A190A /* UIActivityIndicatorView+AFNetworking.m in Sources */,

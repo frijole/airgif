@@ -17,6 +17,9 @@
 #define kGIFLibraryUserDefaultsKeyFavoriteIndex         @"favoriteIndex"
 #define kGIFLibraryUserDefaultsKeyRandomIndex           @"randomIndex"
 
+// use these to display coaching alerts on first run
+#define kGIFLibraryUserDefaultsMigratedData             @"migratedData" // upgrade from GIFBOOK
+#define kGIFLibraryUserDefaultsInitialSetupDone         @"setupDone"    // new user
 
 @interface GIFLibrary : NSObject
 
@@ -40,5 +43,8 @@
 
 // report problem to picbot (send 404 command)
 + (void)reportProblem:(NSURL *)url;
+
+// force writing to disk
++ (void)saveData;
 
 @end

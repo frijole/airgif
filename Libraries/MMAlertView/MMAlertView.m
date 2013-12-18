@@ -30,13 +30,23 @@
 	[self showAlertViewWithTitle:inTitle message:inMessage cancelButtonTitle:inCloseButtonTitle acceptButtonTitle:nil cancelBlock:inCloseBlock acceptBlock:nil];
 }
 
++ (MMAlertView *)alertViewWithTitle:(NSString *)inTitle message:(NSString *)inMessage closeButtonTitle:(NSString *)inCloseButtonTitle closeBlock:(MMAlertViewButtonPressedBlockType)inCloseBlock
+{
+	return [self alertViewWithTitle:inTitle message:inMessage cancelButtonTitle:inCloseButtonTitle acceptButtonTitle:nil cancelBlock:inCloseBlock acceptBlock:nil];
+}
+
 + (void)showAlertViewWithTitle:(NSString *)inTitle message:(NSString *)inMessage cancelButtonTitle:(NSString *)inCancelButtonTitle acceptButtonTitle:(NSString *)inAcceptButtonTitle cancelBlock:(MMAlertViewButtonPressedBlockType)inCancelBlock acceptBlock:(MMAlertViewButtonPressedBlockType)inAcceptBlock
+{
+	[[[self class] alertViewWithTitle:inTitle message:inMessage cancelButtonTitle:inCancelButtonTitle acceptButtonTitle:inAcceptButtonTitle cancelBlock:inCancelBlock acceptBlock:inAcceptBlock] show];
+}
+
++ (MMAlertView *)alertViewWithTitle:(NSString *)inTitle message:(NSString *)inMessage cancelButtonTitle:(NSString *)inCancelButtonTitle acceptButtonTitle:(NSString *)inAcceptButtonTitle cancelBlock:(MMAlertViewButtonPressedBlockType)inCancelBlock acceptBlock:(MMAlertViewButtonPressedBlockType)inAcceptBlock
 {
 	MMAlertView *tmpAlertView = [[MMAlertView alloc] initWithTitle:inTitle message:inMessage delegate:nil cancelButtonTitle:inCancelButtonTitle otherButtonTitles:inAcceptButtonTitle, nil];
 	[tmpAlertView setDelegate:tmpAlertView];
 	[tmpAlertView setCancelBlock:inCancelBlock];
 	[tmpAlertView setAcceptBlock:inAcceptBlock];
-	[tmpAlertView show];
+    return tmpAlertView;
 }
 
 #pragma mark -

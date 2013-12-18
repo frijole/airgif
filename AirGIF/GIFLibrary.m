@@ -31,8 +31,8 @@ static BOOL _fetching = NO;
     if ( !_favorites ) {
         // load from disk
         
-        NSArray *cacheDirectories = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);
-        NSString *tmpAddressFilePath = [NSString stringWithFormat:@"%@/%@",[cacheDirectories objectAtIndex:0],kGIFLibraryFavoriteFileName];
+        NSArray *documentDirectories = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+        NSString *tmpAddressFilePath = [NSString stringWithFormat:@"%@/%@",[documentDirectories objectAtIndex:0],kGIFLibraryFavoriteFileName];
         NSArray *tmpFavoritesFromDisk = [NSKeyedUnarchiver unarchiveObjectWithFile:tmpAddressFilePath];
         if ( tmpFavoritesFromDisk && tmpFavoritesFromDisk.count > 0 )
             _favorites = [NSMutableArray arrayWithArray:tmpFavoritesFromDisk];
@@ -69,8 +69,8 @@ static BOOL _fetching = NO;
         
             // in fact, nuke the disk.
             // TODO: move `resetLibrary` to standalone method
-            NSArray *cacheDirectories = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);
-            NSString *tmpAddressFilePath = [NSString stringWithFormat:@"%@/%@",[cacheDirectories objectAtIndex:0],kGIFLibraryRandomFileName];
+            NSArray *documentDirectories = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+            NSString *tmpAddressFilePath = [NSString stringWithFormat:@"%@/%@",[documentDirectories objectAtIndex:0],kGIFLibraryRandomFileName];
             NSError *tmpError;
             [[NSFileManager defaultManager] removeItemAtPath:tmpAddressFilePath error:&tmpError];
             if ( tmpError )
@@ -82,8 +82,8 @@ static BOOL _fetching = NO;
         else
         {
             // load from disk
-            NSArray *cacheDirectories = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);
-            NSString *tmpAddressFilePath = [NSString stringWithFormat:@"%@/%@",[cacheDirectories objectAtIndex:0],kGIFLibraryRandomFileName];
+            NSArray *documentDirectories = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+            NSString *tmpAddressFilePath = [NSString stringWithFormat:@"%@/%@",[documentDirectories objectAtIndex:0],kGIFLibraryRandomFileName];
             NSArray *tmpRandomsFromDisk = [NSKeyedUnarchiver unarchiveObjectWithFile:tmpAddressFilePath];
             if ( tmpRandomsFromDisk && tmpRandomsFromDisk.count > 0 )
                 _randoms = [NSMutableArray arrayWithArray:tmpRandomsFromDisk];
@@ -91,6 +91,32 @@ static BOOL _fetching = NO;
         }
     
     }
+    
+    if ( !_randoms || _randoms.count == 0 ) {
+        // we didn't load any, see if there are any GIFBOOK randoms to import
+
+        NSArray *cacheDirectories = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);
+        NSString *tmpAddressFilePath = [NSString stringWithFormat:@"%@/%@",[cacheDirectories objectAtIndex:0],@"gifs"];
+        NSArray *tmpRandomsFromGifbook = [NSKeyedUnarchiver unarchiveObjectWithFile:tmpAddressFilePath];
+        if ( tmpRandomsFromGifbook && tmpRandomsFromGifbook.count > 0 ) {
+            _randoms = [NSMutableArray arrayWithArray:tmpRandomsFromGifbook];
+
+            [[NSUserDefaults standardUserDefaults] setBool:YES forKey:kGIFLibraryUserDefaultsMigratedData];
+            [[NSUserDefaults standardUserDefaults] synchronize];
+            
+            // since we migrated the randoms, migrate the current page, too.
+            NSInteger tmpCurrentPageFromGifbook = [[NSUserDefaults standardUserDefaults] integerForKey:@"pageNumber"];
+            [[NSUserDefaults standardUserDefaults] setInteger:tmpCurrentPageFromGifbook forKey:kGIFLibraryUserDefaultsKeyRandomIndex];
+            
+            [[NSUserDefaults standardUserDefaults] synchronize];
+            
+            // and remove the old file?
+            // [[NSFileManager defaultManager] removeItemAtPath:tmpAddressFilePath error:nil];
+            // maybe, but not now.
+        }
+        
+    }
+    
     
     // if we failed to load, or loaded none...
     if ( !_randoms || _randoms.count == 0 ) {
@@ -120,11 +146,27 @@ static BOOL _fetching = NO;
     
     if ( !_blacklist ) {
         // load from disk
-        NSArray *cacheDirectories = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);
-        NSString *tmpAddressFilePath = [NSString stringWithFormat:@"%@/%@",[cacheDirectories objectAtIndex:0],kGIFLibraryBanFileName];
+        NSArray *documentDirectories = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+        NSString *tmpAddressFilePath = [NSString stringWithFormat:@"%@/%@",[documentDirectories objectAtIndex:0],kGIFLibraryBanFileName];
         NSArray *tmpRandomsFromDisk = [NSKeyedUnarchiver unarchiveObjectWithFile:tmpAddressFilePath];
         if ( tmpRandomsFromDisk && tmpRandomsFromDisk.count > 0 )
             _blacklist = [NSMutableArray arrayWithArray:tmpRandomsFromDisk];
+    }
+    
+    if ( !_blacklist ) {
+        // no bans, check for old GIFBOOK ones
+        NSArray *cacheDirectories = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);
+        NSString *tmpBlacklistFilePath = [NSString stringWithFormat:@"%@/%@",[cacheDirectories objectAtIndex:0],@"bans"];
+        NSArray *tmpBlacklistFromGifbook = [NSKeyedUnarchiver unarchiveObjectWithFile:tmpBlacklistFilePath];
+        if ( tmpBlacklistFromGifbook && tmpBlacklistFromGifbook.count > 0 ) {
+            _blacklist = [NSMutableArray arrayWithArray:tmpBlacklistFromGifbook];
+    
+            [[NSUserDefaults standardUserDefaults] setBool:YES forKey:kGIFLibraryUserDefaultsMigratedData];
+
+            // and remove the old file?
+            // [[NSFileManager defaultManager] removeItemAtPath:tmpBlacklistFilePath error:nil];
+            // maybe, but not now.
+        }
     }
     
     if ( !_blacklist ) {
@@ -401,23 +443,23 @@ static BOOL _fetching = NO;
 {
     // save updated list
     // save the update
-    NSArray *cacheDirectories = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);
+    NSArray *documentsDirectories = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
     
-    NSString *tmpAddressFilePath = [NSString stringWithFormat:@"%@/%@",[cacheDirectories objectAtIndex:0],kGIFLibraryFavoriteFileName];
+    NSString *tmpAddressFilePath = [NSString stringWithFormat:@"%@/%@",[documentsDirectories objectAtIndex:0],kGIFLibraryFavoriteFileName];
     if ( [NSKeyedArchiver archiveRootObject:[[self class] favorites] toFile:tmpAddressFilePath] ) {
         // NSLog(@"saved updated list");
     } else {
         NSLog(@"error saving favorites");
     }
     
-    NSString *tmpRandomsFilePath = [NSString stringWithFormat:@"%@/%@",[cacheDirectories objectAtIndex:0],kGIFLibraryRandomFileName];
+    NSString *tmpRandomsFilePath = [NSString stringWithFormat:@"%@/%@",[documentsDirectories objectAtIndex:0],kGIFLibraryRandomFileName];
     if ( [NSKeyedArchiver archiveRootObject:[[self class] randoms] toFile:tmpRandomsFilePath] ) {
         // NSLog(@"saved updated list");
     } else {
         NSLog(@"error saving randoms");
     }
     
-    NSString *tmpBlacklistFilePath = [NSString stringWithFormat:@"%@/%@",[cacheDirectories objectAtIndex:0],kGIFLibraryBanFileName];
+    NSString *tmpBlacklistFilePath = [NSString stringWithFormat:@"%@/%@",[documentsDirectories objectAtIndex:0],kGIFLibraryBanFileName];
     if ( [NSKeyedArchiver archiveRootObject:[[self class] blacklist] toFile:tmpBlacklistFilePath] ) {
         // NSLog(@"saved updated ban list");
     } else {

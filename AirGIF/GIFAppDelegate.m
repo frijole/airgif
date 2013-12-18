@@ -8,12 +8,17 @@
 
 #import "GIFAppDelegate.h"
 
+#import "GIFLibrary.h"
+
 #import "GIFMainPageViewController.h"
 
 @implementation GIFAppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    // check contents of collections, this will also trigger migration/upgrade if needed
+    NSLog(@"Launching with %d favorites, %d randoms, and %d bans",[GIFLibrary favorites].count, [GIFLibrary randoms].count, [GIFLibrary blacklist].count);
+    
     // Override point for customization after application launch.
     NSURL *url = (NSURL *)[launchOptions valueForKey:UIApplicationLaunchOptionsURLKey];
     
